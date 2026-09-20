@@ -1,2 +1,1197 @@
 # rayis-market
 RAYIS onlayn do'kon
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>RAYIS BOZORI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:#0B1121;color:#fff;min-height:100vh;padding-bottom:90px}
+.app{max-width:600px;margin:0 auto;padding:16px}
+.header{display:flex;align-items:center;padding:12px 14px;background:#12192D;border-radius:20px;margin-bottom:16px;gap:8px;position:sticky;top:8px;z-index:40}
+.logo-r{width:36px;height:36px;border-radius:50%;border:2px solid #2ECC71;background:rgba(46,204,113,0.15);display:flex;align-items:center;justify-content:center;color:#8DF0B5;font-weight:900;font-size:18px;flex-shrink:0}
+.logo-t{font-size:17px;font-weight:900;color:#5FE898;letter-spacing:1px}
+.staff-btn{background:rgba(46,204,113,0.15);border:1px solid rgba(46,204,113,0.4);border-radius:20px;padding:7px 12px;color:#5FE898;font-size:11px;font-weight:700;cursor:pointer;margin-left:auto}
+.cart-btn{position:relative;background:rgba(46,204,113,0.15);border:1px solid rgba(46,204,113,0.4);border-radius:20px;padding:7px 12px;color:#5FE898;font-size:14px;cursor:pointer}
+.cart-count{position:absolute;top:-6px;right:-6px;background:#2ECC71;color:#0B1121;font-size:10px;font-weight:900;border-radius:50%;min-width:18px;height:18px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.sec-t{color:#2ECC71;font-size:14px;font-weight:700;margin:20px 0 12px;padding-left:9px;border-left:3px solid #2ECC71;display:flex;align-items:center;gap:6px}
+.sec-t small{color:#8E9AAF;font-size:11px;font-weight:400}
+.search{width:100%;padding:12px 16px;background:#12192D;border:1px solid rgba(46,204,113,0.2);border-radius:30px;color:#fff;font-size:14px;margin-bottom:14px}
+.search:focus{outline:none;border-color:#2ECC71}
+.hero{background:linear-gradient(135deg,rgba(46,204,113,0.2),rgba(46,204,113,0.05));border:1px solid rgba(46,204,113,0.35);border-radius:20px;padding:20px;margin-bottom:16px;text-align:center}
+.hero-title{font-size:20px;font-weight:900;color:#5FE898;margin-bottom:6px}
+.hero-sub{font-size:12px;color:#CBD5E6;line-height:1.5}
+.status-bar{display:flex;align-items:center;justify-content:center;gap:6px;background:rgba(46,204,113,0.1);border:1px solid rgba(46,204,113,0.3);border-radius:20px;padding:6px 14px;margin-bottom:14px;font-size:11px;color:#5FE898;font-weight:600}
+.status-dot{width:8px;height:8px;border-radius:50%;background:#2ECC71;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.big-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.big-card{background:#12192D;border-radius:16px;padding:16px 12px;border:1px solid rgba(46,204,113,0.2);cursor:pointer;text-align:center;transition:0.2s}
+.big-card:active{transform:scale(0.97);border-color:#2ECC71}
+.big-card .ic{font-size:32px;margin-bottom:8px;display:block}
+.big-card .nm{color:#fff;font-size:13px;font-weight:800;line-height:1.2;margin-bottom:4px}
+.big-card .ds{color:#8E9AAF;font-size:10px;line-height:1.3}
+.sub-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.sub-card{background:#12192D;border-radius:14px;padding:12px 8px;border:1px solid rgba(46,204,113,0.15);cursor:pointer;text-align:center}
+.sub-card:active{transform:scale(0.96)}
+.sub-card .ic{font-size:24px;margin-bottom:6px;display:block}
+.sub-card .nm{color:#fff;font-size:11px;font-weight:700;line-height:1.2}
+.prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card{background:#12192D;border-radius:16px;padding:12px;border:1px solid rgba(46,204,113,0.15);cursor:pointer}
+.card-img{width:100%;height:80px;background:rgba(46,204,113,0.1);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:8px}
+.card-name{color:#fff;font-size:12px;font-weight:600;line-height:1.3;min-height:30px;margin-bottom:4px}
+.card-price{color:#2ECC71;font-size:13px;font-weight:900}
+.card-stock{color:#8E9AAF;font-size:10px;margin-top:2px}
+.card-btn{margin-top:8px;width:100%;background:#2ECC71;border:none;padding:8px;border-radius:12px;font-weight:700;font-size:11px;color:#0B1121;cursor:pointer}
+.card-btn:disabled{opacity:0.3}
+.srv-card{background:#12192D;border-radius:14px;padding:12px;margin-bottom:8px;border:1px solid rgba(46,204,113,0.15);display:flex;align-items:center;gap:12px}
+.srv-av{width:50px;height:50px;border-radius:50%;background:rgba(46,204,113,0.15);border:2px solid #2ECC71;display:flex;align-items:center;justify-content:center;color:#5FE898;font-weight:900;font-size:16px;flex-shrink:0}
+.srv-info{flex:1;min-width:0}
+.srv-n{color:#fff;font-size:13px;font-weight:700;margin-bottom:2px}
+.srv-s{color:#8E9AAF;font-size:11px;margin-bottom:3px}
+.srv-r{color:#F5B041;font-size:11px;font-weight:700}
+.srv-p{color:#2ECC71;font-size:12px;font-weight:700;margin-top:2px}
+.srv-call{background:#2ECC71;border:none;color:#0B1121;padding:8px 12px;border-radius:12px;font-weight:700;font-size:11px;cursor:pointer;text-decoration:none;display:inline-block}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#12192D;border-top:1px solid rgba(46,204,113,0.2);display:flex;justify-content:space-around;padding:8px 0;z-index:50}
+.nav-btn{background:none;border:none;color:#8E9AAF;font-size:10px;padding:6px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:60px}
+.nav-btn.on{color:#2ECC71}
+.nav-btn .ic{font-size:20px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:100;display:none;align-items:flex-end;justify-content:center}
+.modal.on{display:flex}
+.modal-box{background:#0B1121;border-radius:24px 24px 0 0;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;padding:20px;border-top:2px solid #2ECC71}
+.modal-close{background:#2A3348;border:none;color:#fff;padding:8px 16px;border-radius:20px;font-size:12px;margin-bottom:14px;cursor:pointer}
+.modal-h{font-size:18px;font-weight:900;color:#5FE898;margin-bottom:10px}
+.btn{width:100%;background:#2ECC71;border:none;padding:14px;border-radius:24px;font-weight:900;font-size:14px;color:#0B1121;margin-top:8px;cursor:pointer}
+.btn-sm{padding:9px;font-size:12px;border-radius:16px;margin-top:6px}
+.btn-warn{background:#F5B041;color:#0B1121}
+.btn-red{background:#E74C3C;color:#fff}
+.input{width:100%;padding:12px;background:rgba(0,0,0,0.4);border:1px solid rgba(46,204,113,0.3);border-radius:12px;color:#fff;font-size:14px;margin-bottom:10px}
+.input:focus{outline:none;border-color:#2ECC71}
+.label{color:#CBD5E6;font-size:12px;font-weight:600;margin-bottom:5px;display:block;margin-top:8px}
+.empty{text-align:center;padding:40px 20px;color:#8E9AAF;font-size:13px}
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#2ECC71;color:#0B1121;padding:10px 22px;border-radius:20px;font-weight:700;font-size:13px;z-index:200;opacity:0;transition:0.3s;pointer-events:none}
+.toast.on{opacity:1;bottom:120px}
+.order{background:#12192D;border-radius:14px;padding:12px;margin-bottom:8px;border-left:3px solid #F5B041}
+.order.done{border-left-color:#2ECC71}
+.order-num{color:#5FE898;font-size:12px;font-weight:900;margin-bottom:4px}
+.order-info{color:#8E9AAF;font-size:11px;line-height:1.5}
+.order-price{color:#2ECC71;font-size:14px;font-weight:900;margin-top:6px}
+.badge{display:inline-block;font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;background:rgba(245,176,65,0.2);color:#F5B041;margin-left:6px}
+.badge.done{background:rgba(46,204,113,0.2);color:#2ECC71}
+.back-btn{background:rgba(46,204,113,0.15);border:1px solid rgba(46,204,113,0.4);border-radius:50%;width:34px;height:34px;color:#5FE898;font-size:18px;font-weight:900;cursor:pointer;flex-shrink:0}
+.loading{text-align:center;padding:60px 20px;color:#5FE898;font-size:14px}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<div class="modal" id="modal"><div class="modal-box" id="modalBox"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ============ FIREBASE ============
+var FB_URL = "https://rayis-bozori-88f50-default-rtdb.firebaseio.com";
+var FB = {
+  get: function(path){ return fetch(FB_URL + path + ".json").then(function(r){ return r.json(); }); },
+  put: function(path, data){ return fetch(FB_URL + path + ".json", { method:"PUT", headers:{"Content-Type":"application/json"}, body:JSON.stringify(data) }).then(function(r){ return r.json(); }); },
+  patch: function(path, data){ return fetch(FB_URL + path + ".json", { method:"PATCH", headers:{"Content-Type":"application/json"}, body:JSON.stringify(data) }).then(function(r){ return r.json(); }); },
+  del: function(path){ return fetch(FB_URL + path + ".json", { method:"DELETE" }); }
+};
+
+// ============ LOCAL STORAGE ============
+var LS = {
+  load: function(k){ try{ return JSON.parse(localStorage.getItem(k)); }catch(e){ return null; } },
+  save: function(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} },
+  del: function(k){ try{ localStorage.removeItem(k); }catch(e){} }
+};
+
+// ============ STAFF ============
+var STAFF = [
+  {code:"1111", role:"Xo'jayin", icon:"👑", level:1},
+  {code:"2222", role:"Admin 1", icon:"🔑", level:2},
+  {code:"2223", role:"Admin", icon:"⚙️", level:2},
+  {code:"3333", role:"Boshqaruvchi", icon:"💼", level:3},
+  {code:"3334", role:"Nazoratchi", icon:"👁️", level:3},
+  {code:"4444", role:"Sotuvchi", icon:"🏪", level:4},
+  {code:"5555", role:"Omborchi", icon:"📦", level:4},
+  {code:"6666", role:"Yetkazib beruvchi", icon:"🚚", level:4},
+  {code:"7777", role:"Kuryer", icon:"🏍️", level:5}
+];
+function findStaff(code){ for(var i=0;i<STAFF.length;i++) if(STAFF[i].code===code) return STAFF[i]; return null; }
+
+// ============ CATEGORIES ============
+var CATS = [
+  {id:"savdo", name:"Savdo", icon:"🛍️", desc:"Mahsulotlar bozori", subs:[
+    {id:"oziq", name:"Oziq-ovqat", icon:"🍎"},{id:"kiyim", name:"Kiyim", icon:"👕"},
+    {id:"poyabzal", name:"Poyabzal", icon:"👟"},{id:"elektronika", name:"Elektronika", icon:"📱"},
+    {id:"texnika", name:"Texnika", icon:"🌀"},{id:"mebel", name:"Mebel", icon:"🛋️"},
+    {id:"qurilish", name:"Qurilish", icon:"🧱"},{id:"bog_dala", name:"Bog'-dala", icon:"🌱"},
+    {id:"chorva", name:"Chorva", icon:"🐄"},{id:"parranda", name:"Parranda", icon:"🐔"},
+    {id:"dori", name:"Dori", icon:"💊"},{id:"gozallik", name:"Go'zallik", icon:"💄"},
+    {id:"sport", name:"Sport", icon:"⚽"},{id:"kitob", name:"Kitob", icon:"📚"},
+    {id:"kimyo", name:"Kimyo", icon:"🧴"},{id:"avto", name:"Avto", icon:"🚗"}
+  ]},
+  {id:"xizmat", name:"Xizmatlar", icon:"🔧", desc:"Mutaxassislar", subs:[
+    {id:"santexnik", name:"Santexnik", icon:"🚰"},{id:"elektrik", name:"Elektrik", icon:"⚡"},
+    {id:"duradgor", name:"Duradgor", icon:"🔨"},{id:"quruvchi", name:"Quruvchi", icon:"👷"},
+    {id:"shifokor", name:"Shifokor", icon:"🩺"},{id:"hamshira", name:"Hamshira", icon:"💉"},
+    {id:"veterinar", name:"Veterinar", icon:"🐾"},{id:"tish", name:"Tish", icon:"🦷"},
+    {id:"oqituvchi", name:"O'qituvchi", icon:"📖"},{id:"repetitor", name:"Repetitor", icon:"🎓"},
+    {id:"tarbiyachi", name:"Tarbiyachi", icon:"🧒"},{id:"murabbiy", name:"Murabbiy", icon:"🏋️"},
+    {id:"hisobchi", name:"Hisobchi", icon:"📊"},{id:"advokat", name:"Advokat", icon:"⚖️"},
+    {id:"dasturchi", name:"Dasturchi", icon:"💻"},{id:"sartarosh", name:"Sartarosh", icon:"✂️"},
+    {id:"kosmetolog", name:"Kosmetolog", icon:"💅"},{id:"massaj", name:"Massaj", icon:"💆"},
+    {id:"suratkash", name:"Suratkash", icon:"📷"},{id:"bogbon", name:"Bog'bon", icon:"🌳"}
+  ]},
+  {id:"buyurtma", name:"Buyurtma", icon:"✂️", desc:"Yasash va tikish", subs:[
+    {id:"mebel_yasa", name:"Mebel yasash", icon:"🪑"},{id:"kiyim_tik", name:"Kiyim tikish", icon:"🧵"},
+    {id:"poyabzal_tik", name:"Poyabzal tikish", icon:"👞"},{id:"zargarlik", name:"Zargarlik", icon:"💍"},
+    {id:"temirchilik", name:"Temirchilik", icon:"🔨"},{id:"tort", name:"Tort", icon:"🎂"},
+    {id:"banner", name:"Banner", icon:"📢"}
+  ]},
+  {id:"mulk", name:"Ko'chmas mulk", icon:"🏠", desc:"Uy, yer, ofis", subs:[
+    {id:"uy_sot", name:"Uy sotish", icon:"🏡"},{id:"uy_ijara", name:"Uy ijarasi", icon:"🏘️"},
+    {id:"kvartira", name:"Kvartira", icon:"🏢"},{id:"yer", name:"Yer", icon:"🌾"},
+    {id:"ofis", name:"Ofis", icon:"🏬"}
+  ]},
+  {id:"ijara", name:"Ijara", icon:"🚜", desc:"Uskunalar ijarasi", subs:[
+    {id:"beton", name:"Betonorastvor", icon:"🌀"},{id:"lesa", name:"Lesa", icon:"🪜"},
+    {id:"generator", name:"Generator", icon:"⚡"},{id:"kompressor", name:"Kompressor", icon:"💨"},
+    {id:"avto_ijara", name:"Avtomobil", icon:"🚗"},{id:"kostyum", name:"Kostyum", icon:"👔"}
+  ]},
+  {id:"transport", name:"Transport", icon:"🚚", desc:"Yuk va yo'lovchi", subs:[
+    {id:"damas", name:"Damas", icon:"🚐"},{id:"labo", name:"Labo", icon:"🚚"},
+    {id:"gazel", name:"Gazel", icon:"🚛"},{id:"yukmashina", name:"Yuk mashina", icon:"🚛"},
+    {id:"manipulyator", name:"Manipulyator", icon:"🏗️"},{id:"evakuator", name:"Evakuator", icon:"🚧"},
+    {id:"yolovchi", name:"Yo'lovchi", icon:"🚌"}
+  ]},
+  {id:"kalkulyator", name:"Qurilish hisob", icon:"🏗️", desc:"Materiallar kalkulyatori", subs:[]},
+  {id:"ustalar", name:"Ustalar bozori", icon:"👷", desc:"Brigadalar va ustalar", subs:[]}
+];
+
+// ============ KATTA SEED DATA ============
+function getSeedProducts(){
+  var arr = {};
+  var i = 1;
+  function add(name, price, unit, stock, sub, e){
+    arr["p" + i] = {name:name, price:price, unit:unit, stock:stock, sub:sub, e:e};
+    i++;
+  }
+  // Oziq-ovqat (30 ta)
+  add("Non (patir)", 5000, "dona", 100, "oziq", "🍞");
+  add("Obi non", 4000, "dona", 150, "oziq", "🥖");
+  add("Guruch (Lazer)", 22000, "kg", 300, "oziq", "🍚");
+  add("Guruch (Devzira)", 28000, "kg", 200, "oziq", "🍚");
+  add("Paxta yog'i 5L", 95000, "litr", 60, "oziq", "🛢️");
+  add("Kungaboqar yog'i 5L", 78000, "litr", 80, "oziq", "🌻");
+  add("Shakar", 14000, "kg", 200, "oziq", "🍬");
+  add("Tuz", 5000, "kg", 300, "oziq", "🧂");
+  add("Un (Oliy nav)", 12000, "kg", 200, "oziq", "🌾");
+  add("Un (1-nav)", 9500, "kg", 250, "oziq", "🌾");
+  add("Mol go'shti", 95000, "kg", 50, "oziq", "🥩");
+  add("Qo'y go'shti", 105000, "kg", 40, "oziq", "🍖");
+  add("Tovuq go'shti", 32000, "kg", 80, "oziq", "🍗");
+  add("Baliq (zog'ora)", 45000, "kg", 30, "oziq", "🐟");
+  add("Tuxum (10 ta)", 18000, "paket", 100, "oziq", "🥚");
+  add("Sut 1L", 12000, "litr", 80, "oziq", "🥛");
+  add("Qatiq 1L", 14000, "litr", 60, "oziq", "🥛");
+  add("Tvorog", 25000, "kg", 40, "oziq", "🧀");
+  add("Pishloq", 65000, "kg", 25, "oziq", "🧀");
+  add("Sariyog'", 85000, "kg", 30, "oziq", "🧈");
+  add("Olma", 8000, "kg", 200, "oziq", "🍎");
+  add("Banan", 22000, "kg", 100, "oziq", "🍌");
+  add("Uzum", 25000, "kg", 60, "oziq", "🍇");
+  add("Pomidor", 15000, "kg", 100, "oziq", "🍅");
+  add("Bodring", 12000, "kg", 120, "oziq", "🥒");
+  add("Kartoshka", 7000, "kg", 300, "oziq", "🥔");
+  add("Piyoz", 6000, "kg", 200, "oziq", "🧅");
+  add("Sabzi", 8000, "kg", 150, "oziq", "🥕");
+  add("Choy (Kenya)", 35000, "kg", 80, "oziq", "🍵");
+  add("Qahva", 95000, "kg", 20, "oziq", "☕");
+  
+  // Qurilish (35 ta)
+  add("Tsement M400 50kg", 45000, "qop", 500, "qurilish", "📦");
+  add("Tsement M500 50kg", 55000, "qop", 300, "qurilish", "📦");
+  add("Gazoblok 600x300x200", 28000, "dona", 1200, "qurilish", "🧱");
+  add("Gazoblok 500x300x200", 26000, "dona", 800, "qurilish", "🧱");
+  add("Qizil g'isht", 850, "dona", 5000, "qurilish", "🧱");
+  add("Xom g'isht", 550, "dona", 8000, "qurilish", "🧱");
+  add("Shlakoblok", 8500, "dona", 500, "qurilish", "🧱");
+  add("Armatura 8mm", 7800000, "tonna", 20, "qurilish", "🔩");
+  add("Armatura 12mm", 8500000, "tonna", 15, "qurilish", "🔩");
+  add("Armatura 14mm", 9000000, "tonna", 12, "qurilish", "🔩");
+  add("Profil truba 40x40", 6500000, "tonna", 8, "qurilish", "🔩");
+  add("Yuvilgan qum", 280000, "m3", 100, "qurilish", "🏖️");
+  add("Shagal", 250000, "m3", 80, "qurilish", "⛰️");
+  add("Tosh (maydalangan)", 320000, "m3", 60, "qurilish", "🪨");
+  add("Kafel (pol)", 65000, "m2", 500, "qurilish", "🟦");
+  add("Kafel (devor)", 55000, "m2", 400, "qurilish", "🟦");
+  add("Parket", 120000, "m2", 200, "qurilish", "🟫");
+  add("Linoleum", 45000, "m2", 300, "qurilish", "🟫");
+  add("Laminat", 95000, "m2", 250, "qurilish", "🟫");
+  add("Shift paneli (Armstrong)", 35000, "m2", 300, "qurilish", "⬜");
+  add("Gips karton", 18000, "m2", 500, "qurilish", "⬜");
+  add("Metal profil", 25000, "dona", 400, "qurilish", "🔩");
+  add("Shpatlevka 25kg", 65000, "qop", 200, "qurilish", "🎨");
+  add("Gruntovka 10L", 45000, "litr", 150, "qurilish", "🎨");
+  add("Bo'yoq (oq) 15L", 180000, "litr", 100, "qurilish", "🎨");
+  add("Bo'yoq (rangli) 15L", 195000, "litr", 80, "qurilish", "🎨");
+  add("Shift yopqichi", 220000, "m2", 50, "qurilish", "🏠");
+  add("Rubert (yopqich)", 35000, "dona", 200, "qurilish", "🔧");
+  add("Iplar (kanop)", 15000, "kg", 100, "qurilish", "🪢");
+  add("Shifer (list)", 78000, "list", 300, "qurilish", "🏠");
+  add("Metallocherepitsa", 92000, "m2", 400, "qurilish", "🏠");
+  add("Ondulin", 98000, "m2", 200, "qurilish", "🏠");
+  add("Profnastil", 70000, "m2", 350, "qurilish", "🏠");
+  add("Strapila 50x150", 3200000, "m3", 30, "qurilish", "🪵");
+  add("Strapila 50x200", 4200000, "m3", 25, "qurilish", "🪵");
+  
+  // Kiyim (25 ta)
+  add("Erkaklar futbolkasi", 80000, "dona", 50, "kiyim", "👕");
+  add("Ayollar futbolkasi", 75000, "dona", 60, "kiyim", "👚");
+  add("Bolalar futbolkasi", 45000, "dona", 80, "kiyim", "👕");
+  add("Erkaklar shimi", 150000, "dona", 40, "kiyim", "👖");
+  add("Ayollar shimi", 140000, "dona", 50, "kiyim", "👖");
+  add("Jinsi shim", 220000, "dona", 30, "kiyim", "👖");
+  add("Kurtka (qish)", 550000, "dona", 20, "kiyim", "🧥");
+  add("Ko'ylak (erkak)", 180000, "dona", 40, "kiyim", "👔");
+  add("Ko'ylak (ayol)", 200000, "dona", 35, "kiyim", "👗");
+  add("Sviter", 250000, "dona", 30, "kiyim", "🧶");
+  add("Kostyum (erkak)", 850000, "dona", 15, "kiyim", "🤵");
+  add("Kostyum (ayol)", 950000, "dona", 12, "kiyim", "👗");
+  add("Paypoq (juft)", 15000, "juft", 100, "kiyim", "🧦");
+  add("Shapka", 65000, "dona", 60, "kiyim", "🧢");
+  add("Qo'lqop", 35000, "juft", 80, "kiyim", "🧤");
+  add("Sharf", 85000, "dona", 40, "kiyim", "🧣");
+  add("Sport kiyimi", 220000, "dona", 30, "kiyim", "🩳");
+  add("Yozgi ko'ylak", 350000, "dona", 20, "kiyim", "👗");
+  add("Bola kostyumi", 320000, "dona", 25, "kiyim", "🧒");
+  add("Fartuk", 65000, "dona", 50, "kiyim", "👘");
+  add("Choyshab to'plami", 450000, "komplekt", 40, "kiyim", "🛏️");
+  add("Kravat", 85000, "dona", 50, "kiyim", "👔");
+  add("Rezina (bel)", 15000, "dona", 100, "kiyim", "🎗️");
+  add("Ich kiyim (erkak)", 45000, "to'plam", 60, "kiyim", "🩲");
+  add("Ich kiyim (ayol)", 55000, "to'plam", 50, "kiyim", "🩱");
+  
+  // Poyabzal (15 ta)
+  add("Krossovka (erkak)", 350000, "juft", 30, "poyabzal", "👟");
+  add("Krossovka (ayol)", 320000, "juft", 25, "poyabzal", "👟");
+  add("Krossovka (bola)", 220000, "juft", 40, "poyabzal", "👟");
+  add("Tufli (erkak)", 550000, "juft", 20, "poyabzal", "👞");
+  add("Tufli (ayol)", 650000, "juft", 15, "poyabzal", "👠");
+  add("Botinka", 780000, "juft", 15, "poyabzal", "🥾");
+  add("Shippak (uy)", 65000, "juft", 60, "poyabzal", "🩴");
+  add("Shippak (hammom)", 35000, "juft", 80, "poyabzal", "🩴");
+  add("Etik", 450000, "juft", 25, "poyabzal", "👢");
+  add("Sandal", 280000, "juft", 30, "poyabzal", "👡");
+  add("Baletka", 220000, "juft", 35, "poyabzal", "🩰");
+  add("Sport poyabzal", 420000, "juft", 20, "poyabzal", "👟");
+  add("Chaqmoq (juft)", 18000, "juft", 100, "poyabzal", "🧵");
+  add("Tufli ustki krem", 25000, "dona", 80, "poyabzal", "🧴");
+  add("Poyabzal bog'i", 8000, "juft", 150, "poyabzal", "🪢");
+  
+  // Elektronika (20 ta)
+  add("Smartfon Xiaomi", 2500000, "dona", 15, "elektronika", "📱");
+  add("Smartfon Samsung", 3200000, "dona", 12, "elektronika", "📱");
+  add("Smartfon iPhone", 8500000, "dona", 5, "elektronika", "📱");
+  add("Planshet", 2800000, "dona", 10, "elektronika", "📱");
+  add("Quloqchin simsiz", 180000, "dona", 40, "elektronika", "🎧");
+  add("Quloqchin simli", 65000, "dona", 80, "elektronika", "🎧");
+  add("Power bank 20000mAh", 195000, "dona", 50, "elektronika", "🔋");
+  add("Zaryadlash kabeli", 35000, "dona", 150, "elektronika", "🔌");
+  add("Adapter (USB)", 45000, "dona", 100, "elektronika", "🔌");
+  add("Televizor 32\"", 3200000, "dona", 8, "elektronika", "📺");
+  add("Televizor 43\"", 5500000, "dona", 5, "elektronika", "📺");
+  add("Kompyuter (noutbuk)", 8500000, "dona", 5, "elektronika", "💻");
+  add("Sichqoncha", 65000, "dona", 60, "elektronika", "🖱️");
+  add("Klaviatura", 180000, "dona", 30, "elektronika", "⌨️");
+  add("Monitor 24\"", 2200000, "dona", 10, "elektronika", "🖥️");
+  add("Kamera", 3500000, "dona", 5, "elektronika", "📷");
+  add("Kolonka (portativ)", 650000, "dona", 20, "elektronika", "🔊");
+  add("Mikrofon", 450000, "dona", 15, "elektronika", "🎤");
+  add("SD karta 64GB", 95000, "dona", 80, "elektronika", "💾");
+  add("USB flesh 32GB", 85000, "dona", 70, "elektronika", "💾");
+  
+  // Texnika (15 ta)
+  add("Muzlatgich", 5000000, "dona", 5, "texnika", "🧊");
+  add("Kir yuvish mashinasi", 4200000, "dona", 7, "texnika", "🌀");
+  add("Konditsioner", 5500000, "dona", 4, "texnika", "❄️");
+  add("Gaz plita", 2200000, "dona", 10, "texnika", "🔥");
+  add("Elektr plita", 1800000, "dona", 12, "texnika", "🔥");
+  add("Mikroto'lqinli pech", 1500000, "dona", 15, "texnika", "📡");
+  add("Changyutgich", 2200000, "dona", 10, "texnika", "🌀");
+  add("Dazmol", 650000, "dona", 25, "texnika", "👕");
+  add("Fen", 450000, "dona", 30, "texnika", "💨");
+  add("Blender", 850000, "dona", 20, "texnika", "🥤");
+  add("Kofe mashinasi", 1800000, "dona", 10, "texnika", "☕");
+  add("Choynak elektr", 350000, "dona", 40, "texnika", "🫖");
+  add("Non pishirgich", 950000, "dona", 15, "texnika", "🍞");
+  add("Suv filtri", 650000, "dona", 30, "texnika", "💧");
+  add("Suv nasosi", 2200000, "dona", 8, "texnika", "💧");
+  
+  // Mebel (15 ta)
+  add("Divan (3 kishilik)", 4500000, "dona", 5, "mebel", "🛋️");
+  add("Divan (2 kishilik)", 3200000, "dona", 6, "mebel", "🛋️");
+  add("Krovat (2 kishilik)", 3200000, "dona", 8, "mebel", "🛏️");
+  add("Krovat (1 kishilik)", 2200000, "dona", 10, "mebel", "🛏️");
+  add("Shkaf (3 eshikli)", 3800000, "dona", 6, "mebel", "🚪");
+  add("Shkaf (2 eshikli)", 2800000, "dona", 8, "mebel", "🚪");
+  add("Stol (yozuv)", 1200000, "dona", 15, "mebel", "🪑");
+  add("Stol (ovqat)", 2500000, "dona", 8, "mebel", "🍽️");
+  add("Stul", 450000, "dona", 40, "mebel", "🪑");
+  add("Kreslo", 1800000, "dona", 10, "mebel", "💺");
+  add("Javon", 1500000, "dona", 12, "mebel", "📚");
+  add("Tumba (televizor)", 1200000, "dona", 10, "mebel", "📺");
+  add("Tumba (kiyim)", 1800000, "dona", 8, "mebel", "👕");
+  add("Yumshoq burchak", 5500000, "dona", 4, "mebel", "🛋️");
+  add("Bolalar krovati", 1800000, "dona", 10, "mebel", "🛏️");
+  
+  // Bog'-dala (20 ta)
+  add("Bug'doy urug'i 1kg", 25000, "kg", 100, "bog_dala", "🌾");
+  add("Makkajo'xori urug'i", 35000, "kg", 80, "bog_dala", "🌽");
+  add("Sabzi urug'i", 45000, "paket", 60, "bog_dala", "🥕");
+  add("Pomidor urug'i", 55000, "paket", 50, "bog_dala", "🍅");
+  add("Bodring urug'i", 50000, "paket", 50, "bog_dala", "🥒");
+  add("Bulg'or qalampiri", 65000, "paket", 40, "bog_dala", "🫑");
+  add("Baqlajon urug'i", 55000, "paket", 40, "bog_dala", "🍆");
+  add("Karam urug'i", 45000, "paket", 50, "bog_dala", "🥬");
+  add("Kartoshka urug'i", 15000, "kg", 200, "bog_dala", "🥔");
+  add("Piyoz urug'i", 40000, "paket", 60, "bog_dala", "🧅");
+  add("Olma ko'chati", 65000, "dona", 100, "bog_dala", "🌳");
+  add("O'rik ko'chati", 55000, "dona", 80, "bog_dala", "🌳");
+  add("Uzum ko'chati", 45000, "dona", 120, "bog_dala", "🍇");
+  add("Atirgul ko'chati", 35000, "dona", 150, "bog_dala", "🌹");
+  add("O'g'it (Azot)", 95000, "qop", 50, "bog_dala", "🌱");
+  add("O'g'it (Fosfor)", 110000, "qop", 40, "bog_dala", "🌱");
+  add("O'g'it (Kaliy)", 125000, "qop", 35, "bog_dala", "🌱");
+  add("Gumus", 45000, "qop", 80, "bog_dala", "🌱");
+  add("Zahar (hasharotga)", 65000, "litr", 50, "bog_dala", "🧴");
+  add("Tomchilatib sug'orish", 350000, "komplekt", 20, "bog_dala", "💧");
+  
+  // Chorva (10 ta)
+  add("Sigir (sutli)", 12000000, "bosh", 3, "chorva", "🐄");
+  add("Sigir (go'shtli)", 15000000, "bosh", 2, "chorva", "🐄");
+  add("Buzoq", 5500000, "bosh", 5, "chorva", "🐄");
+  add("Qo'y (erkak)", 2200000, "bosh", 10, "chorva", "🐑");
+  add("Qo'y (urg'ochi)", 2800000, "bosh", 8, "chorva", "🐑");
+  add("Qo'zi", 1200000, "bosh", 15, "chorva", "🐑");
+  add("Echki", 2500000, "bosh", 8, "chorva", "🐐");
+  add("Ot", 25000000, "bosh", 1, "chorva", "🐎");
+  add("Eshak", 5500000, "bosh", 3, "chorva", "🫏");
+  add("Cho'chqa", 4500000, "bosh", 5, "chorva", "🐷");
+  
+  // Parranda (8 ta)
+  add("Tovuq (go'shtli)", 55000, "dona", 50, "parranda", "🐔");
+  add("Tovuq (tuxumli)", 75000, "dona", 30, "parranda", "🐔");
+  add("Jo'ja", 15000, "dona", 200, "parranda", "🐤");
+  add("O'rdak", 85000, "dona", 40, "parranda", "🦆");
+  add("G'oz", 180000, "dona", 20, "parranda", "🦢");
+  add("Kurka", 250000, "dona", 15, "parranda", "🦃");
+  add("Kabutar", 35000, "dona", 50, "parranda", "🕊️");
+  add("Tuxum (inkubatsiya)", 2500, "dona", 500, "parranda", "🥚");
+  
+  // Dori (15 ta)
+  add("Paracetamol", 8000, "paket", 200, "dori", "💊");
+  add("Aspirin", 9000, "paket", 150, "dori", "💊");
+  add("Ibuprofen", 15000, "paket", 100, "dori", "💊");
+  add("Analgin", 6000, "paket", 200, "dori", "💊");
+  add("Activated uglerod", 7000, "paket", 150, "dori", "💊");
+  add("Vitamin C", 12000, "paket", 100, "dori", "💊");
+  add("Vitamin D", 35000, "paket", 80, "dori", "💊");
+  add("Yod", 8000, "dona", 100, "dori", "💧");
+  add("Zelyonka", 5000, "dona", 150, "dori", "💧");
+  add("Bint", 8000, "dona", 200, "dori", "🩹");
+  add("Plastir", 5000, "paket", 300, "dori", "🩹");
+  add("Spirt 96%", 15000, "litr", 50, "dori", "🧴");
+  add("Shprits", 3000, "dona", 500, "dori", "💉");
+  add("Tonometer", 350000, "dona", 20, "dori", "🩺");
+  add("Termometr", 25000, "dona", 100, "dori", "🌡️");
+  
+  // Go'zallik (15 ta)
+  add("Krem (yuz)", 85000, "dona", 50, "gozallik", "🧴");
+  add("Krem (qo'l)", 35000, "dona", 80, "gozallik", "🧴");
+  add("Shampun", 45000, "dona", 100, "gozallik", "🧼");
+  add("Konditsioner", 55000, "dona", 60, "gozallik", "🧴");
+  add("Tish pastasi", 18000, "dona", 150, "gozallik", "🪥");
+  add("Tish cho'tkasi", 12000, "dona", 200, "gozallik", "🪥");
+  add("Sovun", 8000, "dona", 200, "gozallik", "🧼");
+  add("Atir (erkak)", 350000, "dona", 30, "gozallik", "💐");
+  add("Atir (ayol)", 450000, "dona", 25, "gozallik", "💐");
+  add("Lab bo'yog'i", 95000, "dona", 60, "gozallik", "💄");
+  add("Tirnoq bo'yog'i", 45000, "dona", 80, "gozallik", "💅");
+  add("Maskara", 65000, "dona", 50, "gozallik", "👁️");
+  add("Pudra", 85000, "dona", 40, "gozallik", "💄");
+  add("Dezodorant", 55000, "dona", 70, "gozallik", "🧴");
+  add("Soch geli", 35000, "dona", 80, "gozallik", "💈");
+  
+  // Sport (12 ta)
+  add("Gantel (juft 5kg)", 120000, "juft", 30, "sport", "🏋️");
+  add("Gantel (juft 10kg)", 220000, "juft", 20, "sport", "🏋️");
+  add("Shtanga", 850000, "dona", 10, "sport", "🏋️");
+  add("Futbol topi", 95000, "dona", 40, "sport", "⚽");
+  add("Basketbol topi", 120000, "dona", 25, "sport", "🏀");
+  add("Voleybol topi", 85000, "dona", 30, "sport", "🏐");
+  add("Tennis raketka", 220000, "juft", 20, "sport", "🎾");
+  add("Stol tennis raketka", 85000, "juft", 30, "sport", "🏓");
+  add("Yoga gilamchasi", 120000, "dona", 40, "sport", "🧘");
+  add("Sport kostyumi", 320000, "dona", 25, "sport", "🩳");
+  add("Krossovka sport", 420000, "juft", 20, "sport", "👟");
+  add("Sport sumkasi", 150000, "dona", 30, "sport", "🎒");
+  
+  // Kitob (12 ta)
+  add("Badiiy kitob (o'zbek)", 45000, "dona", 100, "kitob", "📖");
+  add("Bolalar kitobi", 35000, "dona", 80, "kitob", "📚");
+  add("Darslik (matematika)", 55000, "dona", 60, "kitob", "📖");
+  add("Darslik (ingliz tili)", 65000, "dona", 50, "kitob", "📖");
+  add("Darslik (fizika)", 55000, "dona", 40, "kitob", "📖");
+  add("Darslik (kimyo)", 55000, "dona", 40, "kitob", "📖");
+  add("Darslik (biologiya)", 55000, "dona", 40, "kitob", "📖");
+  add("Darslik (tarix)", 50000, "dona", 45, "kitob", "📖");
+  add("Qomus (lug'at)", 150000, "dona", 20, "kitob", "📖");
+  add("Daftar (12 varaq)", 3000, "dona", 500, "kitob", "📓");
+  add("Ruchka", 2000, "dona", 1000, "kitob", "🖊️");
+  add("Qalam to'plami", 25000, "to'plam", 100, "kitob", "✏️");
+  
+  // Kimyo (12 ta)
+  add("Kir kukuni 3kg", 42000, "qop", 100, "kimyo", "🧴");
+  add("Idish yuvish vositasi", 25000, "litr", 80, "kimyo", "🧴");
+  add("Pol yuvish vositasi", 35000, "litr", 60, "kimyo", "🧴");
+  add("Oyna tozalash", 28000, "litr", 70, "kimyo", "🧴");
+  add("Hojatxona tozalash", 32000, "litr", 60, "kimyo", "🧴");
+  add("Xlor", 15000, "litr", 100, "kimyo", "🧴");
+  add("Soda", 8000, "kg", 150, "kimyo", "🧴");
+  add("Sirka 9%", 6000, "litr", 200, "kimyo", "🧴");
+  add("Kraxmal", 12000, "kg", 80, "kimyo", "🧴");
+  add("Yelim (PVA)", 35000, "litr", 50, "kimyo", "🧴");
+  add("Skotch", 8000, "dona", 200, "kimyo", "📏");
+  add("Folga", 15000, "dona", 100, "kimyo", "📏");
+  
+  // Avto (12 ta)
+  add("Motor moyi 5L", 280000, "litr", 40, "avto", "🛢️");
+  add("Tormoz suyuqligi", 45000, "litr", 30, "avto", "🛢️");
+  add("Antifriz", 65000, "litr", 30, "avto", "🛢️");
+  add("Shina (R14)", 450000, "dona", 20, "avto", "🛞");
+  add("Shina (R15)", 550000, "dona", 15, "avto", "🛞");
+  add("Akkumulyator", 850000, "dona", 10, "avto", "🔋");
+  add("Chamg'ich", 15000, "dona", 50, "avto", "🧰");
+  add("Bolg'a (avto)", 55000, "dona", 30, "avto", "🔨");
+  add("Nasos (avto)", 180000, "dona", 20, "avto", "💨");
+  add("Yuvish vositasi (avto)", 45000, "litr", 40, "avto", "🧴");
+  add("Moy filtri", 35000, "dona", 60, "avto", "🔧");
+  add("Havo filtri", 45000, "dona", 50, "avto", "🔧");
+  
+  return arr;
+}
+
+function getSeedServices(){
+  var arr = {};
+  var i = 1;
+  function add(sub, name, spec, exp, price, rate, tel, ic){
+    arr["sv" + i] = {sub:sub, name:name, spec:spec, exp:exp, price:price, rate:rate, tel:tel, ic:ic};
+    i++;
+  }
+  // Santexnik
+  add("santexnik", "Qodirali Safarov", "Santexnik", "10 yil", 90000, 4.5, "+998915850487", "QS");
+  add("santexnik", "Sherzod Yusupov", "Santexnik", "8 yil", 85000, 4.7, "+998915850487", "SY");
+  add("santexnik", "Bekzod Nazarov", "Santexnik", "12 yil", 95000, 4.8, "+998915850487", "BN");
+  // Elektrik
+  add("elektrik", "Orol Mengliyev", "Elektrik", "11 yil", 100000, 4.8, "+998915850487", "OM");
+  add("elektrik", "Azamat Nurmatov", "Elektrik", "7 yil", 90000, 4.6, "+998915850487", "AN");
+  add("elektrik", "Ulugbek Toraxonov", "Elektrik", "15 yil", 120000, 4.9, "+998915850487", "UT");
+  // Duradgor
+  add("duradgor", "Safarali Xolboyev", "Duradgor", "14 yil", 120000, 4.6, "+998915850487", "SX");
+  add("duradgor", "Anvar Nurmatov", "Duradgor", "10 yil", 110000, 4.8, "+998915850487", "AN");
+  add("duradgor", "Orol Mengliyev", "Duradgor", "9 yil", 100000, 4.7, "+998915850487", "OM");
+  // Quruvchi
+  add("quruvchi", "Oybek Mamatrayimov", "Quruvchi", "15 yil", 110000, 4.9, "+998915850487", "OM");
+  add("quruvchi", "Akmal Nurmatov", "Quruvchi", "8 yil", 95000, 4.7, "+998915850487", "AK");
+  add("quruvchi", "Sardor Yusupov", "Quruvchi", "12 yil", 105000, 4.8, "+998915850487", "SY");
+  // Shifokor
+  add("shifokor", "Dr. Anvar Nurmatov", "Terapevt", "12 yil", 80000, 4.9, "+998915850487", "AN");
+  add("shifokor", "Dr. Malika Karimova", "Pediatr", "8 yil", 70000, 4.8, "+998915850487", "MK");
+  add("shifokor", "Dr. Bekzod Nazarov", "Kardiolog", "15 yil", 120000, 5.0, "+998915850487", "BN");
+  add("shifokor", "Dr. Dilnoza Alimova", "Ginekolog", "10 yil", 100000, 4.9, "+998915850487", "DA");
+  // Hamshira
+  add("hamshira", "Zulfiya Rahimova", "Hamshira", "5 yil", 50000, 4.8, "+998915850487", "ZR");
+  add("hamshira", "Nodira Ismailova", "Hamshira", "7 yil", 55000, 4.9, "+998915850487", "NI");
+  add("hamshira", "Madina Yusupova", "Hamshira", "6 yil", 52000, 4.7, "+998915850487", "MY");
+  // Veterinar
+  add("veterinar", "Dr. Bekzod Nazarov", "Veterinar", "7 yil", 90000, 4.7, "+998915850487", "BN");
+  add("veterinar", "Dr. Sardor Yusupov", "Veterinar", "10 yil", 100000, 4.8, "+998915850487", "SY");
+  add("veterinar", "Dr. Anvar Nurmatov", "Veterinar", "12 yil", 110000, 4.9, "+998915850487", "AN");
+  // Tish
+  add("tish", "Dr. Sardor Yusupov", "Stomatolog", "10 yil", 150000, 4.9, "+998915850487", "SY");
+  add("tish", "Dr. Malika Karimova", "Stomatolog", "8 yil", 130000, 4.8, "+998915850487", "MK");
+  add("tish", "Dr. Kamola Nazarova", "Ortodont", "12 yil", 180000, 5.0, "+998915850487", "KN");
+  // O'qituvchi
+  add("oqituvchi", "Dilnoza Alimova", "Matematika", "10 yil", 60000, 4.9, "+998915850487", "DA");
+  add("oqituvchi", "Sherzod Karimov", "Ingliz tili", "6 yil", 70000, 4.8, "+998915850487", "SK");
+  add("oqituvchi", "Kamola Nazarova", "Kimyo", "8 yil", 65000, 4.9, "+998915850487", "KN");
+  add("oqituvchi", "Aziz Rahimov", "Fizika", "7 yil", 62000, 4.7, "+998915850487", "AR");
+  add("oqituvchi", "Zebo Saidova", "Boshlang'ich sinf", "12 yil", 55000, 5.0, "+998915850487", "ZS");
+  // Repetitor
+  add("repetitor", "Kamola Nazarova", "Kimyo", "8 yil", 65000, 4.9, "+998915850487", "KN");
+  add("repetitor", "Aziz Rahimov", "Matematika", "6 yil", 75000, 4.7, "+998915850487", "AR");
+  add("repetitor", "Dilnoza Alimova", "Ingliz tili", "10 yil", 80000, 4.9, "+998915850487", "DA");
+  add("repetitor", "Sherzod Karimov", "Biologiya", "6 yil", 65000, 4.8, "+998915850487", "SK");
+  add("repetitor", "Nodira Ismailova", "Tarix", "12 yil", 70000, 4.9, "+998915850487", "NI");
+  // Tarbiyachi
+  add("tarbiyachi", "Zebo Saidova", "Bog'cha tarbiyachi", "12 yil", 50000, 5.0, "+998915850487", "ZS");
+  add("tarbiyachi", "Nodira Ismailova", "Bog'cha tarbiyachi", "8 yil", 48000, 4.8, "+998915850487", "NI");
+  add("tarbiyachi", "Madina Yusupova", "Bog'cha tarbiyachi", "6 yil", 45000, 4.7, "+998915850487", "MY");
+  // Murabbiy
+  add("murabbiy", "Jasur Bekov", "Futbol murabbiy", "9 yil", 80000, 4.8, "+998915850487", "JB");
+  add("murabbiy", "Ulugbek Xolmatov", "Boks murabbiy", "10 yil", 90000, 4.9, "+998915850487", "UX");
+  add("murabbiy", "Lola Ibragimova", "Yoga murabbiy", "7 yil", 70000, 4.9, "+998915850487", "LI");
+  // Hisobchi
+  add("hisobchi", "Nodira Ismailova", "Buxgalter", "15 yil", 200000, 5.0, "+998915850487", "NI");
+  add("hisobchi", "Kamola Nazarova", "Buxgalter", "10 yil", 150000, 4.9, "+998915850487", "KN");
+  add("hisobchi", "Zebo Saidova", "Buxgalter", "8 yil", 130000, 4.8, "+998915850487", "ZS");
+  // Advokat
+  add("advokat", "Rustam Toshmatov", "Yurist", "12 yil", 300000, 4.9, "+998915850487", "RT");
+  add("advokat", "Aziz Rahimov", "Advokat", "10 yil", 350000, 4.8, "+998915850487", "AR");
+  add("advokat", "Nodira Ismailova", "Notarius", "15 yil", 250000, 5.0, "+998915850487", "NI");
+  // Dasturchi
+  add("dasturchi", "Aziz Rahimov", "Web dasturchi", "6 yil", 250000, 4.7, "+998915850487", "AR");
+  add("dasturchi", "Sherzod Karimov", "Mobil dasturchi", "5 yil", 280000, 4.8, "+998915850487", "SK");
+  add("dasturchi", "Ulugbek Xolmatov", "Dizayner", "7 yil", 220000, 4.9, "+998915850487", "UX");
+  // Sartarosh
+  add("sartarosh", "Sanjar Umarov", "Sartarosh", "8 yil", 50000, 4.9, "+998915850487", "SU");
+  add("sartarosh", "Azamat Nurmatov", "Sartarosh", "6 yil", 45000, 4.7, "+998915850487", "AN");
+  add("sartarosh", "Orol Mengliyev", "Sartarosh", "10 yil", 55000, 4.8, "+998915850487", "OM");
+  // Kosmetolog
+  add("kosmetolog", "Madina Yusupova", "Kosmetolog", "10 yil", 120000, 4.8, "+998915850487", "MY");
+  add("kosmetolog", "Lola Ibragimova", "Kosmetolog", "7 yil", 100000, 4.9, "+998915850487", "LI");
+  add("kosmetolog", "Malika Karimova", "Kosmetolog", "8 yil", 110000, 4.8, "+998915850487", "MK");
+  // Massaj
+  add("massaj", "Lola Ibragimova", "Massajchi", "7 yil", 80000, 4.9, "+998915850487", "LI");
+  add("massaj", "Madina Yusupova", "Massajchi", "10 yil", 90000, 4.8, "+998915850487", "MY");
+  add("massaj", "Zulfiya Rahimova", "Massajchi", "5 yil", 70000, 4.7, "+998915850487", "ZR");
+  // Suratkash
+  add("suratkash", "Ulugbek Xolmatov", "Suratkash", "9 yil", 500000, 4.8, "+998915850487", "UX");
+  add("suratkash", "Aziz Rahimov", "Videograf", "6 yil", 600000, 4.7, "+998915850487", "AR");
+  add("suratkash", "Sherzod Karimov", "To'y suratkash", "8 yil", 800000, 4.9, "+998915850487", "SK");
+  // Bog'bon
+  add("bogbon", "Ergash To'rayev", "Bog'bon", "20 yil", 70000, 5.0, "+998915850487", "ET");
+  add("bogbon", "Anvar Nurmatov", "Bog'bon", "12 yil", 65000, 4.8, "+998915850487", "AN");
+  add("bogbon", "Bekzod Nazarov", "Landshaft dizayner", "10 yil", 100000, 4.9, "+998915850487", "BN");
+  
+  return arr;
+}
+
+// ============ STATE ============
+var S = {
+  user: null,
+  view: "home",
+  cat: null,
+  sub: null,
+  query: "",
+  cart: LS.load("rayis_cart") || [],
+  products: {},
+  services: {},
+  orders: {},
+  loading: true,
+  online: true
+};
+
+// Eski S.user ni tozalash (icon bo'lmasa)
+var savedUser = LS.load("rayis_user");
+if(savedUser && savedUser.icon && savedUser.role){
+  S.user = savedUser;
+} else {
+  LS.del("rayis_user");
+  S.user = null;
+}
+
+function saveCart(){ LS.save("rayis_cart", S.cart); }
+function saveUser(){ if(S.user) LS.save("rayis_user", S.user); else LS.del("rayis_user"); }
+
+function fmt(n){ return Math.round(n).toLocaleString("ru-RU").replace(/,/g," ") + " so'm"; }
+function toast(m){
+  var t = document.getElementById("toast");
+  t.textContent = m; t.classList.add("on");
+  setTimeout(function(){ t.classList.remove("on"); }, 2000);
+}
+function findCat(id){ for(var i=0;i<CATS.length;i++) if(CATS[i].id===id) return CATS[i]; return null; }
+function findSub(catId, subId){
+  var c = findCat(catId); if(!c) return null;
+  for(var i=0;i<c.subs.length;i++) if(c.subs[i].id===subId) return c.subs[i];
+  return null;
+}
+function findProduct(id){ return S.products[id] || null; }
+function objToArr(obj){
+  var arr = [];
+  for(var k in obj) if(obj.hasOwnProperty(k)){
+    var item = obj[k]; if(item && typeof item === "object"){ item._id = k; arr.push(item); }
+  }
+  return arr;
+}
+
+// ============ FIREBASE SYNC ============
+function loadAll(){
+  Promise.all([FB.get("/products"), FB.get("/services"), FB.get("/orders")])
+    .then(function(r){
+      var p = r[0] || {}; var s = r[1] || {}; var o = r[2] || {};
+      if(Object.keys(p).length === 0){
+        // Bo'sh — demo yuklash taklif qilamiz
+        S.products = {};
+        S.services = Object.keys(s).length > 0 ? s : {};
+        S.orders = o;
+        S.loading = false;
+        S.online = true;
+        render();
+        setTimeout(function(){
+          if(confirm("Firebase bazasi bo'sh. Demo ma'lumotlarni yuklashni xohlaysizmi?\n\n200+ mahsulot va 63 xizmat qo'shiladi.")){
+            loadDemoData();
+          }
+        }, 500);
+      } else {
+        S.products = p;
+        S.services = Object.keys(s).length > 0 ? s : getSeedServices();
+        S.orders = o;
+        S.loading = false;
+        S.online = true;
+        render();
+      }
+    })
+    .catch(function(e){
+      console.log("Firebase xato:", e);
+      S.online = false;
+      var lp = LS.load("rayis_products_v2") || {};
+      var ls2 = LS.load("rayis_services_v2") || {};
+      var lo = LS.load("rayis_orders_v2") || {};
+      S.products = lp; S.services = ls2; S.orders = lo;
+      S.loading = false;
+      render();
+    });
+}
+
+function loadDemoData(){
+  toast("⏳ Demo yuklanmoqda...");
+  var seedP = getSeedProducts();
+  var seedS = getSeedServices();
+  Promise.all([FB.put("/products", seedP), FB.put("/services", seedS)])
+    .then(function(){
+      S.products = seedP;
+      S.services = seedS;
+      toast("✅ Demo yuklandi!");
+      render();
+    })
+    .catch(function(e){
+      console.log("Demo xato:", e);
+      toast("❌ Yuklashda xato");
+    });
+}
+
+// Real-time polling
+function startPolling(){
+  setInterval(function(){
+    Promise.all([FB.get("/products"), FB.get("/orders"), FB.get("/services")])
+      .then(function(r){
+        var p = r[0] || {}; var o = r[1] || {}; var s = r[2] || {};
+        var pCh = JSON.stringify(p) !== JSON.stringify(S.products);
+        var oCh = JSON.stringify(o) !== JSON.stringify(S.orders);
+        var sCh = JSON.stringify(s) !== JSON.stringify(S.services);
+        if(pCh || oCh || sCh){
+          S.products = p; S.orders = o; S.services = s;
+          S.online = true;
+          if(S.view !== "home" || S.cat || S.sub) render();
+        }
+      })
+      .catch(function(){ S.online = false; });
+  }, 3000);
+}
+
+function fbSaveProduct(id, data){ var up = {}; up[id] = data; FB.patch("/products", up).catch(function(){ toast("Saqlash xato"); }); }
+function fbDeleteProduct(id){ FB.del("/products/" + id).catch(function(){ toast("O'chirish xato"); }); }
+function fbUpdateOrder(id, data){ FB.patch("/orders/" + id, data).catch(function(){ toast("Xato"); }); }
+
+// ============ STAFF LOGIN ============
+function staffLogin(){
+  document.getElementById("modalBox").innerHTML =
+    '<button class="modal-close" onclick="closeModal()">✕ Yopish</button>' +
+    '<div class="modal-h">👔 Xodim kirishi</div>' +
+    '<label class="label">4 xonali kod</label>' +
+    '<input class="input" id="staff_code" type="tel" maxlength="4" placeholder="0000" style="text-align:center;font-size:24px;letter-spacing:8px;font-weight:900">' +
+    '<button class="btn" onclick="doStaffLogin()">Kirish</button>' +
+    '<div style="color:#8E9AAF;font-size:11px;margin-top:12px;text-align:center;line-height:1.8">' +
+    '👑 1111 Xo\'jayin · 🔑 2222 Admin 1<br>⚙️ 2223 Admin · 💼 3333 Boshqaruvchi<br>' +
+    '👁️ 3334 Nazoratchi · 🏪 4444 Sotuvchi<br>📦 5555 Omborchi · 🚚 6666 Yetkazuvchi<br>🏍️ 7777 Kuryer</div>';
+  document.getElementById("modal").classList.add("on");
+  setTimeout(function(){ var e=document.getElementById("staff_code"); if(e) e.focus(); }, 100);
+}
+function doStaffLogin(){
+  var code = (document.getElementById("staff_code").value || "").trim();
+  var staff = findStaff(code);
+  if(!staff){ toast("❌ Kod noto'g'ri"); return; }
+  S.user = { role: staff.role, icon: staff.icon, level: staff.level, code: staff.code };
+  saveUser(); closeModal();
+  toast("✅ " + staff.role);
+  if(staff.level <= 3) S.view = "admin";
+  else if(staff.role === "Sotuvchi") S.view = "seller";
+  else if(staff.role === "Omborchi") S.view = "warehouse";
+  else if(staff.role === "Yetkazib beruvchi" || staff.role === "Kuryer") S.view = "delivery";
+  else S.view = "home";
+  S.cat = null; S.sub = null;
+  render();
+}
+function staffLogout(){ S.user = null; saveUser(); S.view = "home"; S.cat = null; S.sub = null; toast("Chiqdingiz"); render(); }
+
+// ============ HEADER ============
+function header(){
+  var cc = 0;
+  for(var i=0;i<S.cart.length;i++) cc += S.cart[i].qty;
+  var h = '<div class="header">';
+  if(S.cat || S.sub || (S.view !== "home" && S.view !== "market")) h += '<button class="back-btn" onclick="goBack()">←</button>';
+  h += '<div class="logo-r">R</div><div class="logo-t">RAYIS</div>';
+  h += '<div style="display:flex;gap:6px;margin-left:auto">';
+  if(S.user) h += '<button class="staff-btn" onclick="staffLogout()">' + S.user.icon + ' ' + S.user.role + '</button>';
+  else h += '<button class="staff-btn" onclick="staffLogin()">👔 Xodim</button>';
+  h += '<button class="cart-btn" onclick="openCart()">🛒<span class="cart-count">' + cc + '</span></button>';
+  h += '</div></div>';
+  return h;
+}
+function goBack(){
+  if(S.sub){ S.sub = null; render(); return; }
+  if(S.cat){ S.cat = null; render(); return; }
+  S.view = "home"; render();
+}
+
+// ============ HOME ============
+function renderHome(){
+  var h = header();
+  h += '<div class="hero"><div class="hero-title">RAYIS BOZORI</div><div class="hero-sub">Hayotingiz uchun barcha narsa — bir joyda</div></div>';
+  h += '<div class="status-bar"><span class="status-dot"></span>' + (S.online ? "Real-time ulanish faol" : "Oflayn rejim") + '</div>';
+  h += '<input class="search" placeholder="🔍 Mahsulot yoki xizmat..." oninput="S.query=this.value;render()" value="' + (S.query||"") + '">';
+  
+  if(S.query){ h += renderSearchResults(); h += navBar(); document.getElementById("app").innerHTML = h; return; }
+  
+  h += '<div class="sec-t">📚 Asosiy bo\'limlar <small>' + CATS.length + ' ta</small></div>';
+  h += '<div class="big-grid">';
+  for(var i=0;i<CATS.length;i++){
+    var c = CATS[i];
+    h += '<div class="big-card" onclick="openCat(\'' + c.id + '\')"><span class="ic">' + c.icon + '</span><div class="nm">' + c.name + '</div><div class="ds">' + c.desc + '</div></div>';
+  }
+  h += '</div>';
+  
+  var srvArr = objToArr(S.services);
+  h += '<div class="sec-t">⭐️ Mashhur xizmatlar</div>';
+  var pop = srvArr.slice(0, 4);
+  for(var j=0;j<pop.length;j++) h += serviceCard(pop[j]);
+  
+  h += navBar();
+  document.getElementById("app").innerHTML = h;
+}
+
+function renderSearchResults(){
+  var q = (S.query || "").toLowerCase();
+  var prods = [], srvs = [];
+  var pArr = objToArr(S.products);
+  var sArr = objToArr(S.services);
+  for(var i=0;i<pArr.length;i++) if((pArr[i].name||"").toLowerCase().indexOf(q) !== -1) prods.push(pArr[i]);
+  for(var j=0;j<sArr.length;j++) if((sArr[j].name||"").toLowerCase().indexOf(q) !== -1 || (sArr[j].spec||"").toLowerCase().indexOf(q) !== -1) srvs.push(sArr[j]);
+  var h = '<div class="sec-t">🔍 Natija: "' + S.query + '"</div>';
+  if(prods.length === 0 && srvs.length === 0) return h + '<div class="empty">Hech narsa topilmadi</div>';
+  if(prods.length){
+    h += '<div class="sec-t">Mahsulotlar (' + prods.length + ')</div><div class="prod-grid">';
+    for(var k=0;k<prods.length;k++) h += productCard(prods[k]);
+    h += '</div>';
+  }
+  if(srvs.length){
+    h += '<div class="sec-t">Xizmatlar (' + srvs.length + ')</div>';
+    for(var m=0;m<srvs.length;m++) h += serviceCard(srvs[m]);
+  }
+  return h;
+}
+function openCat(id){ S.cat = id; S.sub = null; S.query = ""; render(); }
+function openSub(catId, subId){ S.sub = subId; render(); }
+
+// ============ CATEGORY ============
+function renderCategory(){
+  var c = findCat(S.cat);
+  if(!c){ S.cat = null; render(); return; }
+  var h = header();
+  h += '<div class="hero" style="padding:16px"><div class="hero-title" style="font-size:18px">' + c.icon + ' ' + c.name + '</div><div class="hero-sub">' + c.desc + '</div></div>';
+  
+  if(c.subs.length === 0){
+    if(c.id === "kalkulyator"){
+      h += '<div class="empty">🏗️ Qurilish kalkulyatori<br><small style="color:#5FE898">Keyingi bosqichda</small></div>';
+    } else if(c.id === "ustalar"){
+      h += '<div class="sec-t">👷 Ustalar brigadasi</div>';
+      var sArr = objToArr(S.services);
+      var found = 0;
+      for(var i=0;i<sArr.length;i++){
+        var sb = sArr[i].sub;
+        if(sb==="quruvchi" || sb==="santexnik" || sb==="elektrik" || sb==="duradgor"){ h += serviceCard(sArr[i]); found++; }
+      }
+      if(found === 0) h += '<div class="empty">Hozircha usta yo\'q</div>';
+    }
+  } else {
+    h += '<div class="sec-t">Bo\'limlar <small>' + c.subs.length + ' ta</small></div>';
+    h += '<div class="sub-grid">';
+    for(var j=0;j<c.subs.length;j++){
+      var s = c.subs[j];
+      h += '<div class="sub-card" onclick="openSub(\'' + c.id + '\',\'' + s.id + '\')"><span class="ic">' + s.icon + '</span><div class="nm">' + s.name + '</div></div>';
+    }
+    h += '</div>';
+  }
+  h += navBar();
+  document.getElementById("app").innerHTML = h;
+}
+
+// ============ SUB ============
+function renderSub(){
+  var c = findCat(S.cat);
+  var s = findSub(S.cat, S.sub);
+  if(!c || !s){ S.sub = null; renderCategory(); return; }
+  var h = header();
+  h += '<div class="hero" style="padding:14px"><div class="hero-title" style="font-size:16px">' + s.icon + ' ' + s.name + '</div></div>';
+  
+  var pArr = objToArr(S.products);
+  var sArr = objToArr(S.services);
+  var prods = [], srvs = [];
+  for(var i=0;i<pArr.length;i++) if(pArr[i].sub === s.id) prods.push(pArr[i]);
+  for(var j=0;j<sArr.length;j++) if(sArr[j].sub === s.id) srvs.push(sArr[j]);
+  
+  if(prods.length === 0 && srvs.length === 0){
+    h += '<div class="empty">Bu bo\'limda hozircha e\'lon yo\'q</div>';
+  } else {
+    if(prods.length){
+      h += '<div class="sec-t">🛒 Mahsulotlar (' + prods.length + ')</div><div class="prod-grid">';
+      for(var k=0;k<prods.length;k++) h += productCard(prods[k]);
+      h += '</div>';
+    }
+    if(srvs.length){
+      h += '<div class="sec-t">👤 Mutaxassislar (' + srvs.length + ')</div>';
+      for(var m=0;m<srvs.length;m++) h += serviceCard(srvs[m]);
+    }
+  }
+  h += navBar();
+  document.getElementById("app").innerHTML = h;
+}
+
+// ============ CARDS ============
+function productCard(p){
+  var id = p._id;
+  return '<div class="card" onclick="openProduct(\'' + id + '\')">' +
+    '<div class="card-img">' + p.e + '</div>' +
+    '<div class="card-name">' + p.name + '</div>' +
+    '<div class="card-price">' + fmt(p.price) + '</div>' +
+    '<div class="card-stock">' + p.unit + ' · ' + p.stock + ' ta</div>' +
+    '<button class="card-btn" onclick="event.stopPropagation();addToCart(\'' + id + '\')" ' + (p.stock === 0 ? 'disabled' : '') + '>' + (p.stock === 0 ? 'Tugagan' : 'Savatga') + '</button></div>';
+}
+function serviceCard(s){
+  return '<div class="srv-card"><div class="srv-av">' + (s.ic || "?") + '</div>' +
+    '<div class="srv-info"><div class="srv-n">' + s.name + '</div>' +
+    '<div class="srv-s">' + s.spec + ' · ' + s.exp + '</div>' +
+    '<div class="srv-r">★ ' + s.rate + '</div>' +
+    '<div class="srv-p">' + fmt(s.price) + ' / kun</div></div>' +
+    '<a href="tel:' + s.tel + '" class="srv-call">📞 Chaqirish</a></div>';
+}
+
+// ============ PRODUCT MODAL ============
+function openProduct(id){
+  var p = findProduct(id); if(!p) return;
+  var h = '<button class="modal-close" onclick="closeModal()">✕ Yopish</button>';
+  h += '<div style="text-align:center;font-size:72px;margin-bottom:14px">' + p.e + '</div>';
+  h += '<div class="modal-h">' + p.name + '</div>';
+  h += '<div style="font-size:24px;font-weight:900;color:#2ECC71;margin-bottom:14px">' + fmt(p.price) + '</div>';
+  h += '<div style="background:rgba(0,0,0,0.3);padding:12px;border-radius:12px;font-size:12px;color:#CBD5E6;line-height:1.6;margin-bottom:14px">';
+  h += '<div><b style="color:#5FE898">Birlik:</b> ' + p.unit + '</div>';
+  h += '<div><b style="color:#5FE898">Qoldiq:</b> ' + p.stock + ' ta</div></div>';
+  h += '<button class="btn" onclick="addToCart(\'' + id + '\');closeModal()" ' + (p.stock === 0 ? 'disabled' : '') + '>Savatga qo\'shish</button>';
+  document.getElementById("modalBox").innerHTML = h;
+  document.getElementById("modal").classList.add("on");
+}
+function closeModal(){ document.getElementById("modal").classList.remove("on"); }
+
+// ============ CART ============
+function addToCart(id){
+  var p = findProduct(id); if(!p || p.stock === 0) return;
+  var found = false;
+  for(var i=0;i<S.cart.length;i++){
+    if(S.cart[i].id === id){
+      if(S.cart[i].qty >= p.stock){ toast("Faqat " + p.stock + " ta"); return; }
+      S.cart[i].qty++; found = true; break;
+    }
+  }
+  if(!found) S.cart.push({id:id, qty:1});
+  saveCart(); toast("✅ Savatga qo'shildi"); render();
+}
+function openCart(){
+  if(S.cart.length === 0){
+    document.getElementById("modalBox").innerHTML = '<button class="modal-close" onclick="closeModal()">✕ Yopish</button><div class="empty">Savat bo\'sh</div>';
+    document.getElementById("modal").classList.add("on"); return;
+  }
+  var total = 0;
+  var h = '<button class="modal-close" onclick="closeModal()">✕ Yopish</button><div class="modal-h">🛒 Savat</div>';
+  for(var i=0;i<S.cart.length;i++){
+    var c = S.cart[i]; var p = findProduct(c.id); if(!p) continue;
+    total += p.price * c.qty;
+    h += '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05)">' +
+         '<div style="font-size:26px">' + p.e + '</div>' +
+         '<div style="flex:1"><div style="font-size:13px;font-weight:600">' + p.name + '</div>' +
+         '<div style="font-size:11px;color:#2ECC71;font-weight:700">' + fmt(p.price) + '</div></div>' +
+         '<button style="width:32px;height:32px;background:rgba(46,204,113,0.15);border:1px solid rgba(46,204,113,0.4);color:#2ECC71;border-radius:8px;font-size:16px;cursor:pointer" onclick="changeQty(\'' + c.id + '\',-1)">−</button>' +
+         '<span style="min-width:24px;text-align:center;font-weight:700">' + c.qty + '</span>' +
+         '<button style="width:32px;height:32px;background:rgba(46,204,113,0.15);border:1px solid rgba(46,204,113,0.4);color:#2ECC71;border-radius:8px;font-size:16px;cursor:pointer" onclick="changeQty(\'' + c.id + '\',1)">+</button></div>';
+  }
+  h += '<div style="display:flex;justify-content:space-between;padding:14px 0;font-size:18px;font-weight:900;color:#2ECC71"><span>Jami:</span><span>' + fmt(total) + '</span></div>';
+  h += '<button class="btn" onclick="openCheckout()">Buyurtma berish</button>';
+  document.getElementById("modalBox").innerHTML = h;
+  document.getElementById("modal").classList.add("on");
+}
+function changeQty(id, d){
+  for(var i=0;i<S.cart.length;i++){
+    if(S.cart[i].id === id){
+      S.cart[i].qty += d;
+      if(S.cart[i].qty <= 0) S.cart.splice(i,1);
+      break;
+    }
+  }
+  saveCart(); render(); openCart();
+}
+function openCheckout(){
+  var h = '<button class="modal-close" onclick="closeModal()">✕ Yopish</button><div class="modal-h">Buyurtma berish</div>';
+  h += '<label class="label">Ism *</label><input class="input" id="ck_name" placeholder="Ismingiz">';
+  h += '<label class="label">Telefon *</label><input class="input" id="ck_phone" placeholder="+998 91 585 04 87">';
+  h += '<label class="label">Manzil</label><input class="input" id="ck_addr" placeholder="Qumqorgon">';
+  h += '<label class="label">To\'lov</label><select class="input" id="ck_pay"><option>Naqd pul</option><option>Karta</option><option>Click</option><option>Payme</option></select>';
+  h += '<button class="btn" onclick="placeOrder()">Buyurtmani tasdiqlash</button>';
+  document.getElementById("modalBox").innerHTML = h;
+}
+function placeOrder(){
+  var name = document.getElementById("ck_name").value.trim();
+  var phone = document.getElementById("ck_phone").value.trim();
+  var addr = document.getElementById("ck_addr").value.trim();
+  var pay = document.getElementById("ck_pay").value;
+  if(!name || !phone){ toast("Ism va telefon kiriting"); return; }
+  var items = [], total = 0;
+  var stockUpdates = {};
+  for(var i=0;i<S.cart.length;i++){
+    var c = S.cart[i]; var p = findProduct(c.id); if(!p) continue;
+    items.push({name:p.name, qty:c.qty, price:p.price});
+    total += p.price * c.qty;
+    p.stock = Math.max(0, p.stock - c.qty);
+    stockUpdates[c.id] = p;
+  }
+  var orderId = "ORD-" + Date.now().toString().slice(-6);
+  var order = { items:items, total:total, name:name, phone:phone, address:addr, payment:pay, status:"Yangi", date:new Date().toISOString().slice(0,10), timestamp:Date.now() };
+  
+  var upOrder = {}; upOrder[orderId] = order;
+  var upProds = {};
+  for(var pid in stockUpdates){ upProds[pid] = {name:stockUpdates[pid].name, price:stockUpdates[pid].price, unit:stockUpdates[pid].unit, stock:stockUpdates[pid].stock, sub:stockUpdates[pid].sub, e:stockUpdates[pid].e}; }
+  
+  Promise.all([FB.patch("/orders", upOrder), FB.patch("/products", upProds)]).then(function(){
+    S.orders[orderId] = order;
+    S.cart = []; saveCart();
+    closeModal();
+    toast("✅ Buyurtma qabul qilindi!");
+    S.view = "orders"; render();
+  }).catch(function(){
+    S.orders[orderId] = order;
+    S.cart = []; saveCart();
+    LS.save("rayis_orders_v2", S.orders);
+    closeModal();
+    toast("Saqlandi (oflayn)");
+    S.view = "orders"; render();
+  });
+}
+
+// ============ ORDERS ============
+function renderOrders(){
+  var h = header();
+  var ordersArr = objToArr(S.orders).sort(function(a,b){ return (b.timestamp||0)-(a.timestamp||0); });
+  h += '<div class="sec-t">📋 Buyurtmalarim (' + ordersArr.length + ')</div>';
+  if(ordersArr.length === 0) h += '<div class="empty">Hozircha buyurtma yo\'q</div>';
+  else for(var i=0;i<ordersArr.length;i++){
+    var o = ordersArr[i];
+    var isDone = o.status === "Yakunlandi";
+    h += '<div class="order ' + (isDone ? "done" : "") + '"><div class="order-num">#' + o._id + '<span class="badge ' + (isDone ? "done" : "") + '">' + o.status + '</span></div><div class="order-info">';
+    for(var j=0;j<o.items.length;j++) h += o.items[j].name + ' × ' + o.items[j].qty + '<br>';
+    h += '</div><div class="order-info" style="margin-top:4px">📅 ' + o.date + ' · 📞 ' + o.phone + '</div><div class="order-price">' + fmt(o.total) + '</div></div>';
+  }
+  h += navBar();
+  document.getElementById("app").innerHTML = h;
+}
+
+// ============ ADMIN ============
+function renderAdmin(){
+  var h = header();
+  var ordersArr = objToArr(S.orders);
+  var total = 0;
+  for(var i=0;i<ordersArr.length;i++) total += ordersArr[i].total || 0;
+  var pCount = Object.keys(S.products).length;
+  var sCount = Object.keys(S.services).length;
+  h += '<div class="sec-t">' + S.user.icon + ' ' + S.user.role + '</div>';
+  h += '<div class="big-grid">' +
+       '<div class="big-card"><span class="ic">📦</span><div class="nm">' + pCount + '</div><div class="ds">Mahsulotlar</div></div>' +
+       '<div class="big-card"><span class="ic">📋</span><div class="nm">' + ordersArr.length + '</div><div class="ds">Buyurtmalar</div></div>' +
+       '<div class="big-card"><span class="ic">👥</span><div class="nm">' + sCount + '</div><div class="ds">Xizmatlar</div></div>' +
+       '<div class="big-card"><span class="ic">💰</span><div class="nm">' + fmt(total) + '</div><div class="ds">Tushum</div></div>' +
+       '</div>';
+  
+  // Demo yuklash tugmasi (faqat bosh adminlar uchun)
+  if(S.user.level <= 2){
+    h += '<div class="sec-t">🛠 Boshqaruv</div>';
+    h += '<button class="btn btn-warn" onclick="if(confirm(\'Demo ma\\'lumotlarni qayta yuklash?\'))loadDemoData()">🌱 Demo ma\'lumot yuklash</button>';
+    h += '<button class="btn btn-red" style="margin-top:8px" onclick="if(confirm(\'Barcha mahsulot va xizmatlarni o\\'chirish?\'))clearAll()">🗑 Hammasini o\'chirish</button>';
+  }
+  
+  h += '<div class="sec-t">📋 So\'nggi buyurtmalar</div>';
+  ordersArr.sort(function(a,b){ return (b.timestamp||0)-(a.timestamp||0); });
+  if(ordersArr.length === 0) h += '<div class="empty">Buyurtma yo\'q</div>';
+  else for(var j=0;j<ordersArr.length && j<10;j++){
+    var o = ordersArr[j];
+    h += '<div class="order"><div class="order-num">#' + o._id + '<span class="badge">' + o.status + '</span></div>' +
+         '<div class="order-info">👤 ' + o.name + ' · 📞 ' + o.phone + '</div>' +
+         '<div class="order-price">' + fmt(o.total) + '</div></div>';
+  }
+  h += navBar();
+  document.getElementById("app").innerHTML = h;
+}
+
+function clearAll(){
+  Promise.all([FB.put("/products", {}), FB.put("/services", {}), FB.put("/orders", {})])
+    .then(function(){
+      S.products = {}; S.services = {}; S.orders = {};
+      toast("✅ Tozalandi"); render();
+    }).catch(function(){ toast("❌ Xato"); });
+}
+
+// ============ SELLER ============
+function renderSeller(){
+  var h = header();
+  var pCount = Object.keys(S.products).length;
+  h += '<div class="sec-t">🏪 Sotuvchi paneli</div>';
+  h += '<div class="big-card" style="margin-bottom:12px"><span class="ic">📦</span><div class="nm">' + pCount + ' ta mahsulot</div></div>';
+  h += '<div class="sec-t">Yangi mahsulot qo\'shish</div>';
+  h += '<div style="background:#12192D;border-radius:14px;padding:14px;border:1px solid rgba(46,204,113,0.2)">';
+  h += '<label class="label">Nomi</label><input class="input" id="sp_name">';
+  h += '<label class="label">Narxi</label><input class="input" id="sp_price" type="number">';
+  h += '<label class="label">Birlik</label><input class="input" id="sp_unit" value="dona">';
+  h += '<label class="label">Qoldiq</label><input class="input" id="sp_stock" type="number" value="10">';
+  h += '<label class="label">Bo\'lim</label><select class="input" id="sp_sub">';
+  for(var i=0;i<CATS.length;i++){
+    var c = CATS[i];
+    for(var j=0;j<c.subs.length;j++) h += '<option value="' + c.subs[j].id + '">' + c.name + ' → ' + c.subs[j].name + '</option>';
+  }
+  h += '</select><button class="btn" onclick="addProduct()">Qo\'shish</button></div>';
+  
+  h += '<div class="sec-t">Mahsulotlarim</div>';
+  var pArr = objToArr(S.products);
+  for(var k=0;k<pArr.length;k++){
+    var p = pArr[k];
+    h += '<div style="background:#12192D;border-radius:12px;padding:10px;margin-bottom:6px;display:flex;align-items:center;gap:10px">' +
+         '<div style="font-size:22px">' + p.e + '</div>' +
+         '<div style="flex:1"><div style="font-size:12px;font-weight:600">' + p.name + '</div>' +
+         '<div style="font-size:11px;color:#2ECC71">' + fmt(p.price) + ' · ' + p.stock + ' ta</div></div>' +
+         '<button style="background:rgba(231,76,60,0.3);border:none;color:#fff;padding:5px 10px;border-radius:8px;font-size:11px;cursor:pointer" onclick="delProduct(\'' + p._id + '\')">O\'chir</button></div>';
+  }
+  h += navBar();
+  document.getElementById("app").innerHTML = h;
+}
+function addProduct(){
+  var n = document.getElementById("sp_name").value.trim();
+  var pr = parseFloat(document.getElementById("sp_price").value);
+  var u = document.getElementById("sp_unit").value.trim() || "dona";
+  var st = parseInt(document.getElementById("sp_stock").value) || 0;
+  var sub = document.getElementById("sp_sub").value;
+  if(!n || !pr){ toast("Nom va narx kerak"); return; }
+  var id = "p" + Date.now();
+  var data = {name:n, price:pr, unit:u, stock:st, sub:sub, e:"📦"};
+  S.products[id] = data;
+  fbSaveProduct(id, data);
+  toast("✅ Qo'shildi"); render();
+}
+function delProduct(id){
+  if(!confirm("O'chirishni tasdiqlaysizmi?")) return;
+  delete S.products[id]; fbDeleteProduct(id);
+  toast("O'chirildi"); render();
+}
+
+// ============ WAREHOUSE ============
+function renderWarehouse(){
+  var h = header();
+  var pArr = objToArr(S.products);
+  var total = 0;
+  for(var i=0;i<pArr.length;i++) total += pArr[i].stock || 0;
+  h += '<div class="sec-t">📦 Omborchi paneli</div>';
+  h += '<div class="big-grid">' +
+       '<div class="big-card"><span class="ic">📦</span><div class="nm">' + pArr.length + '</div><div class="ds">Xil mahsulot</div></div>' +
+       '<div class="big-card"><span class="ic">🔢</span><div class="nm">' + total + '</div><div class="ds">Jami dona</div></div></div>';
+  h += '<div class="sec-t">Qoldiqlar</div>';
+  for(var j=0;j<pArr.length;j++){
+    var p = pArr[j];
+    h += '<div style="background:#12192D;border-radius:12px;padding:10px;margin-bottom:6px;display:flex;align-items:center;gap:10px">' +
+         '<div style="font-size:22px">' + p.e + '</div>' +
+         '<div style="flex:1"><div style="font-size:12px;font-weight:600">' + p.name + '</div>' +
+         '<div style="font-size:11px;color:' + (p.stock < 5 ? '#F5B041' : '#2ECC71') + '">Qoldiq: ' + p.stock + ' ' + p.unit + '</div></div></div>';
+  }
+  h += navBar();
+  document.getElementById("app").innerHTML = h;
+}
+
+// ============ DELIVERY ============
+function renderDelivery(){
+  var h = header();
+  var ordersArr = objToArr(S.orders).filter(function(o){ return o.status !== "Yakunlandi"; });
+  ordersArr.sort(function(a,b){ return (a.timestamp||0)-(b.timestamp||0); });
+  h += '<div class="sec-t">' + S.user.icon + ' ' + S.user.role + '</div>';
+  if(ordersArr.length === 0) h += '<div class="empty">Buyurtma yo\'q</div>';
+  else for(var i=0;i<ordersArr.length;i++){
+    var o = ordersArr[i];
+    h += '<div class="order"><div class="order-num">#' + o._id + '<span class="badge">' + o.status + '</span></div>' +
+         '<div class="order-info">👤 ' + o.name + '<br>📞 ' + o.phone + '<br>📍 ' + (o.address || "—") + '</div>' +
+         '<div class="order-price">' + fmt(o.total) + '</div>' +
+         '<button class="btn btn-sm" onclick="completeOrder(\'' + o._id + '\')">Yetkazildi ✓</button></div>';
+  }
+  h += navBar();
+  document.getElementById("app").innerHTML = h;
+}
+function completeOrder(id){
+  if(!S.orders[id]) return;
+  S.orders[id].status = "Yakunlandi";
+  fbUpdateOrder(id, {status: "Yakunlandi"});
+  toast("✅ Yakunlandi"); render();
+}
+
+// ============ NAV ============
+function navBar(){
+  var items = [{v:"home", ic:"🏠", l:"Asosiy"}, {v:"orders", ic:"📋", l:"Buyurtma"}];
+  if(S.user){
+    if(S.user.level <= 3) items.push({v:"admin", ic:"⚙️", l:"Admin"});
+    else if(S.user.role === "Sotuvchi") items.push({v:"seller", ic:"🏪", l:"Sotuvchi"});
+    else if(S.user.role === "Omborchi") items.push({v:"warehouse", ic:"📦", l:"Ombor"});
+    else if(S.user.role === "Yetkazib beruvchi" || S.user.role === "Kuryer") items.push({v:"delivery", ic:"🚚", l:"Yetkazish"});
+  }
+  var h = '<div class="nav">';
+  for(var i=0;i<items.length;i++){
+    var it = items[i];
+    h += '<button class="nav-btn ' + (S.view === it.v ? "on" : "") + '" onclick="navGo(\'' + it.v + '\')"><span class="ic">' + it.ic + '</span><span>' + it.l + '</span></button>';
+  }
+  h += '</div>';
+  return h;
+}
+function navGo(v){ S.view = v; S.cat = null; S.sub = null; S.query = ""; render(); }
+
+// ============ RENDER ============
+function render(){
+  if(S.loading){ document.getElementById("app").innerHTML = '<div class="loading">⏳ Firebase yuklanmoqda...</div>'; return; }
+  if(S.cat && S.sub){ renderSub(); return; }
+  if(S.cat){ renderCategory(); return; }
+  if(S.view === "home" || S.view === "market") renderHome();
+  else if(S.view === "orders") renderOrders();
+  else if(S.view === "admin" && S.user && S.user.level <= 3) renderAdmin();
+  else if(S.view === "seller" && S.user && S.user.role === "Sotuvchi") renderSeller();
+  else if(S.view === "warehouse" && S.user && S.user.role === "Omborchi") renderWarehouse();
+  else if(S.view === "delivery" && S.user && (S.user.role === "Yetkazib beruvchi" || S.user.role === "Kuryer")) renderDelivery();
+  else renderHome();
+}
+
+// ============ START ============
+loadAll();
+startPolling();
+</script>
+</body>
+</html>
