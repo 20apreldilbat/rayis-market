@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAYIS BOZORI — Nazoratchi</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,'Segoe UI',sans-serif; }
+  body { background:#0b0f1a; color:#fff; min-height:100vh; padding-bottom:80px; }
+
+  .header { background:linear-gradient(135deg,#6366f1,#4338ca); padding:14px 16px; position:sticky; top:0; z-index:100; box-shadow:0 4px 20px rgba(99,102,241,0.3); }
+  .htop { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px; }
+  .brand { display:flex; align-items:center; gap:10px; }
+  .brand-logo { width:36px; height:36px; background:#fff; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:900; color:#6366f1; }
+  .brand-text { font-size:15px; font-weight:800; white-space:nowrap; }
+  .brand-text span { color:#c7d2fe; }
+  .htop-right { display:flex; align-items:center; gap:8px; }
+  .logout-btn { background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.2); color:#fff; padding:8px 12px; border-radius:10px; font-size:11px; font-weight:700; cursor:pointer; }
+  .admin-info { display:flex; align-items:center; gap:10px; font-size:12px; }
+  .admin-info .avatar { width:28px; height:28px; background:rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; }
+  .admin-info .nm { font-weight:800; }
+  .admin-info .badge-v { background:#fff; color:#6366f1; font-size:9px; font-weight:900; padding:2px 6px; border-radius:6px; }
+
+  .tabs { display:flex; gap:2px; padding:8px 12px 12px; overflow-x:auto; background:#6366f1; scrollbar-width:none; position:sticky; top:62px; z-index:99; }
+  .tabs::-webkit-scrollbar { display:none; }
+  .tab { padding:9px 14px; background:rgba(255,255,255,0.15); border:none; color:rgba(255,255,255,0.85); font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; border-radius:8px; }
+  .tab.active { background:#fff; color:#6366f1; }
+
+  .sec { padding:16px; display:none; }
+  .sec.active { display:block; }
+
+  /* WATCH BANNER */
+  .watch { background:rgba(99,102,241,0.08); border:1px solid rgba(99,102,241,0.3); border-radius:14px; padding:14px; margin-bottom:16px; display:flex; gap:12px; align-items:center; }
+  .watch .eye { font-size:26px; flex-shrink:0; }
+  .watch .tx { font-size:12px; color:#c7d2fe; line-height:1.5; }
+  .watch .tx b { color:#fff; display:block; margin-bottom:3px; font-size:13px; }
+
+  /* KPI */
+  .kpi-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+  .kpi { background:#131a2b; border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:14px; }
+  .kpi .val { font-size:22px; font-weight:900; color:#a5b4fc; }
+  .kpi .lbl { font-size:11px; color:#8b9ab8; margin-top:4px; font-weight:600; }
+  .kpi.green .val { color:#34d399; }
+  .kpi.blue .val { color:#60a5fa; }
+  .kpi.yellow .val { color:#fbbf24; }
+
+  /* STITLE */
+  .stitle { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+  .stitle h3 { font-size:15px; font-weight:800; }
+  .stitle .cnt { font-size:12px; color:#8b9ab8; font-weight:600; }
+
+  /* FILTER */
+  .filter-bar { display:flex; gap:6px; margin-bottom:12px; overflow-x:auto; scrollbar-width:none; padding-bottom:4px; }
+  .filter-bar::-webkit-scrollbar { display:none; }
+  .fchip { flex:0 0 auto; padding:7px 12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:16px; font-size:11px; color:#cbd5e1; white-space:nowrap; cursor:pointer; font-weight:600; }
+  .fchip.active { background:rgba(99,102,241,0.15); border-color:#6366f1; color:#c7d2fe; font-weight:800; }
+
+  /* CARD */
+  .card { background:#131a2b; border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:14px; margin-bottom:10px; }
+  .chead { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px; }
+  .ctitle { font-size:13px; font-weight:800; color:#fff; word-break:break-all; }
+  .csub { font-size:10px; color:#5b6b8a; margin-top:3px; }
+  .cbadge { padding:4px 10px; border-radius:20px; font-size:10px; font-weight:800; white-space:nowrap; flex-shrink:0; }
+  .bg-green { background:rgba(52,211,153,0.15); color:#34d399; border:1px solid rgba(52,211,153,0.3); }
+  .bg-blue { background:rgba(0,91,255,0.15); color:#60a5fa; border:1px solid rgba(0,91,255,0.3); }
+  .bg-yellow { background:rgba(251,191,36,0.15); color:#fbbf24; border:1px solid rgba(251,191,36,0.3); }
+  .bg-red { background:rgba(239,68,68,0.15); color:#f87171; border:1px solid rgba(239,68,68,0.3); }
+  .bg-purple { background:rgba(99,102,241,0.15); color:#a5b4fc; border:1px solid rgba(99,102,241,0.3); }
+
+  .cinfo { font-size:12px; color:#cbd5e1; line-height:1.7; }
+  .cinfo b { color:#fff; }
+
+  .citems { padding:8px 0; border-top:1px dashed rgba(255,255,255,0.08); margin-top:8px; }
+  .citem-row { display:flex; justify-content:space-between; font-size:11px; color:#cbd5e1; padding:3px 0; gap:8px; }
+  .citem-row .nm { flex:1; }
+  .citem-row .pr { color:#34d399; font-weight:700; white-space:nowrap; }
+
+  .ctotal { display:flex; justify-content:space-between; padding-top:10px; margin-top:8px; border-top:1px dashed rgba(255,255,255,0.08); }
+  .ctotal .lbl { font-size:11px; color:#8b9ab8; }
+  .ctotal .val { font-size:15px; font-weight:900; color:#a5b4fc; }
+
+  /* PROW */
+  .prow { display:flex; gap:12px; align-items:center; }
+  .pimg { width:54px; height:54px; background:linear-gradient(135deg,#1a2337,#0f1626); border-radius:12px; overflow:hidden; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:26px; }
+  .pimg img { width:100%; height:100%; object-fit:cover; }
+  .pinfo { flex:1; min-width:0; }
+  .pname { font-size:13px; font-weight:700; margin-bottom:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .pmeta { font-size:11px; color:#8b9ab8; margin-bottom:3px; }
+  .pprice { font-size:14px; font-weight:800; color:#34d399; }
+
+  /* EMPTY */
+  .empty { padding:50px 20px; text-align:center; color:#4b5876; }
+  .empty .ic { font-size:54px; margin-bottom:12px; opacity:0.5; }
+  .empty p { font-size:13px; line-height:1.6; }
+
+  /* TOAST */
+  .toast { position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-100px); background:#6366f1; color:#fff; padding:12px 20px; border-radius:12px; font-size:13px; font-weight:700; z-index:9999; transition:transform 0.3s; max-width:90%; text-align:center; }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+
+  /* NAV */
+  .nav { position:fixed; bottom:0; left:0; right:0; background:#0f1626; border-top:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-around; padding:10px 0 max(10px,env(safe-area-inset-bottom)); z-index:200; }
+  .nav-i { display:flex; flex-direction:column; align-items:center; gap:2px; font-size:10px; color:#4b5876; cursor:pointer; flex:1; padding:4px; }
+  .nav-i.active { color:#a5b4fc; }
+  .nav-i .ic { font-size:20px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="htop">
+    <div class="brand">
+      <div class="brand-logo">R</div>
+      <div class="brand-text">RAYIS <span>NAZORAT</span></div>
+    </div>
+    <div class="htop-right">
+      <button class="logout-btn" onclick="logout()">Chiqish</button>
+    </div>
+  </div>
+  <div class="admin-info">
+    <div class="avatar">👁</div>
+    <div class="nm">Nazorat paneli</div>
+    <div class="badge-v">NAZORATCHI</div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="tab('dash')">📊 Dashboard</button>
+  <button class="tab" onclick="tab('orders')">📦 Buyurtmalar</button>
+  <button class="tab" onclick="tab('products')">📋 Mahsulotlar</button>
+  <button class="tab" onclick="tab('services')">🔧 Xizmatlar</button>
+  <button class="tab" onclick="tab('users')">👥 Foydalanuvchilar</button>
+</div>
+
+<!-- DASHBOARD -->
+<div class="sec active" id="sec-dash">
+  <div class="watch">
+    <div class="eye">👁</div>
+    <div class="tx">
+      <b>Kuzatuv rejimi</b>
+      Barcha harakatlarni kuzatasiz. Faqat ko'rish huquqi.
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi blue"><div class="val" id="kpiOrders">0</div><div class="lbl">📦 Buyurtmalar</div></div>
+    <div class="kpi"><div class="val" id="kpiProducts">0</div><div class="lbl">📋 Mahsulotlar</div></div>
+    <div class="kpi yellow"><div class="val" id="kpiServices">0</div><div class="lbl">🔧 Xizmatlar</div></div>
+    <div class="kpi green"><div class="val" id="kpiRevenue">0</div><div class="lbl">💰 Tushum</div></div>
+  </div>
+
+  <div class="stitle"><h3>🕒 So'nggi harakatlar</h3></div>
+  <div id="dashRecent"></div>
+</div>
+
+<!-- ORDERS -->
+<div class="sec" id="sec-orders">
+  <div class="filter-bar">
+    <div class="fchip active" data-f="all" onclick="setFilter('order','all')">Barchasi</div>
+    <div class="fchip" data-f="yangi" onclick="setFilter('order','yangi')">🆕 Yangi</div>
+    <div class="fchip" data-f="yolga_chiqdi" onclick="setFilter('order','yolga_chiqdi')">🚚 Yo'lda</div>
+    <div class="fchip" data-f="yetkazildi" onclick="setFilter('order','yetkazildi')">✅ Yetkazildi</div>
+    <div class="fchip" data-f="bekor" onclick="setFilter('order','bekor')">❌ Bekor</div>
+  </div>
+  <div class="stitle"><h3>Buyurtmalar</h3><span class="cnt" id="orderCount">0 ta</span></div>
+  <div id="ordersList"></div>
+</div>
+
+<!-- PRODUCTS -->
+<div class="sec" id="sec-products">
+  <div class="stitle"><h3>Mahsulotlar</h3><span class="cnt" id="productCount">0 ta</span></div>
+  <div id="productsList"></div>
+</div>
+
+<!-- SERVICES -->
+<div class="sec" id="sec-services">
+  <div class="stitle"><h3>Xizmatlar</h3><span class="cnt" id="serviceCount">0 ta</span></div>
+  <div id="servicesList"></div>
+</div>
+
+<!-- USERS -->
+<div class="sec" id="sec-users">
+  <div class="stitle"><h3>Foydalanuvchilar</h3></div>
+  <div id="usersList"></div>
+</div>
+
+<div class="nav">
+  <div class="nav-i active" onclick="tab('dash')"><div class="ic">📊</div><div>Dashboard</div></div>
+  <div class="nav-i" onclick="tab('orders')"><div class="ic">📦</div><div>Buyurtma</div></div>
+  <div class="nav-i" onclick="tab('products')"><div class="ic">📋</div><div>Mahsulot</div></div>
+  <div class="nav-i" onclick="tab('users')"><div class="ic">👥</div><div>Foydalanuvchi</div></div>
+  <div class="nav-i" onclick="logout()"><div class="ic">🚪</div><div>Chiqish</div></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let filterOrder = 'all';
+
+function tab(t) {
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.sec').forEach(x => x.classList.remove('active'));
+  const map = { dash:0, orders:1, products:2, services:3, users:4 };
+  const idx = map[t];
+  if (idx !== undefined) document.querySelectorAll('.tab')[idx].classList.add('active');
+  document.getElementById('sec-' + t).classList.add('active');
+
+  document.querySelectorAll('.nav-i').forEach(x => x.classList.remove('active'));
+  const navMap = { dash:0, orders:1, products:2, users:3 };
+  if (navMap[t] !== undefined) document.querySelectorAll('.nav-i')[navMap[t]].classList.add('active');
+
+  if (t === 'dash') renderDash();
+  else if (t === 'orders') renderOrders();
+  else if (t === 'products') renderProducts();
+  else if (t === 'services') renderServices();
+  else if (t === 'users') renderUsers();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function setFilter(type, val) {
+  filterOrder = val;
+  document.querySelectorAll('#sec-orders .fchip').forEach(c => c.classList.toggle('active', c.dataset.f === val));
+  renderOrders();
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function num(n) { const v = Number(n)||0; return Number.isInteger(v) ? v.toString() : v.toFixed(2).replace(/\.?0+$/, ''); }
+function fmt(p) { return (Number(p)||0).toLocaleString('uz-UZ').replace(/,/g,' ') + " so'm"; }
+function fmtShort(p) { const n = Number(p)||0; if (n >= 1000000) return (n/1000000).toFixed(1) + 'M'; if (n >= 1000) return (n/1000).toFixed(0) + 'K'; return n.toString(); }
+function esc(s) { return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function formatDate(iso) {
+  try {
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return '—';
+    const pad = n => String(n).padStart(2, '0');
+    return pad(d.getDate()) + '.' + pad(d.getMonth()+1) + '.' + d.getFullYear() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  } catch(e) { return '—'; }
+}
+function catName(k) {
+  const m = {'oziq-ovqat':'🍎 Oziq-ovqat','kiyim':'👕 Kiyim','elektronika':'📱 Elektronika','qurilish':'🏗 Qurilish','xizmatlar':'🔧 Xizmatlar'};
+  return m[k] || '—';
+}
+
+function getOrders() {
+  let all = [];
+  try { all = JSON.parse(localStorage.getItem('rayis_orders') || '[]'); } catch(e) {}
+  if (!Array.isArray(all)) return [];
+  return all.filter(o => o && o.id && o.customer && o.customer.name);
+}
+function getProducts() {
+  let all = [];
+  try { all = JSON.parse(localStorage.getItem('rayis_products') || '[]'); } catch(e) {}
+  if (!Array.isArray(all)) return [];
+  return all.filter(p => p && p.name);
+}
+function getServices() {
+  let all = [];
+  try { all = JSON.parse(localStorage.getItem('rayis_services') || '[]'); } catch(e) {}
+  if (!Array.isArray(all)) return [];
+  return all.filter(s => s && s.name);
+}
+
+// ============================================
+// DASHBOARD
+// ============================================
+function renderDash() {
+  const orders = getOrders();
+  const products = getProducts();
+  const services = getServices();
+
+  const done = orders.filter(o => o.status === 'yetkazildi');
+  const revenue = done.reduce((s, o) => s + (Number(o.total)||0), 0);
+
+  document.getElementById('kpiOrders').textContent = orders.length;
+  document.getElementById('kpiProducts').textContent = products.length;
+  document.getElementById('kpiServices').textContent = services.length;
+  document.getElementById('kpiRevenue').textContent = fmtShort(revenue);
+
+  const recent = orders.sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||'')).slice(0, 5);
+  const c = document.getElementById('dashRecent');
+  if (recent.length === 0) {
+    c.innerHTML = '<div class="card" style="text-align:center;padding:24px;color:#5b6b8a;font-size:12px">Harakatlar yo\'q</div>';
+    return;
+  }
+
+  const stMap = {
+    yangi: { l: '🆕 Yangi', cls: 'bg-blue' },
+    yolga_chiqdi: { l: '🚚 Yo\'lda', cls: 'bg-yellow' },
+    yetkazildi: { l: '✅ Yetkazildi', cls: 'bg-green' },
+    bekor: { l: '❌ Bekor', cls: 'bg-red' }
+  };
+
+  let html = '';
+  recent.forEach(o => {
+    const s = stMap[o.status] || stMap.yangi;
+    html += '<div class="card">' +
+      '<div class="chead">' +
+        '<div><div class="ctitle">' + esc(o.id) + '</div><div class="csub">' + formatDate(o.createdAt) + '</div></div>' +
+        '<div class="cbadge ' + s.cls + '">' + s.l + '</div>' +
+      '</div>' +
+      '<div class="cinfo">👤 ' + esc(o.customer.name) + ' • 💰 <b>' + fmt(o.total) + '</b></div>' +
+    '</div>';
+  });
+  c.innerHTML = html;
+}
+
+// ============================================
+// BUYURTMALAR
+// ============================================
+function renderOrders() {
+  const orders = getOrders();
+  let filtered = filterOrder === 'all' ? orders : orders.filter(o => o.status === filterOrder);
+  document.getElementById('orderCount').textContent = filtered.length + ' ta';
+
+  const c = document.getElementById('ordersList');
+  if (filtered.length === 0) {
+    c.innerHTML = '<div class="empty"><div class="ic">📦</div><p>Buyurtma topilmadi</p></div>';
+    return;
+  }
+
+  const stMap = {
+    yangi: { l: '🆕 Yangi', cls: 'bg-blue' },
+    yolga_chiqdi: { l: '🚚 Yo\'lda', cls: 'bg-yellow' },
+    yetkazildi: { l: '✅ Yetkazildi', cls: 'bg-green' },
+    bekor: { l: '❌ Bekor', cls: 'bg-red' }
+  };
+
+  let html = '';
+  filtered.sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||'')).forEach(o => {
+    const s = stMap[o.status] || stMap.yangi;
+    const items = Array.isArray(o.items) ? o.items.slice(0, 3) : [];
+    const itemsHtml = items.map(it => {
+      const q = Number(it.qty)||1;
+      const sum = (Number(it.price)||0)*q;
+      return '<div class="citem-row"><span class="nm">• ' + esc(it.name) + ' × ' + num(q) + '</span><span class="pr">' + fmt(sum) + '</span></div>';
+    }).join('');
+
+    html += '<div class="card">' +
+      '<div class="chead">' +
+        '<div><div class="ctitle">' + esc(o.id) + '</div><div class="csub">' + formatDate(o.createdAt) + '</div></div>' +
+        '<div class="cbadge ' + s.cls + '">' + s.l + '</div>' +
+      '</div>' +
+      '<div class="cinfo">👤 <b>' + esc(o.customer.name) + '</b><br>📞 ' + esc(o.customer.phone||'—') + '<br>📍 ' + esc(o.customer.address||'—') + '</div>' +
+      '<div class="citems">' + itemsHtml + '</div>' +
+      '<div class="ctotal"><span class="lbl">Umumiy:</span><span class="val">' + fmt(o.total) + '</span></div>' +
+    '</div>';
+  });
+  c.innerHTML = html;
+}
+
+// ============================================
+// MAHSULOTLAR
+// ============================================
+function renderProducts() {
+  const products = getProducts();
+  document.getElementById('productCount').textContent = products.length + ' ta';
+  const c = document.getElementById('productsList');
+  if (products.length === 0) {
+    c.innerHTML = '<div class="empty"><div class="ic">📋</div><p>Mahsulot topilmadi</p></div>';
+    return;
+  }
+  let html = '';
+  products.forEach(p => {
+    const img = (p.images && p.images[0]) ? '<img src="' + p.images[0] + '">' : (p.emoji || '📦');
+    html += '<div class="card"><div class="prow">' +
+      '<div class="pimg">' + img + '</div>' +
+      '<div class="pinfo">' +
+        '<div class="pname">' + esc(p.name) + '</div>' +
+        '<div class="pmeta">' + catName(p.category) + ' • ' + esc(p.sellerName || p.seller || '—') + '</div>' +
+        '<div class="pprice">' + fmt(p.price) + ' / ' + esc(p.unit || 'dona') + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="cinfo" style="margin-top:10px">📦 Ombor: <b>' + num(p.stock) + ' ' + esc(p.unit || 'dona') + '</b></div>' +
+    '</div>';
+  });
+  c.innerHTML = html;
+}
+
+// ============================================
+// XIZMATLAR
+// ============================================
+function renderServices() {
+  const services = getServices();
+  document.getElementById('serviceCount').textContent = services.length + ' ta';
+  const c = document.getElementById('servicesList');
+  if (services.length === 0) {
+    c.innerHTML = '<div class="empty"><div class="ic">🔧</div><p>Xizmat topilmadi</p></div>';
+    return;
+  }
+  let html = '';
+  services.forEach(s => {
+    const img = (s.images && s.images[0]) ? '<img src="' + s.images[0] + '">' : (s.emoji || '🔧');
+    html += '<div class="card"><div class="prow">' +
+      '<div class="pimg">' + img + '</div>' +
+      '<div class="pinfo">' +
+        '<div class="pname">' + esc(s.name) + '</div>' +
+        '<div class="pmeta">👷 ' + esc(s.master || 'Usta') + ' • ' + esc(s.experience || '—') + '</div>' +
+        '<div class="pprice">' + fmt(s.price) + ' / ' + esc(s.unit) + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="cinfo" style="margin-top:10px">📞 ' + esc(s.phone || '—') + '<br>📍 ' + esc(s.region || '—') + '</div>' +
+    '</div>';
+  });
+  c.innerHTML = html;
+}
+
+// ============================================
+// FOYDALANUVCHILAR
+// ============================================
+function renderUsers() {
+  const c = document.getElementById('usersList');
+  const orders = getOrders();
+  const products = getProducts();
+
+  const buyersMap = {};
+  orders.forEach(o => { if (o.customer && o.customer.phone) buyersMap[o.customer.phone] = o.customer; });
+  const buyers = Object.values(buyersMap);
+
+  const sellersMap = {};
+  products.forEach(p => { if (p.sellerName || p.seller) sellersMap[p.sellerName || p.seller] = (sellersMap[p.sellerName || p.seller] || 0) + 1; });
+  const sellers = Object.entries(sellersMap);
+
+  let html = '';
+  html += '<div style="font-size:12px;color:#8b9ab8;font-weight:800;margin-bottom:10px;padding-left:4px">🛒 XARIDORLAR (' + buyers.length + ')</div>';
+  if (buyers.length === 0) {
+    html += '<div class="card" style="text-align:center;padding:20px;color:#5b6b8a;font-size:12px">Hozircha yo\'q</div>';
+  } else {
+    buyers.forEach(b => {
+      html += '<div class="card"><div class="chead">' +
+        '<div><div class="ctitle">👤 ' + esc(b.name) + '</div><div class="csub">📞 ' + esc(b.phone) + '</div></div>' +
+        '<div class="cbadge bg-blue">Xaridor</div>' +
+      '</div>' +
+      '<div class="cinfo">📍 ' + esc(b.address || '—') + '</div></div>';
+    });
+  }
+
+  html += '<div style="font-size:12px;color:#8b9ab8;font-weight:800;margin:16px 0 10px;padding-left:4px">🏪 SOTUVCHILAR (' + sellers.length + ')</div>';
+  if (sellers.length === 0) {
+    html += '<div class="card" style="text-align:center;padding:20px;color:#5b6b8a;font-size:12px">Hozircha yo\'q</div>';
+  } else {
+    sellers.forEach(arr => {
+      html += '<div class="card"><div class="chead">' +
+        '<div><div class="ctitle">🏪 ' + esc(arr[0]) + '</div><div class="csub">' + arr[1] + ' ta mahsulot</div></div>' +
+        '<div class="cbadge bg-green">Sotuvchi</div>' +
+      '</div></div>';
+    });
+  }
+
+  c.innerHTML = html;
+}
+
+function logout() {
+  if (!confirm('Chiqishni tasdiqlaysizmi?')) return;
+  localStorage.removeItem('rayis_user');
+  location.href = 'index.html';
+}
+
+renderDash();
+</script>
+</body>
+</html>

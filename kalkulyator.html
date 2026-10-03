@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAYIS BOZORI — Qurilish Kalkulyatori</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,'Segoe UI',sans-serif; -webkit-tap-highlight-color:transparent; }
+  body { background:#0b0f1a; color:#fff; min-height:100vh; padding:0 0 100px; }
+
+  .header { background:#0f1626; border-bottom:1px solid rgba(255,255,255,0.06); padding:12px 16px; position:sticky; top:0; z-index:100; }
+  .htop { display:flex; align-items:center; gap:10px; }
+  .back { font-size:22px; cursor:pointer; color:#8b9ab8; }
+  .title { font-size:16px; font-weight:800; flex:1; }
+  .title span { color:#60a5fa; }
+
+  .progress { display:flex; gap:4px; padding:12px 16px; }
+  .pbar { flex:1; height:4px; background:rgba(255,255,255,0.08); border-radius:2px; transition:all 0.3s; }
+  .pbar.done { background:#005bff; }
+  .pbar.active { background:#60a5fa; }
+
+  .step { display:none; padding:16px; animation:fade 0.3s; }
+  .step.active { display:block; }
+  @keyframes fade { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+  .step-counter { font-size:11px; color:#60a5fa; font-weight:800; letter-spacing:1px; margin-bottom:8px; }
+  .step h2 { font-size:20px; font-weight:800; margin-bottom:6px; line-height:1.3; }
+  .step .subtitle { font-size:13px; color:#8b9ab8; margin-bottom:20px; line-height:1.5; }
+
+  .ig { margin-bottom:14px; }
+  .ig label { display:block; font-size:12px; color:#8b9ab8; margin-bottom:6px; font-weight:600; }
+  .ig input, .ig select { width:100%; padding:14px 16px; background:#0f1626; border:1px solid rgba(255,255,255,0.08); border-radius:12px; color:#fff; font-size:15px; outline:none; font-family:inherit; -webkit-appearance:none; }
+  .ig input:focus, .ig select:focus { border-color:#005bff; }
+  .ig input::placeholder { color:#4b5876; }
+  .ig select option { background:#0f1626; }
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .row-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+
+  .options-grid { display:grid; grid-template-columns:1fr; gap:10px; margin-bottom:16px; }
+  .options-grid.two { grid-template-columns:1fr 1fr; }
+  .option-card { padding:16px 14px; background:#131a2b; border:2px solid rgba(255,255,255,0.06); border-radius:14px; cursor:pointer; transition:all 0.2s; text-align:center; user-select:none; }
+  .option-card:active { transform:scale(0.97); }
+  .option-card.selected { border-color:#005bff; background:rgba(0,91,255,0.1); }
+  .option-card .icon { font-size:28px; margin-bottom:6px; }
+  .option-card .title { font-size:14px; font-weight:700; margin-bottom:2px; }
+  .option-card .desc { font-size:11px; color:#8b9ab8; }
+
+  .sub-fields { background:rgba(0,0,0,0.25); border-radius:14px; padding:14px; margin-bottom:14px; border:1px solid rgba(0,91,255,0.15); }
+
+  .check-item { display:flex; align-items:center; gap:12px; padding:14px 16px; background:#131a2b; border:2px solid rgba(255,255,255,0.06); border-radius:12px; cursor:pointer; margin-bottom:10px; user-select:none; }
+  .check-item.selected { border-color:#005bff; background:rgba(0,91,255,0.1); }
+  .check-item .box { width:22px; height:22px; border:2px solid #4b5876; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:14px; color:transparent; transition:all 0.2s; flex-shrink:0; }
+  .check-item.selected .box { background:#005bff; border-color:#005bff; color:#fff; }
+  .check-item .label { font-size:14px; font-weight:600; }
+
+  .btn-group { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:20px; }
+  .btn-group.single { grid-template-columns:1fr; }
+  .btn { padding:16px; border:none; border-radius:12px; font-size:15px; font-weight:800; cursor:pointer; transition:all 0.2s; }
+  .btn:active { transform:scale(0.97); }
+  .btn:disabled { opacity:0.4; }
+  .btn-primary { background:linear-gradient(135deg,#005bff,#0047cc); color:#fff; }
+  .btn-secondary { background:#1a2337; color:#cbd5e1; border:1px solid rgba(255,255,255,0.08); }
+  .btn-success { background:linear-gradient(135deg,#10b981,#059669); color:#fff; }
+  .btn-warn { background:linear-gradient(135deg,#fbbf24,#f59e0b); color:#0b0f1a; }
+  .btn-full { width:100%; }
+
+  .info-box { background:rgba(0,91,255,0.08); border:1px solid rgba(0,91,255,0.25); border-radius:12px; padding:12px 14px; font-size:12px; color:#93c5fd; line-height:1.6; margin-bottom:14px; }
+  .warning-box { background:rgba(251,191,36,0.08); border:1px solid rgba(251,191,36,0.25); border-radius:12px; padding:12px 14px; font-size:12px; color:#fcd34d; line-height:1.6; margin-top:12px; }
+
+  .result-total { background:linear-gradient(135deg,#005bff,#7c3aed); padding:24px 20px; border-radius:18px; text-align:center; margin-bottom:16px; box-shadow:0 10px 30px rgba(0,91,255,0.3); }
+  .result-total .label { font-size:12px; opacity:0.9; margin-bottom:6px; font-weight:600; }
+  .result-total .amount { font-size:26px; font-weight:900; letter-spacing:-0.5px; line-height:1.2; word-break:break-word; }
+  .result-total .range { font-size:11px; opacity:0.85; margin-top:8px; }
+
+  .section { background:#131a2b; border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:14px; margin-bottom:12px; }
+  .section-title { font-size:13px; font-weight:800; color:#60a5fa; margin-bottom:12px; display:flex; align-items:center; gap:6px; }
+
+  .material-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; font-size:13px; border-bottom:1px solid rgba(255,255,255,0.04); gap:8px; }
+  .material-row:last-child { border-bottom:none; }
+  .material-row .name { color:#cbd5e1; flex:1; }
+  .material-row .qty { color:#8b9ab8; font-size:11px; margin:0 6px; white-space:nowrap; }
+  .material-row .price { color:#fff; font-weight:700; white-space:nowrap; }
+
+  .section-total { display:flex; justify-content:space-between; padding-top:10px; margin-top:6px; border-top:1px dashed rgba(0,91,255,0.3); font-weight:800; font-size:14px; color:#60a5fa; }
+
+  .summary-card { background:rgba(0,91,255,0.1); border:1px solid rgba(0,91,255,0.3); border-radius:14px; padding:14px; margin-bottom:14px; }
+  .sum-row { display:flex; justify-content:space-between; padding:6px 0; font-size:13px; gap:8px; }
+  .sum-row .l { color:#8b9ab8; }
+  .sum-row .v { color:#cbd5e1; font-weight:700; }
+  .sum-row.big { border-top:1px solid rgba(0,91,255,0.3); margin-top:8px; padding-top:12px; }
+  .sum-row.big .l { color:#60a5fa; font-weight:800; }
+  .sum-row.big .v { color:#60a5fa; font-size:16px; font-weight:900; }
+
+  .toast { position:fixed; bottom:100px; left:50%; transform:translateX(-50%) translateY(20px); background:#005bff; color:#fff; padding:12px 20px; border-radius:12px; font-size:13px; font-weight:700; z-index:9999; opacity:0; transition:all 0.3s; max-width:90%; text-align:center; box-shadow:0 10px 30px rgba(0,91,255,0.4); pointer-events:none; }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  .toast.ok { background:#10b981; box-shadow:0 10px 30px rgba(16,185,129,0.4); }
+  .toast.err { background:#ef4444; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="htop">
+    <div class="back" onclick="goBack()">←</div>
+    <div class="title">🏗 Qurilish <span>Kalkulyatori</span></div>
+  </div>
+</div>
+
+<div class="progress" id="progress"></div>
+
+<!-- STEP 1 -->
+<div class="step active" data-step="1">
+  <div class="step-counter">QADAM 1 / 6</div>
+  <h2>Loyiha ma'lumotlari</h2>
+  <p class="subtitle">Uy maydoni va o'lchamlarini kiriting</p>
+
+  <div class="ig">
+    <label>Uy maydoni (m²)</label>
+    <input type="number" id="area" value="100" min="10" max="1000" step="1">
+  </div>
+
+  <div class="row">
+    <div class="ig">
+      <label>Qavatlar soni</label>
+      <select id="floors">
+        <option value="1">1 qavat</option>
+        <option value="2" selected>2 qavat</option>
+        <option value="3">3 qavat</option>
+      </select>
+    </div>
+    <div class="ig">
+      <label>Devor balandligi (m)</label>
+      <input type="number" id="wallH" value="3" step="0.1" min="2" max="5">
+    </div>
+  </div>
+
+  <div class="ig">
+    <label>Xonalar soni</label>
+    <input type="number" id="rooms" value="4" min="1" max="30" step="1">
+  </div>
+
+  <div class="info-box">
+    💡 Umumiy yashash maydoni: <b id="totalArea">200</b> m² (avtomatik)
+  </div>
+
+  <div class="btn-group single">
+    <button class="btn btn-primary btn-full" onclick="goToStep(2)">Keyingi →</button>
+  </div>
+</div>
+
+<!-- STEP 2 -->
+<div class="step" data-step="2">
+  <div class="step-counter">QADAM 2 / 6</div>
+  <h2>Poydevor</h2>
+  <p class="subtitle">Poydevor turini tanlang</p>
+
+  <div class="options-grid two" id="foundOptions">
+    <div class="option-card selected" data-value="lenta" onclick="pickFound('lenta')">
+      <div class="title">🔷 Lenta</div>
+      <div class="desc">Tavsiya etiladi</div>
+    </div>
+    <div class="option-card" data-value="plita" onclick="pickFound('plita')">
+      <div class="title">⬛ Plita</div>
+      <div class="desc">Mustahkam</div>
+    </div>
+  </div>
+
+  <div id="lentaFields" class="sub-fields">
+    <div class="ig">
+      <label>Lenta perimetri (pm)</label>
+      <input type="number" id="perimeter" value="40" min="10" max="300">
+    </div>
+    <div class="row">
+      <div class="ig">
+        <label>Lenta eni (m)</label>
+        <select id="lentaW">
+          <option value="0.3">0.3</option>
+          <option value="0.4" selected>0.4</option>
+          <option value="0.5">0.5</option>
+          <option value="0.6">0.6</option>
+        </select>
+      </div>
+      <div class="ig">
+        <label>Lenta balandligi (m)</label>
+        <select id="lentaH">
+          <option value="0.6">0.6</option>
+          <option value="0.8" selected>0.8</option>
+          <option value="1">1.0</option>
+          <option value="1.2">1.2</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div id="plitaFields" class="sub-fields" style="display:none">
+    <div class="ig">
+      <label>Plita qalinligi (m)</label>
+      <select id="slabT">
+        <option value="0.2">0.2</option>
+        <option value="0.25" selected>0.25</option>
+        <option value="0.3">0.3</option>
+      </select>
+    </div>
+    <div class="info-box">Plita maydoni = uy maydoni (avtomatik)</div>
+  </div>
+
+  <div class="btn-group">
+    <button class="btn btn-secondary" onclick="goToStep(1)">← Orqaga</button>
+    <button class="btn btn-primary" onclick="goToStep(3)">Keyingi →</button>
+  </div>
+</div>
+
+<!-- STEP 3 -->
+<div class="step" data-step="3">
+  <div class="step-counter">QADAM 3 / 6</div>
+  <h2>Devor</h2>
+  <p class="subtitle">Devor materialini tanlang</p>
+
+  <div class="ig">
+    <label>Devor turi</label>
+    <select id="wallType" onchange="toggleWall()">
+      <option value="gisht_std" selected>🧱 Pishgan g'isht standart (250×120×65)</option>
+      <option value="gisht_pol">🧱 Pishgan g'isht paltarashka (250×120×88)</option>
+      <option value="xom_std">🟫 Xom g'isht standart</option>
+      <option value="xom_pol">🟫 Xom g'isht paltarashka</option>
+      <option value="shlakoblok">⬛ Shlakoblok (390×190×188)</option>
+      <option value="gazoblok600">🧊 Gazoblok (600×300×200)</option>
+      <option value="gazoblok500">🧊 Gazoblok (500×300×200)</option>
+      <option value="paxsa">🟤 Paxsa (m³)</option>
+    </select>
+  </div>
+
+  <div class="ig">
+    <label>Ichki devorlar (%)</label>
+    <select id="innerWall">
+      <option value="0">Yo'q</option>
+      <option value="20" selected>20%</option>
+      <option value="30">30%</option>
+      <option value="40">40%</option>
+    </select>
+  </div>
+
+  <div id="paxsaFields" class="sub-fields" style="display:none">
+    <div class="ig">
+      <label>Paxsa devor qalinligi (m)</label>
+      <select id="paxsaW">
+        <option value="0.5">0.5</option>
+        <option value="0.6" selected>0.6</option>
+        <option value="0.7">0.7</option>
+        <option value="0.8">0.8</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="btn-group">
+    <button class="btn btn-secondary" onclick="goToStep(2)">← Orqaga</button>
+    <button class="btn btn-primary" onclick="goToStep(4)">Keyingi →</button>
+  </div>
+</div>
+
+<!-- STEP 4 -->
+<div class="step" data-step="4">
+  <div class="step-counter">QADAM 4 / 6</div>
+  <h2>Ustun va karkas</h2>
+  <p class="subtitle">Qo'shimcha beton elementlari</p>
+
+  <div class="ig">
+    <label>Armapoyas (armatura kamar) kiritilsinmi?</label>
+    <select id="armapoyasIn" onchange="toggleArmapoyas()">
+      <option value="ha" selected>Ha</option>
+      <option value="yoq">Yo'q</option>
+    </select>
+  </div>
+
+  <div id="armapoyasFields" class="sub-fields">
+    <div class="row-3">
+      <div class="ig"><label>Eni (m)</label><input type="number" id="apW" value="0.3" step="0.05"></div>
+      <div class="ig"><label>Balandligi (m)</label><input type="number" id="apH" value="0.3" step="0.05"></div>
+      <div class="ig"><label>Uzunligi (m)</label><input type="number" id="apL" value="40"></div>
+    </div>
+  </div>
+
+  <div class="ig">
+    <label>Peremichka soni</label>
+    <input type="number" id="peremCount" value="0" min="0" oninput="togglePerem()">
+  </div>
+
+  <div id="peremFields" class="sub-fields" style="display:none">
+    <div class="row-3">
+      <div class="ig"><label>Eni (m)</label><input type="number" id="pmW" value="0.3" step="0.05"></div>
+      <div class="ig"><label>Balandligi (m)</label><input type="number" id="pmH" value="0.3" step="0.05"></div>
+      <div class="ig"><label>Uzunligi (m)</label><input type="number" id="pmL" value="1.5" step="0.1"></div>
+    </div>
+  </div>
+
+  <div class="ig">
+    <label>Kolonna soni</label>
+    <input type="number" id="kolCount" value="0" min="0" oninput="toggleKol()">
+  </div>
+
+  <div id="kolFields" class="sub-fields" style="display:none">
+    <div class="row-3">
+      <div class="ig"><label>Eni (m)</label><input type="number" id="klW" value="0.3" step="0.05"></div>
+      <div class="ig"><label>Eni×2 (m)</label><input type="number" id="klW2" value="0.3" step="0.05"></div>
+      <div class="ig"><label>Balandligi (m)</label><input type="number" id="klH" value="3" step="0.1"></div>
+    </div>
+  </div>
+
+  <div class="ig">
+    <label>Vassalash (karkas) strapila turi</label>
+    <select id="vassType">
+      <option value="yoq">Yo'q</option>
+      <option value="5x15_6">5×15×6 m</option>
+      <option value="4x14_6" selected>4×14×6 m</option>
+      <option value="5x15_4">5×15×4 m</option>
+      <option value="4x14_4">4×14×4 m</option>
+    </select>
+  </div>
+
+  <div class="ig">
+    <label>Vassalash soni (dona)</label>
+    <input type="number" id="vassL" value="0" min="0" step="1">
+  </div>
+
+  <div class="btn-group">
+    <button class="btn btn-secondary" onclick="goToStep(3)">← Orqaga</button>
+    <button class="btn btn-primary" onclick="goToStep(5)">Keyingi →</button>
+  </div>
+</div>
+
+<!-- STEP 5 -->
+<div class="step" data-step="5">
+  <div class="step-counter">QADAM 5 / 6</div>
+  <h2>Tom</h2>
+  <p class="subtitle">Tom materiallari va qo'shimcha elementlar</p>
+
+  <div class="ig">
+    <label>Tom strapila turi</label>
+    <select id="strapType">
+      <option value="5x15_6">5×15×6 m</option>
+      <option value="4x14_6" selected>4×14×6 m</option>
+      <option value="4x14_4">4×14×4 m</option>
+    </select>
+  </div>
+
+  <div class="ig">
+    <label>Tom qoplama turi</label>
+    <select id="coverType">
+      <option value="shifer" selected>Shifer</option>
+      <option value="metallocherepitsa">Metallocherepitsa</option>
+      <option value="ondulin">Ondulin</option>
+    </select>
+  </div>
+
+  <div class="ig">
+    <label>Tornov turi</label>
+    <select id="tornovType">
+      <option value="yoq">Yo'q</option>
+      <option value="yupqa">Yupka tornov</option>
+      <option value="oddiy" selected>Oddiy tornov</option>
+    </select>
+  </div>
+
+  <div class="row">
+    <div class="ig">
+      <label>Konyok (m²)</label>
+      <input type="number" id="konyokS" value="0" step="0.1" min="0">
+    </div>
+    <div class="ig">
+      <label>Mourlant (pm)</label>
+      <input type="number" id="mourlL" value="0" min="0">
+    </div>
+  </div>
+
+  <div class="section" style="background:rgba(0,91,255,0.05);border-color:rgba(0,91,255,0.2)">
+    <div class="section-title" style="margin-bottom:10px">🔧 Qo'shimcha materiallar (ixtiyoriy)</div>
+
+    <div class="row">
+      <div class="ig">
+        <label>Qamish (bog'langan, dona)</label>
+        <input type="number" id="qamishCount" value="0" min="0">
+      </div>
+      <div class="ig">
+        <label>Bo'yra (m.kv)</label>
+        <input type="number" id="boyraS" value="0" step="0.1" min="0">
+      </div>
+    </div>
+
+    <div class="ig">
+      <label>Lombz (m³)</label>
+      <input type="number" id="lombzV" value="0" step="0.1" min="0">
+    </div>
+
+    <div class="row">
+      <div class="ig"><label>Mix 70 (kg)</label><input type="number" id="mix70" value="0" min="0"></div>
+      <div class="ig"><label>Mix 100 (kg)</label><input type="number" id="mix100" value="0" min="0"></div>
+    </div>
+    <div class="row">
+      <div class="ig"><label>Mix 150 (kg)</label><input type="number" id="mix150" value="0" min="0"></div>
+      <div class="ig"><label>Sim 4 (kg)</label><input type="number" id="sim4" value="0" min="0"></div>
+    </div>
+    <div class="ig">
+      <label>Reka 5×5×6 m (dona)</label>
+      <input type="number" id="rekaDona" value="0" min="0">
+    </div>
+  </div>
+
+  <div class="btn-group">
+    <button class="btn btn-secondary" onclick="goToStep(4)">← Orqaga</button>
+    <button class="btn btn-primary" onclick="goToStep(6)">Keyingi →</button>
+  </div>
+</div>
+
+<!-- STEP 6 -->
+<div class="step" data-step="6">
+  <div class="step-counter">QADAM 6 / 6</div>
+  <h2>Xizmat</h2>
+  <p class="subtitle">Kim quradi?</p>
+
+  <div class="options-grid" id="workOptions">
+    <div class="option-card" data-value="self" onclick="pickWork('self')">
+      <div class="title">🙋 O'zim quraman</div>
+      <div class="desc">Usta haqi 0</div>
+    </div>
+    <div class="option-card selected" data-value="brigade" onclick="pickWork('brigade')">
+      <div class="title">👷 Brigada</div>
+      <div class="desc">Materialning 30%</div>
+    </div>
+    <div class="option-card" data-value="super" onclick="pickWork('super')">
+      <div class="title">🏆 Super brigada</div>
+      <div class="desc">Materialning 40%</div>
+    </div>
+  </div>
+
+  <div class="btn-group">
+    <button class="btn btn-secondary" onclick="goToStep(5)">← Orqaga</button>
+    <button class="btn btn-success" onclick="calculate()">🧮 Hisoblash</button>
+  </div>
+</div>
+
+<!-- STEP 7 -->
+<div class="step" data-step="7">
+  <div class="step-counter">NATIJA</div>
+  <h2>Hisob-kitob tayyor!</h2>
+  <p class="subtitle" id="resultSummary"></p>
+
+  <div id="resultContent"></div>
+
+  <div class="warning-box">
+    ⚠️ Bu taxminiy hisob. Aniq smeta uchun mutaxassis bilan maslahatlashing.
+  </div>
+
+  <div class="btn-group single" style="margin-top:12px">
+    <button class="btn btn-primary btn-full" onclick="addAllToCart()">🛒 Materiallarni savatga</button>
+    <button class="btn btn-warn btn-full" onclick="callUsta()" style="margin-top:8px">📞 Usta chaqirish</button>
+    <button class="btn btn-secondary btn-full" onclick="printResult()" style="margin-top:8px">📄 PDF / Chop etish</button>
+    <button class="btn btn-secondary btn-full" onclick="location.reload()" style="margin-top:8px">🔄 Yangi hisob</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================
+// NARXLAR
+// ============================================
+var PRICES = {
+  beton: {min:320000, max:380000, unit:"m3", name:"Beton M200"},
+  tsement: {min:42000, max:50000, unit:"qop", name:"Tsement M400 (50kg)"},
+  qum: {min:250000, max:320000, unit:"m3", name:"Yuvilgan qum"},
+  shagal: {min:230000, max:280000, unit:"m3", name:"Shag'al"},
+  armatura: {min:8200000, max:9000000, unit:"tonna", name:"Armatura 12mm"},
+  reka: {min:3000000, max:3600000, unit:"m3", name:"Reka (yog'och)"},
+  opalubka: {min:500000, max:650000, unit:"m2", name:"Opalubka"},
+  gisht_std: {min:800, max:900, unit:"dona", name:"Pishgan g'isht standart"},
+  gisht_pol: {min:1000, max:1200, unit:"dona", name:"Pishgan g'isht paltarashka"},
+  xom_std: {min:500, max:600, unit:"dona", name:"Xom g'isht standart"},
+  xom_pol: {min:650, max:750, unit:"dona", name:"Xom g'isht paltarashka"},
+  shlakoblok: {min:8000, max:9500, unit:"dona", name:"Shlakoblok"},
+  gazoblok600: {min:26000, max:30000, unit:"dona", name:"Gazoblok 600×300×200"},
+  gazoblok500: {min:24000, max:28000, unit:"dona", name:"Gazoblok 500×300×200"},
+  paxsa: {min:150000, max:200000, unit:"m3", name:"Paxsa"},
+  strapila_5x15_6: {min:3200000, max:3800000, unit:"m3", name:"Strapila 5×15×6m"},
+  strapila_4x14_6: {min:2900000, max:3400000, unit:"m3", name:"Strapila 4×14×6m"},
+  strapila_5x15_4: {min:3000000, max:3500000, unit:"m3", name:"Strapila 5×15×4m"},
+  strapila_4x14_4: {min:2600000, max:3100000, unit:"m3", name:"Strapila 4×14×4m"},
+  qamish: {min:30000, max:40000, unit:"dona", name:"Qamish bog'langan"},
+  boyra: {min:15000, max:25000, unit:"m2", name:"Bo'yra"},
+  lombz: {min:120000, max:150000, unit:"m3", name:"Lombz"},
+  shifer: {min:75000, max:90000, unit:"list", name:"Shifer 8 to'lqin"},
+  metallocherepitsa: {min:85000, max:105000, unit:"m2", name:"Metallocherepitsa"},
+  ondulin: {min:95000, max:115000, unit:"m2", name:"Ondulin"},
+  tornov_yupqa: {min:15000, max:20000, unit:"pm", name:"Yupka tornov"},
+  tornov_oddiy: {min:25000, max:35000, unit:"pm", name:"Tornov oddiy"},
+  konyok: {min:35000, max:45000, unit:"m2", name:"Konyok"},
+  mix70: {min:12000, max:15000, unit:"kg", name:"Mix 70 lik"},
+  mix100: {min:13000, max:16000, unit:"kg", name:"Mix 100 lik"},
+  mix150: {min:14000, max:17000, unit:"kg", name:"Mix 150 lik"},
+  sim4: {min:15000, max:18000, unit:"kg", name:"Sim 4 lik"},
+  reka_5x5x6: {min:35000, max:45000, unit:"dona", name:"Reka 5×5×6m"}
+};
+
+var LABOR = {
+  beton: {min:100000, max:150000, unit:"m3", name:"Beton quyish"},
+  armatura: {min:500000, max:700000, unit:"tonna", name:"Armatura bog'lash"},
+  gisht: {min:800, max:1200, unit:"dona", name:"G'isht terish"},
+  shlakoblok: {min:15000, max:25000, unit:"dona", name:"Shlakoblok terish"},
+  gazoblok: {min:25000, max:35000, unit:"dona", name:"Gazoblok terish"},
+  paxsa: {min:40000, max:60000, unit:"m3", name:"Paxsa qurish"},
+  strapila: {min:40000, max:60000, unit:"m2", name:"Strapila o'rnatish"},
+  tom_qoplash: {min:35000, max:50000, unit:"m2", name:"Tom qoplash"},
+  konyok: {min:20000, max:30000, unit:"m2", name:"Konyok o'rnatish"}
+};
+
+var state = {
+  area: 100, floors: 2, wallH: 3, rooms: 4,
+  found: 'lenta', wall: 'gisht_std', innerWall: 20, work: 'brigade'
+};
+
+var currentStep = 1;
+var lastResult = null;
+
+// ============================================
+// YORDAMCHI
+// ============================================
+function toast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (type === 'err' ? ' err' : type === 'ok' ? ' ok' : '');
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2200);
+}
+
+function fmt(n) {
+  return Math.round(n).toLocaleString('uz-UZ').replace(/,/g, ' ') + " so'm";
+}
+
+function renderProgress() {
+  var bar = document.getElementById('progress');
+  bar.innerHTML = '';
+  for (var i = 1; i <= 6; i++) {
+    var d = document.createElement('div');
+    d.className = 'pbar';
+    if (i < currentStep) d.classList.add('done');
+    if (i === currentStep) d.classList.add('active');
+    bar.appendChild(d);
+  }
+}
+
+function goToStep(n) {
+  document.querySelectorAll('.step').forEach(function(s){ s.classList.remove('active'); });
+  document.querySelector('.step[data-step="' + n + '"]').classList.add('active');
+  currentStep = n;
+  renderProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goBack() {
+  if (currentStep > 1 && currentStep < 7) goToStep(currentStep - 1);
+  else location.href = 'home.html';
+}
+
+// ============================================
+// STEP 1
+// ============================================
+function updateTotalArea() {
+  var area = parseFloat(document.getElementById('area').value) || 0;
+  var floors = parseInt(document.getElementById('floors').value) || 1;
+  document.getElementById('totalArea').textContent = (area * floors).toFixed(0);
+}
+document.getElementById('area').addEventListener('input', updateTotalArea);
+document.getElementById('floors').addEventListener('change', updateTotalArea);
+
+// ============================================
+// STEP 2
+// ============================================
+function pickFound(v) {
+  state.found = v;
+  document.querySelectorAll('#foundOptions .option-card').forEach(function(c){
+    c.classList.toggle('selected', c.dataset.value === v);
+  });
+  document.getElementById('lentaFields').style.display = v === 'lenta' ? 'block' : 'none';
+  document.getElementById('plitaFields').style.display = v === 'plita' ? 'block' : 'none';
+}
+
+// ============================================
+// STEP 3
+// ============================================
+function toggleWall() {
+  var v = document.getElementById('wallType').value;
+  document.getElementById('paxsaFields').style.display = v === 'paxsa' ? 'block' : 'none';
+}
+
+// ============================================
+// STEP 4
+// ============================================
+function toggleArmapoyas() {
+  var v = document.getElementById('armapoyasIn').value;
+  document.getElementById('armapoyasFields').style.display = v === 'ha' ? 'block' : 'none';
+}
+
+function togglePerem() {
+  var v = parseInt(document.getElementById('peremCount').value) || 0;
+  document.getElementById('peremFields').style.display = v > 0 ? 'block' : 'none';
+}
+
+function toggleKol() {
+  var v = parseInt(document.getElementById('kolCount').value) || 0;
+  document.getElementById('kolFields').style.display = v > 0 ? 'block' : 'none';
+}
+
+// ============================================
+// STEP 6
+// ============================================
+function pickWork(v) {
+  state.work = v;
+  document.querySelectorAll('#workOptions .option-card').forEach(function(c){
+    c.classList.toggle('selected', c.dataset.value === v);
+  });
+}
+
+// ============================================
+// HISOBLASH
+// ============================================
+function calculate() {
+  var matList = [];
+  var laborList = [];
+  var mA = 0, mB = 0, lA = 0, lB = 0;
+
+  var area = parseFloat(document.getElementById('area').value) || 0;
+  var floors = parseInt(document.getElementById('floors').value) || 1;
+  var wallH = parseFloat(document.getElementById('wallH').value) || 3;
+  var totalH = floors * wallH;
+  var rooms = parseInt(document.getElementById('rooms').value) || 4;
+
+  if (area <= 0) { toast('Maydonni kiriting', 'err'); return; }
+
+  var fType = state.found;
+  var betonV = 0, opalubkaS = 0;
+
+  if (fType === 'lenta') {
+    var per = parseFloat(document.getElementById('perimeter').value) || 0;
+    var lw = parseFloat(document.getElementById('lentaW').value) || 0.4;
+    var lh = parseFloat(document.getElementById('lentaH').value) || 0.8;
+    betonV = per * lw * lh * 1.02;
+    opalubkaS = per * 2 * lh;
+  } else {
+    var st = parseFloat(document.getElementById('slabT').value) || 0.25;
+    betonV = area * st * 1.02;
+    opalubkaS = area * 0.5;
+  }
+
+  var tsQ = betonV * 6;
+  var qumV = betonV * 0.5;
+  var shagV = betonV * 0.85;
+  var armT = betonV * 0.08;
+  var rekV = betonV * 0.02;
+
+  var wType = document.getElementById('wallType').value;
+  var baseInPct = (parseInt(document.getElementById('innerWall').value) || 0) / 100;
+  var roomsBonus = rooms > 4 ? (rooms - 4) * 0.02 : 0;
+  var inPct = Math.min(baseInPct + roomsBonus, 0.6);
+  var paxsaW = parseFloat((document.getElementById('paxsaW') || {}).value) || 0.6;
+
+  var perW = (fType === 'lenta') ? (parseFloat(document.getElementById('perimeter').value) || 40) : 4.5 * Math.sqrt(area);
+  var wOutS = perW * totalH * 0.85;
+  var wInS = wOutS * inPct;
+  var wTotS = wOutS + wInS;
+
+  var wPM2 = 0, wName = '', wPriceKey = '';
+  if (wType === 'gisht_std') { wPM2 = 400; wName = PRICES.gisht_std.name; wPriceKey = 'gisht_std'; }
+  else if (wType === 'gisht_pol') { wPM2 = 300; wName = PRICES.gisht_pol.name; wPriceKey = 'gisht_pol'; }
+  else if (wType === 'xom_std') { wPM2 = 400; wName = PRICES.xom_std.name; wPriceKey = 'xom_std'; }
+  else if (wType === 'xom_pol') { wPM2 = 300; wName = PRICES.xom_pol.name; wPriceKey = 'xom_pol'; }
+  else if (wType === 'shlakoblok') { wPM2 = 13; wName = PRICES.shlakoblok.name; wPriceKey = 'shlakoblok'; }
+  else if (wType === 'gazoblok600') { wPM2 = 8.33; wName = PRICES.gazoblok600.name; wPriceKey = 'gazoblok600'; }
+  else if (wType === 'gazoblok500') { wPM2 = 10; wName = PRICES.gazoblok500.name; wPriceKey = 'gazoblok500'; }
+  else if (wType === 'paxsa') { wPM2 = 0; wName = PRICES.paxsa.name; wPriceKey = 'paxsa'; }
+
+  var wQty = wType === 'paxsa' ? (wTotS * paxsaW) : (wTotS * wPM2);
+  var wUnit = wType === 'paxsa' ? 'm3' : 'dona';
+  var wPrice = wType === 'paxsa' ? PRICES.paxsa : PRICES[wPriceKey];
+
+  var armapoyasIn = document.getElementById('armapoyasIn').value === 'ha';
+  var apV = 0;
+  if (armapoyasIn) {
+    var apW = parseFloat(document.getElementById('apW').value) || 0.3;
+    var apH = parseFloat(document.getElementById('apH').value) || 0.3;
+    var apL = parseFloat(document.getElementById('apL').value) || 40;
+    apV = apW * apH * apL;
+  }
+
+  var peremCount = parseInt(document.getElementById('peremCount').value) || 0;
+  var pmV = 0;
+  if (peremCount > 0) {
+    var pmW = parseFloat(document.getElementById('pmW').value) || 0.3;
+    var pmH = parseFloat(document.getElementById('pmH').value) || 0.3;
+    var pmL = parseFloat(document.getElementById('pmL').value) || 1.5;
+    pmV = pmW * pmH * pmL * peremCount;
+  }
+
+  var kolCount = parseInt(document.getElementById('kolCount').value) || 0;
+  var klV = 0;
+  if (kolCount > 0) {
+    var klW = parseFloat(document.getElementById('klW').value) || 0.3;
+    var klW2 = parseFloat(document.getElementById('klW2').value) || 0.3;
+    var klH = parseFloat(document.getElementById('klH').value) || 3;
+    klV = klW * klW2 * klH * kolCount;
+  }
+
+  var totalBetonV2 = apV + pmV + klV;
+  var vassType = document.getElementById('vassType').value;
+  var vassCount = parseInt(document.getElementById('vassL').value) || 0;
+  var vassStrapV = 0;
+  if (vassType !== 'yoq' && vassCount > 0) {
+    vassStrapV = vassCount * 3 * 0.03;
+  }
+
+  var roofS = area * 1.4;
+  var strapType = document.getElementById('strapType').value;
+  var strapV = roofS * 0.025;
+  var rekaTomV = roofS * 0.018;
+
+  var qamishCount = parseInt(document.getElementById('qamishCount').value) || 0;
+  var boyraS = parseFloat(document.getElementById('boyraS').value) || 0;
+  var lombzV = parseFloat(document.getElementById('lombzV').value) || 0;
+  var mourlL = parseFloat(document.getElementById('mourlL').value) || 0;
+
+  var coverType = document.getElementById('coverType').value;
+  var covQty = 0, covUnit = 'm2';
+  if (coverType === 'shifer') { covQty = roofS * 0.15; covUnit = 'list'; }
+  else { covQty = roofS * 1.1; }
+
+  var tornovType = document.getElementById('tornovType').value;
+  var tornovL = perW;
+  var konyokS = parseFloat(document.getElementById('konyokS').value) || 0;
+  var mix70 = parseFloat(document.getElementById('mix70').value) || 0;
+  var mix100 = parseFloat(document.getElementById('mix100').value) || 0;
+  var mix150 = parseFloat(document.getElementById('mix150').value) || 0;
+  var sim4 = parseFloat(document.getElementById('sim4').value) || 0;
+  var rekaDona = parseInt(document.getElementById('rekaDona').value) || 0;
+
+  var matOut = '';
+
+  function addMat(name, qty, unit, priceObj) {
+    if (qty <= 0) return;
+    var a = qty * priceObj.min;
+    var b = qty * priceObj.max;
+    mA += a; mB += b;
+    matOut += '<div class="material-row">' +
+      '<span class="name">' + name + '</span>' +
+      '<span class="qty">' + (Math.round(qty*100)/100) + ' ' + unit + '</span>' +
+      '<span class="price">' + fmt(a) + '</span>' +
+    '</div>';
+    matList.push({ name: name, qty: qty, unit: unit, price: priceObj.min, priceMax: priceObj.max });
+  }
+
+  addMat('Beton M200', betonV, 'm3', PRICES.beton);
+  addMat('Tsement M400', tsQ, 'qop', PRICES.tsement);
+  addMat('Yuvilgan qum', qumV, 'm3', PRICES.qum);
+  addMat("Shag'al", shagV, 'm3', PRICES.shagal);
+  addMat('Armatura 12mm', armT, 'tonna', PRICES.armatura);
+  addMat('Reka (qolip)', rekV, 'm3', PRICES.reka);
+  addMat('Opalubka (arenda)', opalubkaS, 'm2', PRICES.opalubka);
+
+  addMat(wName, wQty, wUnit, wPrice);
+
+  if (totalBetonV2 > 0) {
+    addMat('Beton (ustun/karkas)', totalBetonV2, 'm3', PRICES.beton);
+    addMat('Armatura (ustun/karkas)', totalBetonV2 * 0.08, 'tonna', PRICES.armatura);
+  }
+  if (vassStrapV > 0) {
+    var vsKey = 'strapila_' + vassType;
+    addMat('Strapila (vassalash)', vassStrapV, 'm3', PRICES[vsKey] || PRICES.strapila_4x14_6);
+  }
+
+  var stKey = 'strapila_' + strapType;
+  addMat('Strapila (tom)', strapV, 'm3', PRICES[stKey] || PRICES.strapila_4x14_6);
+  addMat('Reka (tom)', rekaTomV, 'm3', PRICES.reka);
+  if (qamishCount > 0) addMat("Qamish bog'langan", qamishCount, 'dona', PRICES.qamish);
+  if (boyraS > 0) addMat("Bo'yra", boyraS, 'm2', PRICES.boyra);
+  if (lombzV > 0) addMat('Lombz', lombzV, 'm3', PRICES.lombz);
+  if (mourlL > 0) addMat('Mourlant', mourlL, 'pm', PRICES.reka);
+  addMat(coverType === 'shifer' ? 'Shifer' : coverType === 'metallocherepitsa' ? 'Metallocherepitsa' : 'Ondulin', covQty, covUnit, PRICES[coverType]);
+  if (tornovType === 'yupqa') addMat('Yupka tornov', tornovL, 'pm', PRICES.tornov_yupqa);
+  else if (tornovType === 'oddiy') addMat('Tornov oddiy', tornovL, 'pm', PRICES.tornov_oddiy);
+  if (konyokS > 0) addMat('Konyok', konyokS, 'm2', PRICES.konyok);
+  if (mix70 > 0) addMat('Mix 70 lik', mix70, 'kg', PRICES.mix70);
+  if (mix100 > 0) addMat('Mix 100 lik', mix100, 'kg', PRICES.mix100);
+  if (mix150 > 0) addMat('Mix 150 lik', mix150, 'kg', PRICES.mix150);
+  if (sim4 > 0) addMat('Sim 4 lik', sim4, 'kg', PRICES.sim4);
+  if (rekaDona > 0) addMat('Reka 5×5×6m', rekaDona, 'dona', PRICES.reka_5x5x6);
+
+  var laborOut = '';
+  var wWork = state.work;
+
+  if (wWork === 'self') {
+    laborOut = '<div style="color:#8b9ab8;padding:14px;text-align:center;font-size:13px">Usta xizmati yo\'q (o\'zim quraman)</div>';
+  } else {
+    function addLab(name, qty, unit, priceObj) {
+      if (qty <= 0) return;
+      var a = qty * priceObj.min;
+      var b = qty * priceObj.max;
+      lA += a; lB += b;
+      laborOut += '<div class="material-row">' +
+        '<span class="name">' + name + '</span>' +
+        '<span class="qty">' + (Math.round(qty*100)/100) + ' ' + unit + '</span>' +
+        '<span class="price">' + fmt(a) + '</span>' +
+      '</div>';
+      laborList.push({ name: name, qty: qty, unit: unit, price: priceObj.min });
+    }
+
+    if (betonV > 0) addLab('Beton quyish', betonV, 'm3', LABOR.beton);
+    if (armT > 0) addLab("Armatura bog'lash", armT, 'tonna', LABOR.armatura);
+
+    var lk = 'gisht';
+    if (wType.indexOf('gazoblok') === 0) lk = 'gazoblok';
+    else if (wType === 'shlakoblok') lk = 'shlakoblok';
+    else if (wType === 'paxsa') lk = 'paxsa';
+
+    var terUnit = wType === 'paxsa' ? 'm3' : 'dona';
+    var terQty = wType === 'paxsa' ? (wTotS * paxsaW) : wQty;
+    if (terQty > 0) addLab('Devor terish (' + wName + ')', terQty, terUnit, LABOR[lk]);
+
+    if (roofS > 0) addLab("Strapila yig'ish", roofS, 'm2', LABOR.strapila);
+    if (roofS > 0) addLab('Tom qoplash', roofS, 'm2', LABOR.tom_qoplash);
+    if (konyokS > 0) addLab("Konyok o'rnatish", konyokS, 'm2', LABOR.konyok);
+
+    var bonusPct = wWork === 'super' ? 0.40 : 0.30;
+    var bonusA = mA * bonusPct;
+    var bonusB = mB * bonusPct;
+    lA += bonusA;
+    lB += bonusB;
+    laborOut += '<div class="material-row" style="border-top:1px dashed rgba(0,91,255,0.3);margin-top:8px;padding-top:10px">' +
+      '<span class="name" style="color:#60a5fa;font-weight:800">Brigada ustama (' + (bonusPct*100) + '%)</span>' +
+      '<span class="price" style="color:#60a5fa">' + fmt(bonusA) + '</span>' +
+    '</div>';
+  }
+
+  var tA = mA + lA;
+  var tB = mB + lB;
+
+  var houseTypeNames = { 1: '1 qavatli', 2: '2 qavatli', 3: '3 qavatli' };
+
+  document.getElementById('resultSummary').textContent =
+    houseTypeNames[floors] + ' uy • ' + area + ' m² • ' + rooms + ' xona';
+
+  var finalHtml = '' +
+    '<div class="result-total">' +
+      '<div class="label">UMUMIY XARAJAT</div>' +
+      '<div class="amount">' + fmt(tB) + '</div>' +
+      '<div class="range">Min: ' + fmt(tA) + ' — Max: ' + fmt(tB) + '</div>' +
+    '</div>' +
+    '<div class="section">' +
+      '<div class="section-title">🧱 MATERIAL</div>' +
+      (matOut || '<div style="text-align:center;padding:20px;color:#8b9ab8;font-size:13px">Material yo\'q</div>') +
+    '</div>' +
+    '<div class="section">' +
+      '<div class="section-title">👷 XIZMAT</div>' +
+      (laborOut || '') +
+    '</div>' +
+    '<div class="summary-card">' +
+      '<div class="sum-row"><span class="l">Material jami</span><span class="v">' + fmt(mA) + ' — ' + fmt(mB) + '</span></div>' +
+      '<div class="sum-row"><span class="l">Usta haqi</span><span class="v">' + fmt(lA) + ' — ' + fmt(lB) + '</span></div>' +
+      '<div class="sum-row big"><span class="l">YAKUNIY</span><span class="v">' + fmt(tB) + '</span></div>' +
+    '</div>';
+
+  document.getElementById('resultContent').innerHTML = finalHtml;
+
+  lastResult = { matList: matList, laborList: laborList, totalA: tA, totalB: tB, area: area, floors: floors };
+
+  goToStep(7);
+  toast('✅ Hisob tayyor!', 'ok');
+}
+
+function addAllToCart() {
+  if (!lastResult) { toast('Avval hisoblang', 'err'); return; }
+  var cart = [];
+  try { cart = JSON.parse(localStorage.getItem('rayis_cart')) || []; } catch(e) { cart = []; }
+
+  var added = 0;
+  lastResult.matList.forEach(function(item) {
+    var ex = cart.find(function(c){ return c.name === item.name && c.fromCalc; });
+    if (ex) {
+      ex.qty += item.qty;
+    } else {
+      cart.push({
+        id: 'calc_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+        name: item.name,
+        qty: item.qty,
+        unit: item.unit,
+        price: item.price,
+        emoji: '🧮',
+        images: [],
+        category: 'qurilish',
+        fromCalc: true
+      });
+    }
+    added++;
+  });
+
+  try { localStorage.setItem('rayis_cart', JSON.stringify(cart)); } catch(e) {
+    return toast('Xotira to\'ldi', 'err');
+  }
+  toast('✅ ' + added + ' ta material savatga', 'ok');
+  setTimeout(function(){
+    if (confirm('Savatga o\'tishni xohlaysizmi?')) location.href = 'cart.html';
+  }, 1000);
+}
+
+function callUsta() {
+  if (!lastResult) { toast('Avval hisoblang', 'err'); return; }
+  var text = 'RAYIS Qurilish: ' + lastResult.area + ' m², ' + lastResult.floors + ' qavat uy uchun usta kerak.';
+  if (confirm(text + '\n\nQo\'ng\'iroq qilinsinmi?')) {
+    location.href = 'tel:+998915850487';
+  }
+}
+
+function printResult() { window.print(); }
+
+// ============================================
+// ✅ INPUT: "0" avtomatik o'chirish
+// ============================================
+document.querySelectorAll('input[type="number"]').forEach(function(inp) {
+  inp.addEventListener('focus', function() {
+    if (this.value === '0' || this.value === '0.0' || this.value === '0.00' || this.value === '0.000') {
+      this.value = '';
+    }
+    var self = this;
+    setTimeout(function() { try { self.select(); } catch(e) {} }, 10);
+  });
+
+  inp.addEventListener('blur', function() {
+    if (this.value === '' || this.value === '-' || this.value === '.') {
+      this.value = '0';
+    }
+  });
+});
+
+// ============================================
+// BOSHLASH
+// ============================================
+renderProgress();
+updateTotalArea();
+</script>
+</body>
+</html>

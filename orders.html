@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAYIS BOZORI — Buyurtmalarim</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,'Segoe UI',sans-serif; }
+  body { background:#0b0f1a; color:#fff; min-height:100vh; padding-bottom:80px; }
+  .header { background:#0f1626; border-bottom:1px solid rgba(255,255,255,0.06); padding:12px 16px; position:sticky; top:0; z-index:100; }
+  .htop { display:flex; align-items:center; gap:10px; }
+  .back { font-size:22px; cursor:pointer; color:#8b9ab8; }
+  .title { font-size:16px; font-weight:800; flex:1; }
+  .count-badge { background:rgba(0,91,255,0.15); border:1px solid rgba(0,91,255,0.3); padding:5px 12px; border-radius:20px; font-size:11px; color:#60a5fa; font-weight:800; }
+  .section { padding:16px; }
+  .order { background:#131a2b; border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:14px; margin-bottom:12px; }
+  .ohead { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; gap:10px; }
+  .oid { font-size:12px; font-weight:800; color:#60a5fa; word-break:break-all; }
+  .odate { font-size:10px; color:#5b6b8a; margin-top:3px; }
+  .ostat { padding:5px 12px; border-radius:20px; font-size:10px; font-weight:800; white-space:nowrap; flex-shrink:0; }
+  .st-yangi { background:rgba(0,91,255,0.15); color:#60a5fa; border:1px solid rgba(0,91,255,0.3); }
+  .st-yolga_chiqdi { background:rgba(251,191,36,0.15); color:#fbbf24; border:1px solid rgba(251,191,36,0.3); }
+  .st-yetkazildi { background:rgba(52,211,153,0.15); color:#34d399; border:1px solid rgba(52,211,153,0.3); }
+  .st-bekor { background:rgba(239,68,68,0.15); color:#f87171; border:1px solid rgba(239,68,68,0.3); }
+
+  /* ✅ TO'LOV BADGES */
+  .badge-row { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
+  .pbadge { padding:4px 10px; border-radius:16px; font-size:10px; font-weight:800; white-space:nowrap; }
+  .pb-paid { background:rgba(52,211,153,0.15); color:#34d399; border:1px solid rgba(52,211,153,0.3); }
+  .pb-cash { background:rgba(251,191,36,0.15); color:#fbbf24; border:1px solid rgba(251,191,36,0.3); }
+  .pb-pending { background:rgba(139,92,246,0.15); color:#a78bfa; border:1px solid rgba(139,92,246,0.3); }
+
+  .items-prev { display:flex; flex-direction:column; gap:8px; padding-bottom:12px; border-bottom:1px dashed rgba(255,255,255,0.08); margin-bottom:12px; }
+  .prev-item { display:flex; gap:10px; align-items:center; font-size:12px; color:#cbd5e1; }
+  .prev-item .em { font-size:20px; width:26px; text-align:center; flex-shrink:0; }
+  .prev-item .em img { width:26px; height:26px; border-radius:6px; object-fit:cover; }
+  .prev-item .nm { flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .prev-item .qt { color:#8b9ab8; font-size:11px; font-weight:600; }
+  .prev-more { font-size:11px; color:#8b9ab8; padding-left:36px; }
+  .ototal { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+  .ototal .lbl { font-size:11px; color:#8b9ab8; font-weight:600; }
+  .ototal .val { font-size:18px; font-weight:900; color:#34d399; letter-spacing:-0.3px; }
+  .oacts { display:flex; gap:8px; }
+  .btn-sm { flex:1; padding:11px; border-radius:10px; font-size:12px; font-weight:800; cursor:pointer; border:none; }
+  .btn-toggle { background:#1a2337; color:#cbd5e1; border:1px solid rgba(255,255,255,0.08); }
+  .btn-cancel { background:rgba(239,68,68,0.12); color:#f87171; border:1px solid rgba(239,68,68,0.3); }
+  .btn-pay { background:linear-gradient(135deg,#10b981,#059669); color:#fff; }
+  .details { display:none; margin-top:14px; padding-top:14px; border-top:1px dashed rgba(255,255,255,0.08); }
+  .details.show { display:block; }
+  .drow { display:flex; justify-content:space-between; padding:6px 0; font-size:12px; color:#cbd5e1; gap:10px; }
+  .drow .lbl { color:#8b9ab8; flex-shrink:0; }
+  .drow .val { color:#fff; font-weight:600; text-align:right; word-break:break-word; }
+  .ditem { display:flex; justify-content:space-between; padding:6px 0; font-size:12px; gap:10px; }
+  .ditem .nm { color:#cbd5e1; flex:1; }
+  .ditem .pr { color:#34d399; font-weight:700; white-space:nowrap; }
+  .clear-all { background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.3); color:#f87171; padding:14px; border-radius:12px; font-size:13px; font-weight:800; cursor:pointer; width:100%; margin-top:8px; }
+  .empty { padding:80px 20px; text-align:center; color:#5b6b8a; }
+  .empty .ic { font-size:64px; margin-bottom:14px; opacity:0.5; }
+  .empty h3 { font-size:16px; color:#cbd5e1; margin-bottom:8px; font-weight:700; }
+  .empty p { font-size:13px; line-height:1.6; margin-bottom:20px; }
+  .empty button { background:linear-gradient(135deg,#005bff,#0047cc); color:#fff; border:none; padding:14px 28px; border-radius:12px; font-size:14px; font-weight:800; cursor:pointer; }
+  .toast { position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-100px); background:#005bff; color:#fff; padding:12px 20px; border-radius:12px; font-size:13px; font-weight:700; z-index:9999; transition:transform 0.3s; max-width:90%; text-align:center; box-shadow:0 10px 30px rgba(0,91,255,0.4); }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+  .toast.ok { background:#10b981; }
+  .toast.err { background:#ef4444; }
+  .nav { position:fixed; bottom:0; left:0; right:0; background:#0f1626; border-top:1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-around; padding:10px 0 max(10px,env(safe-area-inset-bottom)); z-index:200; }
+  .nav-i { display:flex; flex-direction:column; align-items:center; gap:2px; font-size:10px; color:#5b6b8a; cursor:pointer; flex:1; padding:4px; }
+  .nav-i.active { color:#60a5fa; }
+  .nav-i .ic { font-size:20px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="htop">
+    <div class="back" onclick="location.href='home.html'">←</div>
+    <div class="title">Buyurtmalarim</div>
+    <div class="count-badge" id="countBadge">0 ta</div>
+  </div>
+</div>
+
+<div id="content"></div>
+
+<div class="nav">
+  <div class="nav-i" onclick="location.href='home.html'"><div class="ic">🏠</div><div>Bosh</div></div>
+  <div class="nav-i" onclick="location.href='search.html'"><div class="ic">🔍</div><div>Qidiruv</div></div>
+  <div class="nav-i" onclick="location.href='cart.html'"><div class="ic">🛒</div><div>Savat</div></div>
+  <div class="nav-i active"><div class="ic">📦</div><div>Buyurtma</div></div>
+  <div class="nav-i" onclick="location.href='profile.html'"><div class="ic">👤</div><div>Profil</div></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function toast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (type === 'err' ? ' err' : type === 'ok' ? ' ok' : '');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+function fmt(p) { return (Number(p)||0).toLocaleString('uz-UZ').replace(/,/g,' ') + " so'm"; }
+function num(n) { const v = Number(n)||0; return Number.isInteger(v) ? v.toString() : v.toFixed(2).replace(/\.?0+$/, ''); }
+function esc(s) { return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function formatDate(iso) {
+  try {
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return '—';
+    const pad = n => String(n).padStart(2, '0');
+    return pad(d.getDate()) + '.' + pad(d.getMonth()+1) + '.' + d.getFullYear() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  } catch(e) { return '—'; }
+}
+
+const STATUS = {
+  yangi: { label: '🆕 Yangi', cls: 'st-yangi' },
+  yolga_chiqdi: { label: '🚚 Yo\'lda', cls: 'st-yolga_chiqdi' },
+  yetkazildi: { label: '✅ Yetkazildi', cls: 'st-yetkazildi' },
+  bekor: { label: '❌ Bekor', cls: 'st-bekor' }
+};
+
+function getOrders() {
+  let orders = [];
+  try { orders = JSON.parse(localStorage.getItem('rayis_orders') || '[]'); } catch(e) {}
+  if (!Array.isArray(orders)) return [];
+  return orders.filter(o => o && o.id && o.customer && o.customer.name);
+}
+function toggleDetails(id) {
+  const el = document.getElementById('details-' + id);
+  if (el) el.classList.toggle('show');
+}
+function cancelOrder(id) {
+  if (!confirm('Buyurtmani bekor qilishni tasdiqlaysizmi?')) return;
+  let orders = JSON.parse(localStorage.getItem('rayis_orders') || '[]');
+  const o = orders.find(x => x.id === id);
+  if (!o) return;
+  if (o.status !== 'yangi') { toast('Faqat yangi buyurtmani bekor qilish mumkin', 'err'); return; }
+  o.status = 'bekor';
+  try { localStorage.setItem('rayis_orders', JSON.stringify(orders)); } catch(e) {}
+  toast('❌ Buyurtma bekor qilindi', 'ok');
+  render();
+}
+function clearAll() {
+  if (!confirm('Barcha buyurtmalarni o\'chirishni tasdiqlaysizmi?')) return;
+  try { localStorage.removeItem('rayis_orders'); } catch(e) {}
+  toast('🗑 Hammasi o\'chirildi', 'ok');
+  render();
+}
+
+// ✅ TO'LOV BADGE
+function paymentBadge(o) {
+  const ps = o.paymentStatus;
+  const method = o.paymentMethod || o.payment;
+  const methodNames = {
+    'payme': 'Payme',
+    'click': 'Click',
+    'uzum': 'Uzum',
+    'card': 'Karta',
+    'installment': 'Bo\'lib to\'lash',
+    'naqd': 'Naqd',
+    'cash': 'Naqd'
+  };
+  const methodName = methodNames[method] || 'To\'lov';
+
+  if (ps === 'paid') {
+    return '<div class="pbadge pb-paid">✅ ' + methodName + ' — To\'langan</div>';
+  } else if (ps === 'cash_on_delivery') {
+    return '<div class="pbadge pb-cash">💵 ' + methodName + ' — Yetkazishda</div>';
+  } else if (ps === 'pending') {
+    return '<div class="pbadge pb-pending">⏳ ' + methodName + ' — Kutilmoqda</div>';
+  }
+  return '';
+}
+
+function renderOrder(o) {
+  try {
+    const s = STATUS[o.status] || STATUS.yangi;
+    const items = Array.isArray(o.items) ? o.items : [];
+    const cust = o.customer || {};
+    const previewItems = items.slice(0, 3).map(it => {
+      const em = (it.images && it.images[0]) ? '<img src="' + it.images[0] + '">' : (it.emoji || '📦');
+      const variant = it.variantText ? ' <span style="color:#60a5fa">(' + esc(it.variantText) + ')</span>' : '';
+      return '<div class="prev-item"><div class="em">' + em + '</div><div class="nm">' + esc(it.name) + variant + '</div><div class="qt">' + num(it.qty||1) + ' ' + esc(it.unit||'dona') + '</div></div>';
+    }).join('');
+    const more = items.length > 3 ? '<div class="prev-more">+ yana ' + (items.length - 3) + ' ta</div>' : '';
+    const allItems = items.map(it => {
+      const q = Number(it.qty) || 1;
+      const sum = (Number(it.price)||0) * q;
+      const variant = it.variantText ? ' <span style="color:#60a5fa">(' + esc(it.variantText) + ')</span>' : '';
+      return '<div class="ditem"><span class="nm">' + esc(it.name) + variant + ' × ' + num(q) + '</span><span class="pr">' + fmt(sum) + '</span></div>';
+    }).join('');
+    const cancelBtn = o.status === 'yangi' ? '<button class="btn-sm btn-cancel" onclick="cancelOrder(\'' + o.id + '\')">❌ Bekor</button>' : '';
+
+    // ✅ To'lov tugmasi (agar pending bo'lsa)
+    const payBtn = (o.paymentStatus === 'pending') ?
+      '<button class="btn-sm btn-pay" onclick="location.href=\'payment.html?order=' + o.id + '\'">💳 To\'lash</button>' : '';
+
+    return '<div class="order">' +
+      '<div class="ohead"><div><div class="oid">' + esc(o.id) + '</div><div class="odate">' + formatDate(o.createdAt) + '</div></div><div class="ostat ' + s.cls + '">' + s.label + '</div></div>' +
+      '<div class="badge-row">' + paymentBadge(o) + '</div>' +
+      '<div class="items-prev">' + previewItems + more + '</div>' +
+      '<div class="ototal"><div class="lbl">Umumiy summa:</div><div class="val">' + fmt(o.total) + '</div></div>' +
+      '<div class="oacts">' + payBtn + '<button class="btn-sm btn-toggle" onclick="toggleDetails(\'' + o.id + '\')">📄 Batafsil</button>' + cancelBtn + '</div>' +
+      '<div class="details" id="details-' + o.id + '">' +
+        '<div class="drow"><span class="lbl">👤 Xaridor</span><span class="val">' + esc(cust.name || '—') + '</span></div>' +
+        '<div class="drow"><span class="lbl">📞 Telefon</span><span class="val">' + esc(cust.phone || '—') + '</span></div>' +
+        '<div class="drow"><span class="lbl">📍 Manzil</span><span class="val">' + esc(cust.address || '—') + '</span></div>' +
+        (o.discount ? '<div class="drow"><span class="lbl">🎁 Chegirma</span><span class="val" style="color:#34d399">−' + fmt(o.discount) + ' (' + esc(o.promoCode || '') + ')</span></div>' : '') +
+        '<div style="margin-top:10px;padding-top:10px;border-top:1px dashed rgba(255,255,255,0.08)">' +
+          '<div style="font-size:12px;color:#60a5fa;font-weight:800;margin-bottom:6px">🛒 Mahsulotlar:</div>' +
+          allItems +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  } catch(e) {
+    return '<div class="order"><div style="color:#ef4444;font-size:12px">⚠️ Xato: ' + esc(o.id || '—') + '</div></div>';
+  }
+}
+
+function render() {
+  const orders = getOrders();
+  document.getElementById('countBadge').textContent = orders.length + ' ta';
+  const c = document.getElementById('content');
+  if (orders.length === 0) {
+    c.innerHTML = '<div class="empty"><div class="ic">📦</div><h3>Hozircha buyurtma yo\'q</h3><p>Xarid qilib, birinchi buyurtmangizni bering</p><button onclick="location.href=\'search.html\'">🔍 Xarid qilish</button></div>';
+    return;
+  }
+  orders.sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||''));
+  let html = '<div class="section">';
+  orders.forEach(o => { html += renderOrder(o); });
+  html += '<button class="clear-all" onclick="clearAll()">🗑 Hammasini tozalash</button>';
+  html += '</div>';
+  c.innerHTML = html;
+}
+
+render();
+</script>
+</body>
+</html>

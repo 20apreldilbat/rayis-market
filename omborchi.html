@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAYIS BOZORI — Omborchi</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,'Segoe UI',sans-serif; }
+  body { background:#0b0f1a; color:#fff; min-height:100vh; padding-bottom:80px; }
+
+  /* HEADER */
+  .header { background:linear-gradient(135deg,#f59e0b,#b45309); padding:14px 16px; position:sticky; top:0; z-index:100; box-shadow:0 4px 20px rgba(245,158,11,0.3); }
+  .htop { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px; }
+  .brand { display:flex; align-items:center; gap:10px; }
+  .brand-logo { width:36px; height:36px; background:#fff; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:900; color:#f59e0b; }
+  .brand-text { font-size:15px; font-weight:800; white-space:nowrap; }
+  .brand-text span { color:#fde68a; }
+  .htop-right { display:flex; align-items:center; gap:8px; }
+  .logout-btn { background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.2); color:#fff; padding:8px 12px; border-radius:10px; font-size:11px; font-weight:700; cursor:pointer; }
+  .admin-info { display:flex; align-items:center; gap:10px; font-size:12px; }
+  .admin-info .avatar { width:28px; height:28px; background:rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; }
+  .admin-info .nm { font-weight:800; }
+  .admin-info .badge-v { background:#fff; color:#f59e0b; font-size:9px; font-weight:900; padding:2px 6px; border-radius:6px; }
+
+  /* TABS */
+  .tabs { display:flex; gap:2px; padding:8px 12px 12px; overflow-x:auto; background:#f59e0b; scrollbar-width:none; position:sticky; top:62px; z-index:99; }
+  .tabs::-webkit-scrollbar { display:none; }
+  .tab { padding:9px 14px; background:rgba(255,255,255,0.15); border:none; color:rgba(255,255,255,0.85); font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; border-radius:8px; }
+  .tab.active { background:#fff; color:#f59e0b; }
+
+  /* SECTIONS */
+  .sec { padding:16px; display:none; }
+  .sec.active { display:block; }
+
+  /* KPI */
+  .kpi-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+  .kpi { background:#131a2b; border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:14px; }
+  .kpi .val { font-size:22px; font-weight:900; color:#fbbf24; }
+  .kpi .lbl { font-size:11px; color:#8b9ab8; margin-top:4px; font-weight:600; }
+  .kpi.danger .val { color:#f87171; }
+  .kpi.green .val { color:#34d399; }
+
+  /* SEARCH */
+  .search-row { display:flex; align-items:center; gap:10px; background:#0f1626; border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px 14px; margin-bottom:12px; }
+  .search-row input { flex:1; background:none; border:none; color:#fff; font-size:14px; outline:none; font-family:inherit; }
+  .search-row input::placeholder { color:#5b6b8a; }
+
+  /* FILTER */
+  .filter-bar { display:flex; gap:6px; margin-bottom:12px; overflow-x:auto; scrollbar-width:none; padding-bottom:4px; }
+  .filter-bar::-webkit-scrollbar { display:none; }
+  .fchip { flex:0 0 auto; padding:7px 12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:16px; font-size:11px; color:#cbd5e1; white-space:nowrap; cursor:pointer; font-weight:600; }
+  .fchip.active { background:rgba(245,158,11,0.15); border-color:#f59e0b; color:#fbbf24; font-weight:800; }
+
+  /* STITLE */
+  .stitle { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+  .stitle h3 { font-size:15px; font-weight:800; }
+  .stitle .cnt { font-size:12px; color:#8b9ab8; font-weight:600; }
+
+  /* PRODUCT CARD */
+  .prod { background:#131a2b; border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:14px; margin-bottom:10px; }
+  .prod.low { border-color:rgba(239,68,68,0.4); background:rgba(239,68,68,0.04); }
+  .prow { display:flex; gap:12px; align-items:center; margin-bottom:12px; }
+  .pimg { width:54px; height:54px; background:linear-gradient(135deg,#1a2337,#0f1626); border-radius:12px; overflow:hidden; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:26px; }
+  .pimg img { width:100%; height:100%; object-fit:cover; }
+  .pinfo { flex:1; min-width:0; }
+  .pname { font-size:13px; font-weight:700; margin-bottom:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .pmeta { font-size:11px; color:#8b9ab8; margin-bottom:3px; }
+  .pstock { font-size:15px; font-weight:900; color:#fbbf24; }
+  .pstock.danger { color:#f87171; }
+
+  /* QTY CONTROLS */
+  .qty-row { display:flex; justify-content:space-between; align-items:center; padding-top:10px; border-top:1px dashed rgba(255,255,255,0.08); }
+  .qty-controls { display:flex; align-items:center; gap:10px; }
+  .qbtn { width:36px; height:36px; border-radius:10px; border:none; font-size:16px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .qbtn:active { transform:scale(0.92); }
+  .qbtn.minus { background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); color:#f87171; }
+  .qbtn.plus { background:rgba(52,211,153,0.15); border:1px solid rgba(52,211,153,0.3); color:#34d399; }
+  .qnum { font-size:15px; font-weight:800; min-width:40px; text-align:center; }
+
+  /* EMPTY */
+  .empty { padding:50px 20px; text-align:center; color:#4b5876; }
+  .empty .ic { font-size:54px; margin-bottom:12px; opacity:0.5; }
+  .empty p { font-size:13px; line-height:1.6; }
+
+  /* TOAST */
+  .toast { position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-100px); background:#f59e0b; color:#fff; padding:12px 20px; border-radius:12px; font-size:13px; font-weight:700; z-index:9999; transition:transform 0.3s; max-width:90%; text-align:center; box-shadow:0 10px 30px rgba(245,158,11,0.4); }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+  .toast.err { background:#ef4444; }
+  .toast.ok { background:#10b981; }
+
+  /* NAV */
+  .nav { position:fixed; bottom:0; left:0; right:0; background:#0f1626; border-top:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-around; padding:10px 0 max(10px,env(safe-area-inset-bottom)); z-index:200; }
+  .nav-i { display:flex; flex-direction:column; align-items:center; gap:2px; font-size:10px; color:#4b5876; cursor:pointer; flex:1; padding:4px; }
+  .nav-i.active { color:#fbbf24; }
+  .nav-i .ic { font-size:20px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="htop">
+    <div class="brand">
+      <div class="brand-logo">R</div>
+      <div class="brand-text">RAYIS <span>OMBOR</span></div>
+    </div>
+    <div class="htop-right">
+      <button class="logout-btn" onclick="logout()">Chiqish</button>
+    </div>
+  </div>
+  <div class="admin-info">
+    <div class="avatar">📦</div>
+    <div class="nm" id="adminName">Ombor paneli</div>
+    <div class="badge-v">OMBORCHI</div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="tab('all')">📦 Barchasi</button>
+  <button class="tab" onclick="tab('low')">⚠️ Kam qolgan</button>
+  <button class="tab" onclick="tab('zero')">❌ Tugagan</button>
+</div>
+
+<!-- ALL PRODUCTS -->
+<div class="sec active" id="sec-all">
+  <div class="kpi-grid">
+    <div class="kpi"><div class="val" id="kpiTotal">0</div><div class="lbl">Mahsulot turi</div></div>
+    <div class="kpi danger"><div class="val" id="kpiLow">0</div><div class="lbl">Kam qolgan</div></div>
+    <div class="kpi green"><div class="val" id="kpiUnits">0</div><div class="lbl">Umumiy dona</div></div>
+  </div>
+
+  <div class="search-row">
+    <span>🔍</span>
+    <input type="text" id="q" placeholder="Mahsulot qidirish..." oninput="renderAll()">
+  </div>
+
+  <div class="filter-bar">
+    <div class="fchip active" data-c="all" onclick="setCat('all')">Barchasi</div>
+    <div class="fchip" data-c="oziq-ovqat" onclick="setCat('oziq-ovqat')">🍎 Oziq-ovqat</div>
+    <div class="fchip" data-c="kiyim" onclick="setCat('kiyim')">👕 Kiyim</div>
+    <div class="fchip" data-c="elektronika" onclick="setCat('elektronika')">📱 Elektronika</div>
+    <div class="fchip" data-c="qurilish" onclick="setCat('qurilish')">🏗 Qurilish</div>
+    <div class="fchip" data-c="xizmatlar" onclick="setCat('xizmatlar')">🔧 Xizmatlar</div>
+  </div>
+
+  <div class="stitle"><h3>Barcha mahsulotlar</h3><span class="cnt" id="cntAll">0 ta</span></div>
+  <div id="listAll"></div>
+</div>
+
+<!-- LOW STOCK -->
+<div class="sec" id="sec-low">
+  <div class="stitle"><h3>⚠️ Kam qolgan (10 yoki kam)</h3></div>
+  <div id="listLow"></div>
+</div>
+
+<!-- ZERO STOCK -->
+<div class="sec" id="sec-zero">
+  <div class="stitle"><h3>❌ Tugagan mahsulotlar</h3></div>
+  <div id="listZero"></div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-i active" onclick="tab('all')"><div class="ic">📦</div><div>Barchasi</div></div>
+  <div class="nav-i" onclick="tab('low')"><div class="ic">⚠️</div><div>Kam</div></div>
+  <div class="nav-i" onclick="tab('zero')"><div class="ic">❌</div><div>Tugagan</div></div>
+  <div class="nav-i" onclick="location.href='home.html'"><div class="ic">🏠</div><div>Bosh</div></div>
+  <div class="nav-i" onclick="logout()"><div class="ic">🚪</div><div>Chiqish</div></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const LOW_LIMIT = 10;
+let filterCat = 'all';
+
+// ============================================
+// TOAST
+// ============================================
+function toast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (type === 'err' ? ' err' : type === 'ok' ? ' ok' : '');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ============================================
+// YORDAMCHI
+// ============================================
+function num(n) { const v = Number(n)||0; return Number.isInteger(v) ? v.toString() : v.toFixed(2).replace(/\.?0+$/, ''); }
+function fmt(p) { return (Number(p)||0).toLocaleString('uz-UZ').replace(/,/g,' ') + " so'm"; }
+function esc(s) { return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function catName(k) {
+  const m = {'oziq-ovqat':'🍎 Oziq-ovqat','kiyim':'👕 Kiyim','elektronika':'📱 Elektronika','qurilish':'🏗 Qurilish','xizmatlar':'🔧 Xizmatlar'};
+  return m[k] || '—';
+}
+function getProducts() {
+  let all = [];
+  try { all = JSON.parse(localStorage.getItem('rayis_products') || '[]'); } catch(e) {}
+  if (!Array.isArray(all)) return [];
+  return all.filter(p => p && p.name);
+}
+
+// ============================================
+// TAB
+// ============================================
+function tab(t) {
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.sec').forEach(x => x.classList.remove('active'));
+  const map = { all:0, low:1, zero:2 };
+  const idx = map[t];
+  if (idx !== undefined) document.querySelectorAll('.tab')[idx].classList.add('active');
+  document.getElementById('sec-' + t).classList.add('active');
+
+  document.querySelectorAll('.nav-i').forEach(x => x.classList.remove('active'));
+  if (idx !== undefined) document.querySelectorAll('.nav-i')[idx].classList.add('active');
+
+  if (t === 'all') renderAll();
+  else if (t === 'low') renderLow();
+  else if (t === 'zero') renderZero();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function setCat(c) {
+  filterCat = c;
+  document.querySelectorAll('.fchip').forEach(ch => ch.classList.toggle('active', ch.dataset.c === c));
+  renderAll();
+}
+
+// ============================================
+// STATISTIKA
+// ============================================
+function updateKPIs() {
+  const all = getProducts();
+  document.getElementById('kpiTotal').textContent = all.length;
+  document.getElementById('kpiLow').textContent = all.filter(p => Number(p.stock) <= LOW_LIMIT && Number(p.stock) > 0).length;
+  const units = all.reduce((s, p) => s + (Number(p.stock) || 0), 0);
+  document.getElementById('kpiUnits').textContent = units.toLocaleString('uz-UZ').replace(/,/g,' ');
+}
+
+// ============================================
+// RENDER CARD
+// ============================================
+function renderCard(p) {
+  const stock = Number(p.stock) || 0;
+  const low = stock <= LOW_LIMIT && stock > 0;
+  const zero = stock === 0;
+  const img = (p.images && p.images[0]) ? '<img src="' + p.images[0] + '">' : (p.emoji || '📦');
+
+  let cls = 'prod';
+  if (zero) cls += ' low';
+  else if (low) cls += ' low';
+
+  return '<div class="' + cls + '">' +
+    '<div class="prow">' +
+      '<div class="pimg">' + img + '</div>' +
+      '<div class="pinfo">' +
+        '<div class="pname">' + esc(p.name) + '</div>' +
+        '<div class="pmeta">' + catName(p.category) + ' • ' + esc(p.sellerName || p.seller || '—') + '</div>' +
+        '<div class="pstock' + (low || zero ? ' danger' : '') + '">' + num(stock) + ' ' + esc(p.unit || 'dona') + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="qty-row">' +
+      '<div class="qty-controls">' +
+        '<button class="qbtn minus" onclick="changeStock(' + p.id + ',-1)">−</button>' +
+        '<div class="qnum">' + num(stock) + '</div>' +
+        '<button class="qbtn plus" onclick="changeStock(' + p.id + ',1)">+</button>' +
+      '</div>' +
+      '<div style="font-size:11px;color:#8b9ab8">' + fmt(p.price) + '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+// ============================================
+// RENDER ALL
+// ============================================
+function renderAll() {
+  updateKPIs();
+  const q = (document.getElementById('q').value || '').toLowerCase().trim();
+  let all = getProducts();
+
+  if (filterCat !== 'all') all = all.filter(p => p.category === filterCat);
+  if (q) all = all.filter(p => (p.name || '').toLowerCase().includes(q));
+
+  document.getElementById('cntAll').textContent = all.length + ' ta';
+  const c = document.getElementById('listAll');
+
+  if (all.length === 0) {
+    c.innerHTML = '<div class="empty"><div class="ic">📦</div><p>Mahsulot topilmadi</p></div>';
+    return;
+  }
+
+  let html = '';
+  all.forEach(p => { html += renderCard(p); });
+  c.innerHTML = html;
+}
+
+// ============================================
+// RENDER LOW
+// ============================================
+function renderLow() {
+  const all = getProducts().filter(p => Number(p.stock) <= LOW_LIMIT && Number(p.stock) > 0);
+  const c = document.getElementById('listLow');
+  if (all.length === 0) {
+    c.innerHTML = '<div class="empty"><div class="ic">✅</div><p>Kam qolgan mahsulot yo\'q</p></div>';
+    return;
+  }
+  let html = '';
+  all.forEach(p => { html += renderCard(p); });
+  c.innerHTML = html;
+}
+
+// ============================================
+// RENDER ZERO
+// ============================================
+function renderZero() {
+  const all = getProducts().filter(p => Number(p.stock) === 0);
+  const c = document.getElementById('listZero');
+  if (all.length === 0) {
+    c.innerHTML = '<div class="empty"><div class="ic">✅</div><p>Tugagan mahsulot yo\'q</p></div>';
+    return;
+  }
+  let html = '';
+  all.forEach(p => { html += renderCard(p); });
+  c.innerHTML = html;
+}
+
+// ============================================
+// CHANGE STOCK
+// ============================================
+function changeStock(id, delta) {
+  let all = JSON.parse(localStorage.getItem('rayis_products') || '[]');
+  const idx = all.findIndex(x => String(x.id) === String(id));
+  if (idx === -1) return;
+
+  const oldStock = Number(all[idx].stock) || 0;
+  const newStock = Math.max(0, oldStock + delta);
+  if (newStock === oldStock) {
+    if (delta < 0) toast('0 dan kam bo\'lmaydi', 'err');
+    return;
+  }
+
+  all[idx].stock = newStock;
+  all[idx].updatedAt = new Date().toISOString();
+  try { localStorage.setItem('rayis_products', JSON.stringify(all)); } catch(e) {
+    return toast('Xotira to\'ldi', 'err');
+  }
+
+  toast(delta > 0 ? '➕ +1 qo\'shildi' : '➖ −1 kamaydi', 'ok');
+
+  // Qaysi tab'da bo'lsa, o'shani yangilash
+  const activeSec = document.querySelector('.sec.active');
+  if (activeSec) {
+    if (activeSec.id === 'sec-all') renderAll();
+    else if (activeSec.id === 'sec-low') renderLow();
+    else if (activeSec.id === 'sec-zero') renderZero();
+  }
+}
+
+// ============================================
+// LOGOUT
+// ============================================
+function logout() {
+  if (!confirm('Chiqishni tasdiqlaysizmi?')) return;
+  localStorage.removeItem('rayis_user');
+  location.href = 'index.html';
+}
+
+// ============================================
+// BOSHLASH
+// ============================================
+renderAll();
+</script>
+</body>
+</html>
