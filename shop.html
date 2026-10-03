@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAYIS BOZORI — Do'kon</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,'Segoe UI',sans-serif; }
+  body { background:#0b0f1a; color:#fff; min-height:100vh; padding-bottom:80px; }
+
+  .header { background:#0f1626; border-bottom:1px solid rgba(255,255,255,0.06); padding:12px 16px; position:sticky; top:0; z-index:100; }
+  .htop { display:flex; align-items:center; gap:10px; }
+  .back { font-size:22px; cursor:pointer; color:#8b9ab8; }
+  .title { font-size:15px; font-weight:800; flex:1; }
+  .icon-btn { position:relative; width:38px; height:38px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer; color:#fff; }
+  .icon-btn .dot { position:absolute; top:-4px; right:-4px; background:#ff3b30; color:#fff; font-size:9px; font-weight:800; min-width:18px; height:18px; border-radius:9px; display:flex; align-items:center; justify-content:center; padding:0 4px; }
+
+  .shop-banner { height:140px; background:linear-gradient(135deg,#005bff,#7c3aed); position:relative; overflow:hidden; }
+  .shop-banner img { width:100%; height:100%; object-fit:cover; }
+  .shop-banner::after { content:"🏪"; position:absolute; right:-20px; top:-20px; font-size:150px; opacity:0.15; }
+
+  .shop-info { padding:0 16px; margin-top:-40px; position:relative; z-index:2; }
+  .shop-head { display:flex; gap:12px; align-items:flex-end; margin-bottom:12px; }
+  .shop-avatar { width:80px; height:80px; background:linear-gradient(135deg,#005bff,#0047cc); border-radius:20px; display:flex; align-items:center; justify-content:center; font-size:36px; border:3px solid #0b0f1a; box-shadow:0 8px 20px rgba(0,91,255,0.3); flex-shrink:0; overflow:hidden; }
+  .shop-avatar img { width:100%; height:100%; object-fit:cover; }
+  .shop-title { flex:1; min-width:0; padding-bottom:6px; }
+  .shop-name { font-size:19px; font-weight:900; margin-bottom:4px; word-break:break-word; }
+  .shop-verified { display:inline-block; background:rgba(52,211,153,0.15); border:1px solid rgba(52,211,153,0.3); color:#34d399; font-size:9px; font-weight:800; padding:2px 6px; border-radius:6px; vertical-align:middle; margin-left:6px; }
+  .shop-meta { font-size:11px; color:#8b9ab8; }
+
+  .shop-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; padding:12px; background:#131a2b; border:1px solid rgba(255,255,255,0.06); border-radius:14px; margin-bottom:12px; }
+  .shop-stat { text-align:center; }
+  .shop-stat .num { font-size:16px; font-weight:900; color:#60a5fa; }
+  .shop-stat .num.star { color:#fbbf24; }
+  .shop-stat .lbl { font-size:10px; color:#8b9ab8; margin-top:3px; font-weight:600; }
+
+  .shop-actions { display:flex; gap:8px; margin-bottom:12px; }
+  .shop-btn { padding:12px; border:none; border-radius:12px; font-size:13px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; }
+  .shop-btn.subscribe { flex:1; background:linear-gradient(135deg,#005bff,#0047cc); color:#fff; }
+  .shop-btn.subscribed { flex:1; background:rgba(52,211,153,0.15); color:#34d399; border:1px solid rgba(52,211,153,0.3); }
+  .shop-btn.chat { background:rgba(0,91,255,0.12); color:#60a5fa; border:1px solid rgba(0,91,255,0.3); padding:12px 16px; font-size:18px; }
+  .shop-btn.call { background:rgba(52,211,153,0.12); color:#34d399; border:1px solid rgba(52,211,153,0.3); padding:12px 16px; font-size:18px; }
+
+  .shop-desc { background:#131a2b; border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:12px; font-size:12px; color:#cbd5e1; line-height:1.6; margin-bottom:16px; }
+
+  .chips { display:flex; gap:6px; padding:8px 16px 12px; overflow-x:auto; scrollbar-width:none; }
+  .chips::-webkit-scrollbar { display:none; }
+  .chip { flex:0 0 auto; padding:8px 14px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:20px; color:#94a3b8; font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap; }
+  .chip.active { background:rgba(0,91,255,0.15); border-color:#005bff; color:#60a5fa; font-weight:800; }
+
+  .products { display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:0 16px; }
+  .prod { background:#131a2b; border:1px solid rgba(255,255,255,0.06); border-radius:14px; overflow:hidden; cursor:pointer; transition:all 0.15s; }
+  .prod:active { transform:scale(0.98); }
+  .prod-img { height:130px; background:linear-gradient(135deg,#1a2337,#0f1626); display:flex; align-items:center; justify-content:center; font-size:48px; position:relative; overflow:hidden; }
+  .prod-img img { width:100%; height:100%; object-fit:cover; }
+  .prod-img .heart { position:absolute; top:8px; right:8px; background:rgba(0,0,0,0.5); color:#fff; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; cursor:pointer; }
+  .prod-img .heart.on { color:#ff3b6b; }
+  .prod-info { padding:10px; }
+  .prod-name { font-size:13px; font-weight:700; margin-bottom:5px; line-height:1.3; min-height:34px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .prod-rating { display:flex; align-items:center; gap:4px; margin-bottom:6px; font-size:11px; }
+  .prod-rating .stars { color:#fbbf24; letter-spacing:0.5px; }
+  .prod-rating .num { color:#fbbf24; font-weight:800; }
+  .prod-rating .cnt { color:#8b9ab8; }
+  .prod-rating .none { color:#5b6b8a; }
+  .prod-price-row { display:flex; align-items:center; gap:6px; margin-bottom:8px; flex-wrap:wrap; }
+  .prod-price { font-size:14px; font-weight:900; color:#34d399; }
+  .prod-old { font-size:11px; color:#5b6b8a; text-decoration:line-through; }
+  .prod-add { width:100%; padding:9px; background:linear-gradient(135deg,#005bff,#0047cc); border:none; border-radius:10px; color:#fff; font-size:12px; font-weight:800; cursor:pointer; }
+  .prod-add.in-cart { background:linear-gradient(135deg,#10b981,#059669); }
+
+  .empty { padding:50px 20px; text-align:center; color:#5b6b8a; }
+  .empty .ic { font-size:54px; margin-bottom:12px; opacity:0.5; }
+  .empty p { font-size:13px; line-height:1.6; }
+
+  .toast { position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-100px); background:#005bff; color:#fff; padding:12px 20px; border-radius:12px; font-size:13px; font-weight:700; z-index:9999; transition:transform 0.3s; max-width:90%; text-align:center; box-shadow:0 10px 30px rgba(0,91,255,0.4); }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+  .toast.ok { background:#10b981; }
+  .toast.err { background:#ef4444; }
+
+  .nav { position:fixed; bottom:0; left:0; right:0; background:#0f1626; border-top:1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-around; padding:10px 0 max(10px,env(safe-area-inset-bottom)); z-index:200; }
+  .nav-i { display:flex; flex-direction:column; align-items:center; gap:2px; font-size:10px; color:#5b6b8a; cursor:pointer; flex:1; padding:4px; position:relative; }
+  .nav-i.active { color:#60a5fa; }
+  .nav-i .ic { font-size:20px; }
+  .nav-i .nc { position:absolute; top:0; right:25%; background:#ff3b30; color:#fff; font-size:9px; font-weight:800; min-width:16px; height:16px; border-radius:8px; display:flex; align-items:center; justify-content:center; padding:0 3px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="htop">
+    <div class="back" onclick="goBack()">←</div>
+    <div class="title">Do'kon</div>
+    <div class="icon-btn" onclick="location.href='cart.html'">🛒<span class="dot" id="cartDot" style="display:none">0</span></div>
+  </div>
+</div>
+
+<div id="content"></div>
+
+<div class="nav">
+  <div class="nav-i" onclick="location.href='home.html'"><div class="ic">🏠</div><div>Bosh</div></div>
+  <div class="nav-i" onclick="location.href='search.html'"><div class="ic">🔍</div><div>Qidiruv</div></div>
+  <div class="nav-i" onclick="location.href='cart.html'">
+    <div class="ic">🛒</div><div>Savat</div>
+    <div class="nc" id="navCartCnt" style="display:none">0</div>
+  </div>
+  <div class="nav-i" onclick="location.href='chat.html'"><div class="ic">💬</div><div>Chat</div></div>
+  <div class="nav-i" onclick="location.href='profile.html'"><div class="ic">👤</div><div>Profil</div></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================
+// PARAMS
+// ============================================
+const params = new URLSearchParams(location.search);
+const shopId = params.get('id');
+
+let filterCat = 'all';
+
+// ============================================
+// TOAST
+// ============================================
+function toast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (type === 'err' ? ' err' : type === 'ok' ? ' ok' : '');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ============================================
+// YORDAMCHI
+// ============================================
+function num(n) { const v = Number(n)||0; return Number.isInteger(v) ? v.toString() : v.toFixed(2).replace(/\.?0+$/, ''); }
+function fmt(p) { return (Number(p)||0).toLocaleString('uz-UZ').replace(/,/g,' ') + " so'm"; }
+function esc(s) { return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+// ============================================
+// MAHSULOTLAR
+// ============================================
+function getAllProducts() {
+  let all = [];
+  try { all = JSON.parse(localStorage.getItem('rayis_products') || '[]'); } catch(e) {}
+  if (!Array.isArray(all)) return [];
+  return all.filter(p => p && p.name);
+}
+
+function getShopProducts() {
+  const all = getAllProducts();
+  if (!shopId) return all; // ✅ Agar id yo'q — BARCHA mahsulotlar
+  return all.filter(p => {
+    const sid = String(p.sellerId || '');
+    const sname = String(p.sellerName || p.seller || '');
+    return sid === String(shopId) || sname === String(shopId);
+  });
+}
+
+// ============================================
+// DO'KON MA'LUMOTLARI
+// ============================================
+function getShopData() {
+  const products = getShopProducts();
+  if (products.length === 0) return null;
+
+  const first = products[0];
+  const shopName = shopId
+    ? (first.sellerName || first.seller || shopId)
+    : 'RAYIS BOZORI (umumiy)';
+
+  const reviews = getAllReviews();
+  const productIds = products.map(p => String(p.id));
+  const myReviews = reviews.filter(r => productIds.indexOf(String(r.productId)) !== -1);
+  const avgRating = myReviews.length > 0
+    ? Math.round((myReviews.reduce((s, r) => s + (Number(r.rating) || 0), 0) / myReviews.length) * 10) / 10
+    : 0;
+
+  const shopKey = first.sellerId || shopName;
+  const subscribers = getSubscribers(shopKey);
+  const settings = getShopSettings(shopKey);
+
+  return {
+    id: shopKey,
+    name: shopName,
+    region: first.region || '—',
+    rating: avgRating,
+    reviewCount: myReviews.length,
+    productCount: products.length,
+    subscribers: subscribers,
+    banner: settings.banner || null,
+    avatar: settings.avatar || null,
+    description: settings.description || 'Bu do\'kon RAYIS BOZORI da ro\'yxatdan o\'tgan. Barcha mahsulotlar tekshirilgan.',
+    products: products
+  };
+}
+
+// ============================================
+// SHARHLAR
+// ============================================
+function getAllReviews() {
+  let all = [];
+  try { all = JSON.parse(localStorage.getItem('rayis_reviews') || '[]'); } catch(e) {}
+  return Array.isArray(all) ? all : [];
+}
+
+// ============================================
+// OBUNACHILAR
+// ============================================
+function getSubscribers(shopKey) {
+  let all = {};
+  try { all = JSON.parse(localStorage.getItem('rayis_subscribers') || '{}'); } catch(e) {}
+  if (typeof all !== 'object' || Array.isArray(all)) return [];
+  return all[shopKey] || [];
+}
+
+function isSubscribed(shopKey) {
+  const user = JSON.parse(localStorage.getItem('rayis_user') || '{}');
+  const myId = user.userId || 'guest';
+  if (myId === 'guest') return false;
+  const subs = getSubscribers(shopKey);
+  return subs.indexOf(myId) !== -1;
+}
+
+function toggleSubscribe(shopKey) {
+  const user = JSON.parse(localStorage.getItem('rayis_user') || '{}');
+  const myId = user.userId;
+  if (!myId) {
+    toast('Avval tizimga kiring', 'err');
+    return;
+  }
+
+  let all = {};
+  try { all = JSON.parse(localStorage.getItem('rayis_subscribers') || '{}'); } catch(e) {}
+  if (typeof all !== 'object' || Array.isArray(all)) all = {};
+  if (!Array.isArray(all[shopKey])) all[shopKey] = [];
+
+  const idx = all[shopKey].indexOf(myId);
+  if (idx === -1) {
+    all[shopKey].push(myId);
+    toast('✅ Obuna bo\'ldingiz', 'ok');
+  } else {
+    all[shopKey].splice(idx, 1);
+    toast('Obunadan chiqdingiz');
+  }
+
+  try { localStorage.setItem('rayis_subscribers', JSON.stringify(all)); } catch(e) {}
+  render();
+}
+
+// ============================================
+// DO'KON SOZLAMALARI
+// ============================================
+function getShopSettings(shopKey) {
+  let all = {};
+  try { all = JSON.parse(localStorage.getItem('rayis_shop_settings') || '{}'); } catch(e) {}
+  return (typeof all === 'object' && !Array.isArray(all)) ? (all[shopKey] || {}) : {};
+}
+
+// ============================================
+// SEVIMLILAR
+// ============================================
+function isFav(id) {
+  let favs = [];
+  try { favs = JSON.parse(localStorage.getItem('rayis_favs') || '[]'); } catch(e) {}
+  if (!Array.isArray(favs)) favs = [];
+  return favs.indexOf(id) !== -1;
+}
+
+function toggleFav(id, el) {
+  let favs = [];
+  try { favs = JSON.parse(localStorage.getItem('rayis_favs') || '[]'); } catch(e) {}
+  if (!Array.isArray(favs)) favs = [];
+
+  const idx = favs.indexOf(id);
+  if (idx === -1) {
+    favs.push(id);
+    el.textContent = '❤️';
+    el.classList.add('on');
+    toast('❤️ Sevimlilarga qo\'shildi', 'ok');
+  } else {
+    favs.splice(idx, 1);
+    el.textContent = '🤍';
+    el.classList.remove('on');
+    toast('Sevimlilardan olindi');
+  }
+  try { localStorage.setItem('rayis_favs', JSON.stringify(favs)); } catch(e) {}
+}
+
+// ============================================
+// SAVAT
+// ============================================
+function isInCart(id) {
+  let cart = [];
+  try { cart = JSON.parse(localStorage.getItem('rayis_cart') || '[]'); } catch(e) {}
+  if (!Array.isArray(cart)) cart = [];
+  return cart.some(i => String(i.id) === String(id));
+}
+
+function addToCart(id) {
+  const all = getAllProducts();
+  const p = all.find(x => String(x.id) === String(id));
+  if (!p) return toast('Topilmadi', 'err');
+
+  let cart = [];
+  try { cart = JSON.parse(localStorage.getItem('rayis_cart') || '[]'); } catch(e) {}
+  if (!Array.isArray(cart)) cart = [];
+
+  const ex = cart.find(i => String(i.id) === String(id));
+  if (ex) { ex.qty = (Number(ex.qty) || 1) + 1; }
+  else {
+    cart.push({
+      id: p.id, name: p.name, price: p.price,
+      unit: p.unit || 'dona', emoji: p.emoji || '📦',
+      images: p.images || [], category: p.category, qty: 1
+    });
+  }
+  try { localStorage.setItem('rayis_cart', JSON.stringify(cart)); } catch(e) {
+    return toast('Xotira to\'ldi', 'err');
+  }
+  updateCartBadge();
+  toast('✅ Savatga qo\'shildi', 'ok');
+  render();
+}
+
+// ============================================
+// RENDER
+// ============================================
+function render() {
+  const c = document.getElementById('content');
+  const shop = getShopData();
+
+  if (!shop) {
+    c.innerHTML = '<div class="empty"><div class="ic">🏪</div><p>Do\'kon topilmadi</p><p style="margin-top:10px;font-size:11px;color:#4b5876">Mahsulot qo\'shilmagan</p></div>';
+    return;
+  }
+
+  const subscribed = isSubscribed(shop.id);
+
+  let bannerHtml = shop.banner
+    ? '<div class="shop-banner"><img src="' + shop.banner + '"></div>'
+    : '<div class="shop-banner"></div>';
+
+  const avatarHtml = shop.avatar
+    ? '<div class="shop-avatar"><img src="' + shop.avatar + '"></div>'
+    : '<div class="shop-avatar">🏪</div>';
+
+  let html = bannerHtml +
+    '<div class="shop-info">' +
+      '<div class="shop-head">' +
+        avatarHtml +
+        '<div class="shop-title">' +
+          '<div class="shop-name">' + esc(shop.name) + '<span class="shop-verified">✓</span></div>' +
+          '<div class="shop-meta">📍 ' + esc(shop.region) + ' • ' + shop.productCount + ' ta mahsulot</div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="shop-stats">' +
+        '<div class="shop-stat">' +
+          '<div class="num star">' + (shop.rating > 0 ? shop.rating.toFixed(1) : '0.0') + '</div>' +
+          '<div class="lbl">⭐ Reyting (' + shop.reviewCount + ')</div>' +
+        '</div>' +
+        '<div class="shop-stat">' +
+          '<div class="num">' + shop.productCount + '</div>' +
+          '<div class="lbl">📦 Mahsulot</div>' +
+        '</div>' +
+        '<div class="shop-stat">' +
+          '<div class="num">' + shop.subscribers.length + '</div>' +
+          '<div class="lbl">👥 Obunachi</div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="shop-actions">' +
+        '<button class="shop-btn ' + (subscribed ? 'subscribed' : 'subscribe') + '" onclick="toggleSubscribe(\'' + esc(shop.id) + '\')">' +
+          (subscribed ? '✅ Obuna bo\'ldingiz' : '❤️ Obuna bo\'lish') +
+        '</button>' +
+        '<button class="shop-btn chat" onclick="openChat()">💬</button>' +
+        '<button class="shop-btn call" onclick="callShop()">📞</button>' +
+      '</div>' +
+
+      '<div class="shop-desc">' + esc(shop.description) + '</div>' +
+    '</div>' +
+
+    '<div class="chips">' +
+      '<div class="chip ' + (filterCat === 'all' ? 'active' : '') + '" onclick="setCat(\'all\')">Barchasi</div>' +
+      '<div class="chip ' + (filterCat === 'oziq-ovqat' ? 'active' : '') + '" onclick="setCat(\'oziq-ovqat\')">🍎 Oziq-ovqat</div>' +
+      '<div class="chip ' + (filterCat === 'kiyim' ? 'active' : '') + '" onclick="setCat(\'kiyim\')">👕 Kiyim</div>' +
+      '<div class="chip ' + (filterCat === 'elektronika' ? 'active' : '') + '" onclick="setCat(\'elektronika\')">📱 Elektronika</div>' +
+      '<div class="chip ' + (filterCat === 'qurilish' ? 'active' : '') + '" onclick="setCat(\'qurilish\')">🏗 Qurilish</div>' +
+      '<div class="chip ' + (filterCat === 'xizmatlar' ? 'active' : '') + '" onclick="setCat(\'xizmatlar\')">🔧 Xizmatlar</div>' +
+    '</div>' +
+    '<div id="productList"></div>';
+
+  c.innerHTML = html;
+  renderProducts(shop.products);
+  updateCartBadge();
+}
+
+function renderProducts(products) {
+  const list = document.getElementById('productList');
+  let filtered = filterCat === 'all' ? products : products.filter(p => p.category === filterCat);
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="empty" style="padding:30px 20px"><div class="ic">📦</div><p>Bu kategoriyada mahsulot yo\'q</p></div>';
+    return;
+  }
+
+  let html = '<div class="products">';
+  filtered.forEach(p => {
+    const img = (p.images && p.images[0]) ? '<img src="' + p.images[0] + '">' : (p.emoji || '📦');
+    const oldPrice = (p.oldPrice && p.oldPrice > p.price) ? '<span class="prod-old">' + fmt(p.oldPrice) + '</span>' : '';
+    const inCart = isInCart(p.id);
+    const fav = isFav(p.id);
+    const btnClass = inCart ? 'prod-add in-cart' : 'prod-add';
+    const btnText = inCart ? '✅ Savatda' : '🛒 Savatga';
+
+    html += '<div class="prod">' +
+      '<div class="prod-img" onclick="location.href=\'product.html?id=' + p.id + '\'">' + img +
+        '<div class="heart ' + (fav ? 'on' : '') + '" onclick="event.stopPropagation();toggleFav(' + p.id + ', this)">' + (fav ? '❤️' : '🤍') + '</div>' +
+      '</div>' +
+      '<div class="prod-info">' +
+        '<div class="prod-name">' + esc(p.name) + '</div>' +
+        ratingHtml(p.id) +
+        '<div class="prod-price-row"><span class="prod-price">' + fmt(p.price) + '</span>' + oldPrice + '</div>' +
+        '<button class="' + btnClass + '" onclick="event.stopPropagation();addToCart(' + p.id + ')">' + btnText + '</button>' +
+      '</div>' +
+    '</div>';
+  });
+  html += '</div>';
+  list.innerHTML = html;
+}
+
+function ratingHtml(productId) {
+  const reviews = getAllReviews();
+  const filtered = reviews.filter(r => String(r.productId) === String(productId));
+  if (filtered.length === 0) {
+    return '<div class="prod-rating"><span class="none">☆☆☆☆☆ Sharh yo\'q</span></div>';
+  }
+  const sum = filtered.reduce((s, r) => s + (Number(r.rating) || 0), 0);
+  const avg = Math.round((sum / filtered.length) * 10) / 10;
+  const stars = '⭐'.repeat(Math.round(avg)) + '☆'.repeat(5 - Math.round(avg));
+  return '<div class="prod-rating">' +
+    '<span class="stars">' + stars + '</span>' +
+    '<span class="num">' + avg.toFixed(1) + '</span>' +
+    '<span class="cnt">(' + filtered.length + ')</span>' +
+  '</div>';
+}
+
+function setCat(c) {
+  filterCat = c;
+  render();
+}
+
+// ============================================
+// CHAT & CALL
+// ============================================
+function openChat() {
+  const shop = getShopData();
+  if (!shop) return;
+  location.href = 'chat.html?new=' + encodeURIComponent(shop.id) + '&nname=' + encodeURIComponent(shop.name);
+}
+
+function callShop() {
+  const products = getShopProducts();
+  const phone = products[0]?.phone || products[0]?.sellerPhone;
+  if (!phone) return toast('Telefon raqam yo\'q', 'err');
+  if (confirm('Qo\'ng\'iroq qilinsinmi: ' + phone)) {
+    location.href = 'tel:' + phone.replace(/\D/g, '');
+  }
+}
+
+// ============================================
+// BADGE
+// ============================================
+function updateCartBadge() {
+  let cart = [];
+  try { cart = JSON.parse(localStorage.getItem('rayis_cart') || '[]'); } catch(e) {}
+  if (!Array.isArray(cart)) cart = [];
+  const cnt = Math.round(cart.reduce((s, i) => s + (Number(i.qty) || 0), 0));
+  const cd = document.getElementById('cartDot');
+  const nc = document.getElementById('navCartCnt');
+  if (cnt > 0) {
+    cd.textContent = cnt > 99 ? '99+' : cnt; cd.style.display = 'flex';
+    nc.textContent = cnt > 99 ? '99+' : cnt; nc.style.display = 'flex';
+  } else {
+    cd.style.display = 'none'; nc.style.display = 'none';
+  }
+}
+
+// ============================================
+// GO BACK
+// ============================================
+function goBack() {
+  if (history.length > 1) history.back();
+  else location.href = 'home.html';
+}
+
+// ============================================
+// BOSHLASH
+// ============================================
+render();
+</script>
+</body>
+</html>
