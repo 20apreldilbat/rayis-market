@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAYIS BOZORI</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,'Segoe UI',sans-serif; }
+  body { background:#0b0f1a; color:#fff; min-height:100vh; padding-bottom:80px; }
+
+  .header { background:#0f1626; border-bottom:1px solid rgba(255,255,255,0.06); padding:12px 16px; position:sticky; top:0; z-index:100; }
+  .htop { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .brand { display:flex; align-items:center; gap:8px; }
+  .brand-logo { width:32px; height:32px; background:linear-gradient(135deg,#005bff,#0047cc); border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:900; color:#fff; }
+  .brand-name { font-size:15px; font-weight:800; letter-spacing:0.3px; }
+  .brand-name span { color:#60a5fa; }
+  .h-icons { display:flex; gap:8px; }
+  .icon-btn { position:relative; width:38px; height:38px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer; color:#fff; }
+  .icon-btn .dot { position:absolute; top:-4px; right:-4px; background:#ff3b30; color:#fff; font-size:9px; font-weight:800; min-width:18px; height:18px; border-radius:9px; display:flex; align-items:center; justify-content:center; padding:0 4px; }
+
+  .search-bar { display:flex; align-items:center; gap:10px; background:#0f1626; border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px 14px; cursor:pointer; }
+  .search-bar .ic { font-size:16px; color:#60a5fa; }
+  .search-bar .ph { font-size:13px; color:#5b6b8a; flex:1; }
+
+  .greet { padding:16px; }
+  .greet h2 { font-size:19px; font-weight:800; margin-bottom:3px; }
+  .greet p { font-size:12px; color:#8b9ab8; }
+
+  .banner { margin:0 16px 12px; background:linear-gradient(135deg,#005bff,#7c3aed); border-radius:14px; padding:12px 16px; position:relative; overflow:hidden; cursor:pointer; box-shadow:0 6px 20px rgba(0,91,255,0.25); }
+  .banner::after { content:"🏗"; position:absolute; right:-10px; top:-20px; font-size:90px; opacity:0.12; }
+  .banner .badge { display:inline-block; background:rgba(255,255,255,0.2); padding:2px 8px; border-radius:20px; font-size:9px; font-weight:800; letter-spacing:0.5px; margin-bottom:6px; }
+  .banner h3 { font-size:15px; font-weight:900; margin-bottom:3px; line-height:1.2; }
+  .banner p { font-size:11px; opacity:0.9; margin-bottom:8px; line-height:1.4; }
+  .banner button { background:#fff; color:#005bff; padding:7px 14px; border-radius:8px; font-size:12px; font-weight:800; border:none; cursor:pointer; }
+
+  .stitle { display:flex; justify-content:space-between; align-items:center; padding:16px 16px 10px; }
+  .stitle h3 { font-size:15px; font-weight:800; }
+  .stitle .link { font-size:12px; color:#60a5fa; cursor:pointer; font-weight:700; }
+
+  .cats { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; padding:0 16px; }
+  .cat { display:flex; flex-direction:column; align-items:center; gap:6px; padding:12px 4px; background:#131a2b; border:1px solid rgba(255,255,255,0.06); border-radius:14px; cursor:pointer; transition:all 0.15s; }
+  .cat:active { transform:scale(0.94); background:rgba(0,91,255,0.08); border-color:rgba(0,91,255,0.3); }
+  .cat .em { font-size:24px; }
+  .cat .nm { font-size:10px; color:#cbd5e1; text-align:center; line-height:1.2; font-weight:600; }
+
+  .products { display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:0 16px; }
+  .prod { background:#131a2b; border:1px solid rgba(255,255,255,0.06); border-radius:14px; overflow:hidden; cursor:pointer; transition:all 0.15s; }
+  .prod:active { transform:scale(0.98); }
+  .prod-img { height:130px; background:linear-gradient(135deg,#1a2337,#0f1626); display:flex; align-items:center; justify-content:center; font-size:48px; position:relative; overflow:hidden; }
+  .prod-img img { width:100%; height:100%; object-fit:cover; }
+  .prod-img .heart { position:absolute; top:8px; right:8px; background:rgba(0,0,0,0.5); color:#fff; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; cursor:pointer; }
+  .prod-img .heart.on { color:#ff3b6b; }
+  .prod-info { padding:10px; }
+  .prod-name { font-size:13px; font-weight:700; margin-bottom:5px; line-height:1.3; min-height:34px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .prod-rating { display:flex; align-items:center; gap:4px; margin-bottom:6px; font-size:11px; }
+  .prod-rating .stars { color:#fbbf24; letter-spacing:0.5px; }
+  .prod-rating .num { color:#fbbf24; font-weight:800; }
+  .prod-rating .cnt { color:#8b9ab8; }
+  .prod-rating .none { color:#5b6b8a; }
+  .prod-price-row { display:flex; align-items:center; gap:6px; margin-bottom:8px; flex-wrap:wrap; }
+  .prod-price { font-size:14px; font-weight:900; color:#34d399; }
+  .prod-old { font-size:11px; color:#5b6b8a; text-decoration:line-through; }
+  .prod-add { width:100%; padding:9px; background:linear-gradient(135deg,#005bff,#0047cc); border:none; border-radius:10px; color:#fff; font-size:12px; font-weight:800; cursor:pointer; }
+  .prod-add:active { transform:scale(0.97); }
+
+  .empty { padding:50px 20px; text-align:center; color:#5b6b8a; }
+  .empty .ic { font-size:54px; margin-bottom:12px; opacity:0.5; }
+  .empty p { font-size:13px; line-height:1.6; }
+
+  .skeleton { background:linear-gradient(90deg,#131a2b 25%,#1a2337 50%,#131a2b 75%); background-size:200% 100%; animation:sk 1.5s infinite; border-radius:14px; }
+  @keyframes sk { 0% { background-position:200% 0; } 100% { background-position:-200% 0; } }
+  .sk-prod { height:220px; }
+
+  .toast { position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-100px); background:#005bff; color:#fff; padding:12px 20px; border-radius:12px; font-size:13px; font-weight:700; z-index:9999; transition:transform 0.3s; max-width:90%; text-align:center; box-shadow:0 10px 30px rgba(0,91,255,0.4); }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+  .toast.ok { background:#10b981; }
+  .toast.err { background:#ef4444; }
+
+  .nav { position:fixed; bottom:0; left:0; right:0; background:#0f1626; border-top:1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-around; padding:10px 0 max(10px,env(safe-area-inset-bottom)); z-index:200; }
+  .nav-i { display:flex; flex-direction:column; align-items:center; gap:2px; font-size:10px; color:#5b6b8a; cursor:pointer; flex:1; padding:4px; position:relative; }
+  .nav-i.active { color:#60a5fa; }
+  .nav-i .ic { font-size:20px; }
+  .nav-i .nc { position:absolute; top:0; right:25%; background:#ff3b30; color:#fff; font-size:9px; font-weight:800; min-width:18px; height:18px; border-radius:9px; display:flex; align-items:center; justify-content:center; padding:0 5px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="htop">
+    <div class="brand">
+      <div class="brand-logo">R</div>
+      <div class="brand-name">RAYIS <span>BOZORI</span></div>
+    </div>
+    <div class="h-icons">
+      <div class="icon-btn" onclick="notifClick()">🔔<span class="dot" id="notifDot" style="display:none">0</span></div>
+      <div class="icon-btn" onclick="location.href='profile.html'">👤</div>
+    </div>
+  </div>
+  <div class="search-bar" onclick="location.href='search.html'">
+    <span class="ic">🔍</span>
+    <span class="ph">Mahsulot yoki xizmat qidirish...</span>
+  </div>
+</div>
+
+<div class="greet">
+  <h2 id="greetName">Salom! 👋</h2>
+  <p id="greetRegion">Xush kelibsiz</p>
+</div>
+
+<div class="banner" onclick="location.href='kalkulyator.html'">
+  <div class="badge">⭐ YANGI</div>
+  <h3>Uy qurmoqchimisiz?</h3>
+  <p>Qurilish kalkulyatori — material va pulni hisoblab beradi</p>
+  <button>Hisoblash →</button>
+</div>
+
+<div class="stitle"><h3>Kategoriyalar</h3></div>
+<div class="cats">
+  <div class="cat" onclick="location.href='search.html?cat=oziq-ovqat'"><div class="em">🍎</div><div class="nm">Oziq-ovqat</div></div>
+  <div class="cat" onclick="location.href='search.html?cat=kiyim'"><div class="em">👕</div><div class="nm">Kiyim</div></div>
+  <div class="cat" onclick="location.href='search.html?cat=elektronika'"><div class="em">📱</div><div class="nm">Elektronika</div></div>
+  <div class="cat" onclick="location.href='search.html?cat=qurilish'"><div class="em">🏗</div><div class="nm">Qurilish</div></div>
+  <div class="cat" onclick="location.href='search.html?cat=xizmatlar'"><div class="em">🔧</div><div class="nm">Xizmatlar</div></div>
+</div>
+
+<div class="stitle">
+  <h3>Tavsiya etilgan</h3>
+  <span class="link" onclick="location.href='search.html'">Barchasi →</span>
+</div>
+<div id="productsWrap">
+  <div class="products">
+    <div class="skeleton sk-prod"></div>
+    <div class="skeleton sk-prod"></div>
+    <div class="skeleton sk-prod"></div>
+    <div class="skeleton sk-prod"></div>
+  </div>
+</div>
+
+<div class="nav">
+  <div class="nav-i active" onclick="location.href='home.html'"><div class="ic">🏠</div><div>Bosh</div></div>
+  <div class="nav-i" onclick="location.href='search.html'"><div class="ic">🔍</div><div>Qidiruv</div></div>
+  <div class="nav-i" onclick="location.href='cart.html'">
+    <div class="ic">🛒</div><div>Savat</div>
+    <div class="nc" id="navCartCnt" style="display:none">0</div>
+  </div>
+  <div class="nav-i" onclick="location.href='orders.html'"><div class="ic">📦</div><div>Buyurtma</div></div>
+  <div class="nav-i" onclick="location.href='profile.html'"><div class="ic">👤</div><div>Profil</div></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const user = JSON.parse(localStorage.getItem('rayis_user') || '{}');
+
+if (user.firstName) {
+  document.getElementById('greetName').textContent = 'Salom, ' + user.firstName + '! 👋';
+}
+if (user.region) {
+  document.getElementById('greetRegion').textContent = '📍 ' + user.region;
+}
+
+function toast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (type === 'err' ? ' err' : type === 'ok' ? ' ok' : '');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function fmt(p) { return (Number(p)||0).toLocaleString('uz-UZ').replace(/,/g,' ') + " so'm"; }
+function esc(s) { return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+// ============================================
+// REYTING
+// ============================================
+function getRatingInfo(productId) {
+  let reviews = [];
+  try { reviews = JSON.parse(localStorage.getItem('rayis_reviews') || '[]'); } catch(e) {}
+  if (!Array.isArray(reviews)) return { avg: 0, count: 0 };
+  const filtered = reviews.filter(r => r && String(r.productId) === String(productId));
+  if (filtered.length === 0) return { avg: 0, count: 0 };
+  const sum = filtered.reduce((s, r) => s + (Number(r.rating) || 0), 0);
+  return { avg: Math.round((sum / filtered.length) * 10) / 10, count: filtered.length };
+}
+
+function ratingHtml(productId) {
+  const r = getRatingInfo(productId);
+  if (r.count === 0) {
+    return '<div class="prod-rating"><span class="none">☆☆☆☆☆ Sharh yo\'q</span></div>';
+  }
+  const starsFull = '⭐'.repeat(Math.round(r.avg)) + '☆'.repeat(5 - Math.round(r.avg));
+  return '<div class="prod-rating">' +
+    '<span class="stars">' + starsFull + '</span>' +
+    '<span class="num">' + r.avg.toFixed(1) + '</span>' +
+    '<span class="cnt">(' + r.count + ')</span>' +
+  '</div>';
+}
+
+// ============================================
+// MAHSULOTLAR
+// ============================================
+function loadProducts() {
+  const wrap = document.getElementById('productsWrap');
+  let products = [];
+  try { products = JSON.parse(localStorage.getItem('rayis_products') || '[]'); } catch(e) {}
+  if (!Array.isArray(products)) products = [];
+
+  const valid = products.filter(p => p && p.name && p.price > 0);
+
+  if (valid.length === 0) {
+    wrap.innerHTML = '<div class="empty"><div class="ic">📦</div><p>Hozircha mahsulot yo\'q.<br>Sotuvchilar tez orada qo\'shadi!</p></div>';
+    return;
+  }
+
+  let html = '<div class="products">';
+  valid.slice(0, 20).forEach(p => {
+    const img = (p.images && p.images[0]) ? '<img src="' + p.images[0] + '">' : (p.emoji || '📦');
+    const oldPrice = (p.oldPrice && p.oldPrice > p.price) ? '<span class="prod-old">' + fmt(p.oldPrice) + '</span>' : '';
+    html += '<div class="prod">' +
+      '<div class="prod-img" onclick="openProduct(' + p.id + ')">' + img + '<div class="heart" onclick="event.stopPropagation();toggleFav(' + p.id + ',this)">🤍</div></div>' +
+      '<div class="prod-info">' +
+        '<div class="prod-name">' + esc(p.name) + '</div>' +
+        ratingHtml(p.id) +
+        '<div class="prod-price-row"><span class="prod-price">' + fmt(p.price) + '</span>' + oldPrice + '</div>' +
+        '<button class="prod-add" onclick="event.stopPropagation();addToCart(' + p.id + ')">🛒 Savatga</button>' +
+      '</div>' +
+    '</div>';
+  });
+  html += '</div>';
+  wrap.innerHTML = html;
+}
+
+function openProduct(id) {
+  location.href = 'product.html?id=' + id;
+}
+
+// ============================================
+// SAVATGA QO'SHISH (TUZATILGAN)
+// ============================================
+function addToCart(id) {
+  const all = JSON.parse(localStorage.getItem('rayis_products') || '[]');
+  const p = all.find(x => String(x.id) === String(id));
+  if (!p) return toast('Topilmadi', 'err');
+
+  let cart = [];
+  try { cart = JSON.parse(localStorage.getItem('rayis_cart') || '[]'); } catch(e) {}
+  if (!Array.isArray(cart)) cart = [];
+
+  const ex = cart.find(i => String(i.id) === String(id));
+  if (ex) {
+    ex.qty = (Number(ex.qty) || 1) + 1;
+  } else {
+    cart.push({
+      id: p.id, name: p.name, price: p.price,
+      unit: p.unit || 'dona', emoji: p.emoji || '📦',
+      images: p.images || [], category: p.category, qty: 1
+    });
+  }
+  try { localStorage.setItem('rayis_cart', JSON.stringify(cart)); } catch(e) {
+    return toast('Xotira to\'ldi', 'err');
+  }
+  updateCartBadge();
+  toast('✅ Savatga qo\'shildi', 'ok');
+}
+
+// ============================================
+// SEVIMLILAR
+// ============================================
+function toggleFav(id, el) {
+  let favs = [];
+  try { favs = JSON.parse(localStorage.getItem('rayis_favs') || '[]'); } catch(e) {}
+  if (!Array.isArray(favs)) favs = [];
+
+  const idx = favs.indexOf(id);
+  if (idx === -1) {
+    favs.push(id);
+    el.textContent = '❤️';
+    el.classList.add('on');
+    toast('❤️ Sevimlilarga qo\'shildi', 'ok');
+  } else {
+    favs.splice(idx, 1);
+    el.textContent = '🤍';
+    el.classList.remove('on');
+    toast('Sevimlilardan olindi');
+  }
+  try { localStorage.setItem('rayis_favs', JSON.stringify(favs)); } catch(e) {}
+}
+
+// ============================================
+// SAVAT BADGE (TUZATILGAN)
+// ============================================
+function updateCartBadge() {
+  let cart = [];
+  try { cart = JSON.parse(localStorage.getItem('rayis_cart') || '[]'); } catch(e) {}
+  if (!Array.isArray(cart)) cart = [];
+
+  // Butun songa aylantirish
+  const cnt = Math.round(cart.reduce((s, i) => s + (Number(i.qty) || 0), 0));
+
+  const el = document.getElementById('navCartCnt');
+  if (cnt > 0) {
+    el.textContent = cnt > 99 ? '99+' : cnt;
+    el.style.display = 'flex';
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+// ============================================
+// BILDIRISHNOMA
+// ============================================
+function updateNotif() {
+  let orders = [];
+  try { orders = JSON.parse(localStorage.getItem('rayis_orders') || '[]'); } catch(e) {}
+  if (!Array.isArray(orders)) orders = [];
+  const cnt = orders.filter(o => o && o.status === 'yangi').length;
+  const dot = document.getElementById('notifDot');
+  if (cnt > 0) { dot.textContent = cnt; dot.style.display = 'flex'; }
+  else { dot.style.display = 'none'; }
+}
+
+function notifClick() { toast('🔔 Bildirishnomalar tez orada'); }
+
+loadProducts();
+updateCartBadge();
+updateNotif();
+</script>
+</body>
+</html>
