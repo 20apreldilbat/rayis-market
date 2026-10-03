@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAYIS BOZORI — Yetkazib beruvchi</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,'Segoe UI',sans-serif; }
+  body { background:#0b0f1a; color:#fff; min-height:100vh; padding-bottom:80px; }
+
+  .header { background:linear-gradient(135deg,#005bff,#003eb3); padding:14px 16px; position:sticky; top:0; z-index:100; box-shadow:0 4px 20px rgba(0,91,255,0.3); }
+  .htop { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px; }
+  .brand { display:flex; align-items:center; gap:10px; }
+  .brand-logo { width:36px; height:36px; background:#fff; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:900; color:#005bff; }
+  .brand-text { font-size:15px; font-weight:800; white-space:nowrap; }
+  .brand-text span { color:#a3c4ff; }
+  .htop-right { display:flex; align-items:center; gap:8px; }
+  .logout-btn { background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.2); color:#fff; padding:8px 12px; border-radius:10px; font-size:11px; font-weight:700; cursor:pointer; }
+  .seller-info { display:flex; align-items:center; gap:10px; font-size:12px; }
+  .seller-info .avatar { width:28px; height:28px; background:rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; }
+  .seller-info .nm { font-weight:800; }
+  .seller-info .badge-v { background:#fff; color:#005bff; font-size:9px; font-weight:900; padding:2px 6px; border-radius:6px; }
+
+  .tabs { display:flex; gap:2px; padding:8px 12px 12px; overflow-x:auto; background:#005bff; scrollbar-width:none; position:sticky; top:62px; z-index:99; }
+  .tabs::-webkit-scrollbar { display:none; }
+  .tab { padding:9px 14px; background:rgba(255,255,255,0.15); border:none; color:rgba(255,255,255,0.85); font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; border-radius:8px; position:relative; }
+  .tab.active { background:#fff; color:#005bff; }
+  .tab .badge-new { position:absolute; top:-6px; right:-6px; background:#ff3b30; color:#fff; font-size:9px; font-weight:800; min-width:18px; height:18px; border-radius:9px; display:flex; align-items:center; justify-content:center; padding:0 4px; }
+
+  .sec { padding:16px; display:none; }
+  .sec.active { display:block; }
+
+  .kpi-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:16px; }
+  .kpi { background:#131a2b; border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:14px 10px; text-align:center; }
+  .kpi .val { font-size:22px; font-weight:900; color:#60a5fa; }
+  .kpi .val.warn { color:#fbbf24; }
+  .kpi .val.green { color:#34d399; }
+  .kpi .lbl { font-size:10px; color:#8b9ab8; margin-top:4px; font-weight:600; }
+
+  .stitle { display:flex; justify-content:space-between; align-items:center; margin:16px 0 12px; }
+  .stitle h3 { font-size:15px; font-weight:800; }
+
+  .order { background:#131a2b; border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:14px; margin-bottom:10px; }
+  .order.new { border-color:rgba(0,91,255,0.4); box-shadow:0 0 0 1px rgba(0,91,255,0.15); }
+  .ohead { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; gap:10px; }
+  .oid { font-size:12px; font-weight:800; color:#60a5fa; word-break:break-all; }
+  .odate { font-size:10px; color:#5b6b8a; margin-top:2px; }
+  .ostat { padding:4px 10px; border-radius:20px; font-size:10px; font-weight:700; white-space:nowrap; }
+  .st-yangi { background:rgba(0,91,255,0.15); color:#60a5fa; }
+  .st-yolga_chiqdi { background:rgba(251,191,36,0.15); color:#fbbf24; }
+  .st-yetkazildi { background:rgba(52,211,153,0.15); color:#34d399; }
+  .st-bekor { background:rgba(239,68,68,0.15); color:#f87171; }
+
+  .ocust { font-size:11px; color:#cbd5e1; padding:10px; background:#0f1626; border-radius:10px; margin-bottom:10px; line-height:1.7; }
+  .ocust b { color:#fff; }
+
+  .oitems { margin-bottom:10px; padding-bottom:10px; border-bottom:1px dashed rgba(255,255,255,0.08); }
+  .oitem { display:flex; justify-content:space-between; font-size:12px; padding:4px 0; color:#cbd5e1; gap:8px; }
+  .oitem .nm { flex:1; }
+  .oitem .pr { color:#34d399; font-weight:700; white-space:nowrap; }
+
+  .ototal { display:flex; justify-content:space-between; padding-top:10px; margin-top:8px; }
+  .ototal .lbl { font-size:11px; color:#8b9ab8; }
+  .ototal .val { font-size:16px; font-weight:900; color:#34d399; }
+
+  .oacts { display:flex; gap:8px; margin-top:12px; }
+  .btn-sm { flex:1; padding:11px; border-radius:10px; font-size:12px; font-weight:800; cursor:pointer; border:none; }
+  .btn-take { background:linear-gradient(135deg,#005bff,#0047cc); color:#fff; }
+  .btn-done { background:linear-gradient(135deg,#10b981,#059669); color:#fff; }
+  .btn-call { background:rgba(0,91,255,0.12); color:#60a5fa; border:1px solid rgba(0,91,255,0.3); }
+  .btn-reject { background:rgba(239,68,68,0.12); color:#f87171; border:1px solid rgba(239,68,68,0.3); }
+
+  .empty { padding:50px 20px; text-align:center; color:#4b5876; }
+  .empty .ic { font-size:54px; margin-bottom:12px; opacity:0.5; }
+  .empty p { font-size:13px; line-height:1.6; }
+
+  .toast { position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-100px); background:#005bff; color:#fff; padding:12px 20px; border-radius:12px; font-size:13px; font-weight:700; z-index:9999; transition:transform 0.3s; max-width:90%; text-align:center; box-shadow:0 10px 30px rgba(0,91,255,0.4); }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+  .toast.err { background:#ef4444; }
+  .toast.ok { background:#10b981; }
+
+  .nav { position:fixed; bottom:0; left:0; right:0; background:#0f1626; border-top:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-around; padding:10px 0 max(10px,env(safe-area-inset-bottom)); z-index:200; }
+  .nav-i { display:flex; flex-direction:column; align-items:center; gap:2px; font-size:10px; color:#4b5876; cursor:pointer; flex:1; padding:4px; }
+  .nav-i.active { color:#60a5fa; }
+  .nav-i .ic { font-size:20px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="htop">
+    <div class="brand">
+      <div class="brand-logo">R</div>
+      <div class="brand-text">RAYIS <span>YETKAZISH</span></div>
+    </div>
+    <div class="htop-right">
+      <button class="logout-btn" onclick="logout()">Chiqish</button>
+    </div>
+  </div>
+  <div class="seller-info">
+    <div class="avatar">🚚</div>
+    <div class="nm">Yetkazish paneli</div>
+    <div class="badge-v">YETKAZUVCHI</div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="tab('active')" id="tabActive">🚚 Faol</button>
+  <button class="tab" onclick="tab('history')">✅ Tarix</button>
+</div>
+
+<!-- ACTIVE -->
+<div class="sec active" id="sec-active">
+  <div class="kpi-grid">
+    <div class="kpi"><div class="val warn" id="kpiActive">0</div><div class="lbl">Faol</div></div>
+    <div class="kpi"><div class="val green" id="kpiDone">0</div><div class="lbl">Yetkazildi</div></div>
+    <div class="kpi"><div class="val" id="kpiTotal">0</div><div class="lbl">Jami</div></div>
+  </div>
+
+  <div class="stitle"><h3>Faol buyurtmalar</h3></div>
+  <div id="listActive"></div>
+</div>
+
+<!-- HISTORY -->
+<div class="sec" id="sec-history">
+  <div class="stitle"><h3>Tarix</h3></div>
+  <div id="listHistory"></div>
+</div>
+
+<div class="nav">
+  <div class="nav-i active" onclick="tab('active')"><div class="ic">🚚</div><div>Faol</div></div>
+  <div class="nav-i" onclick="location.href='home.html'"><div class="ic">🏠</div><div>Bosh</div></div>
+  <div class="nav-i" onclick="tab('history')"><div class="ic">✅</div><div>Tarix</div></div>
+  <div class="nav-i" onclick="logout()"><div class="ic">🚪</div><div>Chiqish</div></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================
+// USER
+// ============================================
+const user = JSON.parse(localStorage.getItem('rayis_user') || '{}');
+const driverName = user.name || 'Yetkazuvchi';
+
+// ============================================
+// TOAST
+// ============================================
+function toast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (type === 'err' ? ' err' : type === 'ok' ? ' ok' : '');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ============================================
+// YORDAMCHI
+// ============================================
+function num(n) { const v = Number(n)||0; return Number.isInteger(v) ? v.toString() : v.toFixed(2).replace(/\.?0+$/, ''); }
+function fmt(p) { return (Number(p)||0).toLocaleString('uz-UZ').replace(/,/g,' ') + " so'm"; }
+function esc(s) { return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function formatDate(iso) {
+  try {
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return '—';
+    const pad = n => String(n).padStart(2, '0');
+    return pad(d.getDate()) + '.' + pad(d.getMonth()+1) + '.' + d.getFullYear() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  } catch(e) { return '—'; }
+}
+
+function getOrders() {
+  let all = [];
+  try { all = JSON.parse(localStorage.getItem('rayis_orders') || '[]'); } catch(e) {}
+  if (!Array.isArray(all)) return [];
+  return all.filter(o => o && o.id && o.customer && o.customer.name && Array.isArray(o.items) && o.items.length > 0);
+}
+
+// ============================================
+// TAB
+// ============================================
+function tab(t) {
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.sec').forEach(x => x.classList.remove('active'));
+  const map = { active:0, history:1 };
+  const idx = map[t];
+  if (idx !== undefined) document.querySelectorAll('.tab')[idx].classList.add('active');
+  document.getElementById('sec-' + t).classList.add('active');
+
+  document.querySelectorAll('.nav-i').forEach(x => x.classList.remove('active'));
+  if (t === 'active') document.querySelectorAll('.nav-i')[0].classList.add('active');
+  else if (t === 'history') document.querySelectorAll('.nav-i')[2].classList.add('active');
+
+  if (t === 'active') renderActive();
+  else if (t === 'history') renderHistory();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============================================
+// RENDER ORDER CARD
+// ============================================
+function renderOrder(o, actions) {
+  const stMap = {
+    yangi: { l: '🆕 Yangi', cls: 'st-yangi' },
+    yolga_chiqdi: { l: '🚚 Yo\'lda', cls: 'st-yolga_chiqdi' },
+    yetkazildi: { l: '✅ Yetkazildi', cls: 'st-yetkazildi' },
+    bekor: { l: '❌ Bekor', cls: 'st-bekor' }
+  };
+  const s = stMap[o.status] || stMap.yangi;
+  const items = Array.isArray(o.items) ? o.items : [];
+  const cust = o.customer || {};
+  const phone = (cust.phone || '').replace(/\D/g, '');
+
+  const itemsHtml = items.map(it => {
+    const q = Number(it.qty) || 1;
+    const sum = (Number(it.price)||0) * q;
+    return '<div class="oitem"><span class="nm">' + esc(it.name) + ' × ' + num(q) + ' ' + esc(it.unit||'dona') + '</span><span class="pr">' + fmt(sum) + '</span></div>';
+  }).join('');
+
+  let acts = '';
+  if (actions) {
+    let btns = '';
+    if (o.status === 'yangi') {
+      btns += '<button class="btn-sm btn-take" onclick="takeOrder(\'' + o.id + '\')">🚚 Qabul qilish</button>';
+    } else if (o.status === 'yolga_chiqdi') {
+      btns += '<button class="btn-sm btn-done" onclick="markDone(\'' + o.id + '\')">✅ Yetkazildi</button>';
+    }
+    const callBtn = phone ? '<a href="tel:+' + phone + '" style="text-decoration:none;flex:1"><button class="btn-sm btn-call" style="width:100%">📞 Qo\'ng\'iroq</button></a>' : '';
+    acts = '<div class="oacts">' + btns + callBtn + '</div>';
+  }
+
+  return '<div class="order ' + (o.status === 'yangi' ? 'new' : '') + '">' +
+    '<div class="ohead">' +
+      '<div><div class="oid">' + esc(o.id) + '</div><div class="odate">' + formatDate(o.createdAt) + '</div></div>' +
+      '<div class="ostat ' + s.cls + '">' + s.l + '</div>' +
+    '</div>' +
+    '<div class="ocust">' +
+      '👤 <b>' + esc(cust.name) + '</b><br>' +
+      '📞 ' + esc(cust.phone || '—') + '<br>' +
+      '📍 ' + esc(cust.address || '—') + '<br>' +
+      '💳 ' + (o.payment === 'karta' ? 'Plastik karta' : 'Naqd pul') +
+    '</div>' +
+    '<div class="oitems">' + itemsHtml + '</div>' +
+    '<div class="ototal"><span class="lbl">Summa:</span><span class="val">' + fmt(o.total) + '</span></div>' +
+    acts +
+  '</div>';
+}
+
+// ============================================
+// RENDER ACTIVE
+// ============================================
+function renderActive() {
+  const orders = getOrders().filter(o => o.status === 'yangi' || o.status === 'yolga_chiqdi');
+
+  document.getElementById('kpiActive').textContent = orders.filter(o => o.status === 'yolga_chiqdi').length;
+  document.getElementById('kpiDone').textContent = getOrders().filter(o => o.status === 'yetkazildi').length;
+  document.getElementById('kpiTotal').textContent = getOrders().length;
+
+  const c = document.getElementById('listActive');
+  if (orders.length === 0) {
+    c.innerHTML = '<div class="empty"><div class="ic">🚚</div><p>Faol buyurtma yo\'q</p></div>';
+    return;
+  }
+
+  let html = '';
+  orders.sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||'')).forEach(o => {
+    html += renderOrder(o, true);
+  });
+  c.innerHTML = html;
+}
+
+// ============================================
+// RENDER HISTORY
+// ============================================
+function renderHistory() {
+  const orders = getOrders().filter(o => o.status === 'yetkazildi' || o.status === 'bekor');
+  const c = document.getElementById('listHistory');
+
+  if (orders.length === 0) {
+    c.innerHTML = '<div class="empty"><div class="ic">📋</div><p>Tarix bo\'sh</p></div>';
+    return;
+  }
+
+  let html = '';
+  orders.sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||'')).forEach(o => {
+    html += renderOrder(o, false);
+  });
+  c.innerHTML = html;
+}
+
+// ============================================
+// TAKE ORDER
+// ============================================
+function takeOrder(id) {
+  const all = JSON.parse(localStorage.getItem('rayis_orders') || '[]');
+  const o = all.find(x => x.id === id);
+  if (!o) return toast('Topilmadi', 'err');
+  o.status = 'yolga_chiqdi';
+  o.takenBy = driverName;
+  o.takenAt = new Date().toISOString();
+  try { localStorage.setItem('rayis_orders', JSON.stringify(all)); }
+  catch(e) { return toast('Xotira to\'ldi', 'err'); }
+  toast('🚚 Buyurtma qabul qilindi', 'ok');
+  renderActive();
+}
+
+// ============================================
+// MARK DONE
+// ============================================
+function markDone(id) {
+  if (!confirm('Yetkazilganini tasdiqlaysizmi?')) return;
+  const all = JSON.parse(localStorage.getItem('rayis_orders') || '[]');
+  const o = all.find(x => x.id === id);
+  if (!o) return;
+  o.status = 'yetkazildi';
+  o.deliveredAt = new Date().toISOString();
+  try { localStorage.setItem('rayis_orders', JSON.stringify(all)); }
+  catch(e) { return toast('Xotira to\'ldi', 'err'); }
+  toast('🎉 Yetkazildi!', 'ok');
+  renderActive();
+}
+
+// ============================================
+// LOGOUT
+// ============================================
+function logout() {
+  if (!confirm('Chiqishni tasdiqlaysizmi?')) return;
+  localStorage.removeItem('rayis_user');
+  location.href = 'index.html';
+}
+
+// ============================================
+// BOSHLASH
+// ============================================
+renderActive();
+</script>
+</body>
+</html>
