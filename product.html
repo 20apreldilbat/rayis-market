@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAYIS BOZORI — Mahsulot</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,'Segoe UI',sans-serif; }
+  body { background:#0b0f1a; color:#fff; min-height:100vh; padding-bottom:90px; }
+  .header { background:#0f1626; border-bottom:1px solid rgba(255,255,255,0.06); padding:12px 16px; position:sticky; top:0; z-index:100; }
+  .htop { display:flex; align-items:center; gap:10px; }
+  .back { font-size:22px; cursor:pointer; color:#8b9ab8; }
+  .title { font-size:15px; font-weight:800; flex:1; }
+  .icon-btn { position:relative; width:38px; height:38px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer; color:#fff; }
+  .icon-btn .dot { position:absolute; top:-4px; right:-4px; background:#ff3b30; color:#fff; font-size:9px; font-weight:800; min-width:18px; height:18px; border-radius:9px; display:flex; align-items:center; justify-content:center; padding:0 4px; }
+  .gallery { background:#0f1626; padding:0 0 12px; }
+  .gallery-main { width:100%; aspect-ratio:1/1; background:linear-gradient(135deg,#1a2337,#0f1626); display:flex; align-items:center; justify-content:center; font-size:120px; position:relative; overflow:hidden; }
+  .gallery-main img { width:100%; height:100%; object-fit:cover; }
+  .gallery-main .heart { position:absolute; top:16px; right:16px; background:rgba(0,0,0,0.55); color:#fff; width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:20px; cursor:pointer; }
+  .gallery-main .heart.on { color:#ff3b6b; }
+  .gallery-thumbs { display:flex; gap:8px; padding:10px 16px 0; overflow-x:auto; scrollbar-width:none; }
+  .gallery-thumbs::-webkit-scrollbar { display:none; }
+  .thumb { flex:0 0 auto; width:56px; height:56px; border-radius:10px; overflow:hidden; background:#1a2337; border:2px solid transparent; cursor:pointer; }
+  .thumb.active { border-color:#005bff; }
+  .thumb img { width:100%; height:100%; object-fit:cover; }
+  .section { padding:16px; }
+  .price-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; flex-wrap:wrap; }
+  .price { font-size:28px; font-weight:900; color:#34d399; letter-spacing:-0.5px; }
+  .old-price { font-size:15px; color:#5b6b8a; text-decoration:line-through; }
+  .discount { background:rgba(239,68,68,0.15); color:#f87171; font-size:11px; font-weight:800; padding:3px 8px; border-radius:6px; }
+  .prod-name { font-size:19px; font-weight:800; line-height:1.3; margin-bottom:10px; }
+  .rating-row { display:flex; align-items:center; gap:8px; margin-bottom:14px; cursor:pointer; }
+  .stars { color:#fbbf24; font-size:16px; letter-spacing:1px; }
+  .rating-num { font-size:14px; font-weight:800; color:#fbbf24; }
+  .rating-count { font-size:12px; color:#8b9ab8; }
+  .seller-card { display:flex; align-items:center; gap:12px; padding:12px; background:#131a2b; border:1px solid rgba(255,255,255,0.06); border-radius:12px; margin-bottom:14px; transition:all 0.15s; }
+  .seller-card:active { transform:scale(0.99); background:rgba(0,91,255,0.05); border-color:rgba(0,91,255,0.3); }
+  .seller-avatar { width:40px; height:40px; background:linear-gradient(135deg,#005bff,#7c3aed); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+  .seller-info { flex:1; min-width:0; }
+  .seller-name { font-size:13px; font-weight:800; margin-bottom:2px; }
+  .seller-meta { font-size:11px; color:#8b9ab8; }
+  .seller-chat { width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#005bff,#0047cc); border:none; color:#fff; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .var-block { background:#131a2b; border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:12px; margin-bottom:12px; }
+  .var-title { font-size:12px; color:#8b9ab8; margin-bottom:8px; font-weight:700; display:flex; justify-content:space-between; }
+  .var-title .val { color:#60a5fa; font-weight:800; }
+  .var-options { display:flex; flex-wrap:wrap; gap:8px; }
+  .var-opt { padding:8px 14px; background:#0f1626; border:2px solid rgba(255,255,255,0.08); border-radius:10px; color:#cbd5e1; font-size:13px; font-weight:700; cursor:pointer; transition:all 0.15s; min-width:44px; text-align:center; }
+  .var-opt:active { transform:scale(0.95); }
+  .var-opt.selected { background:rgba(0,91,255,0.15); border-color:#005bff; color:#60a5fa; }
+  .var-opt.color-opt { display:flex; align-items:center; gap:6px; padding:6px 12px 6px 6px; }
+  .var-opt.color-opt .swatch { width:20px; height:20px; border-radius:50%; border:1px solid rgba(255,255,255,0.15); }
+  .stock-row { display:flex; gap:12px; margin-bottom:14px; }
+  .stock-item { flex:1; padding:10px; background:#131a2b; border:1px solid rgba(255,255,255,0.06); border-radius:10px; text-align:center; }
+  .stock-item .lbl { font-size:10px; color:#8b9ab8; font-weight:600; margin-bottom:3px; }
+  .stock-item .val { font-size:14px; font-weight:800; color:#fff; }
+  .stock-item .val.ok { color:#34d399; }
+  .stock-item .val.low { color:#fbbf24; }
+  .stock-item .val.out { color:#f87171; }
+  .stitle { display:flex; justify-content:space-between; align-items:center; margin:20px 0 12px; }
+  .stitle h3 { font-size:15px; font-weight:800; }
+  .stitle .link { font-size:12px; color:#60a5fa; cursor:pointer; font-weight:700; }
+  .desc { font-size:13px; color:#cbd5e1; line-height:1.7; }
+  .review-summary { display:flex; gap:16px; padding:16px; background:#131a2b; border:1px solid rgba(255,255,255,0.06); border-radius:14px; margin-bottom:14px; }
+  .rs-left { text-align:center; flex-shrink:0; }
+  .rs-big { font-size:36px; font-weight:900; color:#fbbf24; line-height:1; }
+  .rs-stars { color:#fbbf24; font-size:14px; margin:4px 0; }
+  .rs-count { font-size:11px; color:#8b9ab8; }
+  .rs-right { flex:1; display:flex; flex-direction:column; justify-content:center; gap:4px; }
+  .rs-bar { display:flex; align-items:center; gap:8px; font-size:11px; }
+  .rs-bar .num { color:#8b9ab8; width:12px; }
+  .rs-bar .track { flex:1; height:6px; background:#1a2337; border-radius:3px; overflow:hidden; }
+  .rs-bar .fill { height:100%; background:#fbbf24; border-radius:3px; }
+  .rs-bar .cnt { color:#8b9ab8; width:24px; text-align:right; }
+  .review-form { background:#131a2b; border:1px solid rgba(0,91,255,0.3); border-radius:14px; padding:16px; margin-bottom:14px; display:none; }
+  .review-form.show { display:block; }
+  .rf-title { font-size:14px; font-weight:800; margin-bottom:12px; }
+  .star-picker { display:flex; gap:8px; font-size:32px; margin-bottom:14px; }
+  .star-picker span { cursor:pointer; transition:transform 0.15s; }
+  .star-picker span:active { transform:scale(1.2); }
+  .star-picker span.off { filter:grayscale(1); opacity:0.4; }
+  .ig { margin-bottom:12px; }
+  .ig label { display:block; font-size:12px; color:#8b9ab8; margin-bottom:6px; font-weight:600; }
+  .ig textarea { width:100%; padding:13px 14px; background:#0f1626; border:1px solid rgba(255,255,255,0.08); border-radius:12px; color:#fff; font-size:14px; outline:none; font-family:inherit; resize:vertical; min-height:80px; }
+  .ig textarea:focus { border-color:#005bff; }
+  .ig textarea::placeholder { color:#4b5876; }
+  .rf-btns { display:flex; gap:8px; }
+  .btn { flex:1; padding:12px; border:none; border-radius:10px; font-size:13px; font-weight:800; cursor:pointer; }
+  .btn-primary { background:linear-gradient(135deg,#005bff,#0047cc); color:#fff; }
+  .btn-secondary { background:#1a2337; color:#cbd5e1; border:1px solid rgba(255,255,255,0.08); }
+  .review { background:#131a2b; border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:14px; margin-bottom:10px; }
+  .rev-head { display:flex; gap:10px; align-items:flex-start; margin-bottom:10px; }
+  .rev-avatar { width:36px; height:36px; background:linear-gradient(135deg,#005bff,#7c3aed); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:900; flex-shrink:0; }
+  .rev-info { flex:1; min-width:0; }
+  .rev-name { font-size:13px; font-weight:700; margin-bottom:2px; }
+  .rev-date { font-size:10px; color:#5b6b8a; }
+  .rev-stars { color:#fbbf24; font-size:13px; }
+  .rev-text { font-size:13px; color:#cbd5e1; line-height:1.6; word-break:break-word; }
+  .rev-images { display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
+  .rev-img { width:70px; height:70px; border-radius:10px; overflow:hidden; background:#0f1626; border:1px solid rgba(255,255,255,0.08); }
+  .rev-img img { width:100%; height:100%; object-fit:cover; }
+  .rev-mine { border-color:rgba(0,91,255,0.4); }
+  .rev-badge { background:rgba(0,91,255,0.15); color:#60a5fa; font-size:9px; font-weight:800; padding:2px 6px; border-radius:6px; }
+  .img-upload { display:block; border:2px dashed rgba(0,91,255,0.4); border-radius:12px; padding:16px; text-align:center; cursor:pointer; background:rgba(0,91,255,0.04); }
+  .img-upload .ic { font-size:24px; margin-bottom:4px; pointer-events:none; }
+  .img-upload .tx { font-size:12px; color:#60a5fa; font-weight:700; pointer-events:none; }
+  .preview { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+  .pv-item { position:relative; width:64px; height:64px; border-radius:10px; overflow:hidden; background:#0f1626; border:1px solid rgba(255,255,255,0.08); }
+  .pv-item img { width:100%; height:100%; object-fit:cover; }
+  .pv-item .rm { position:absolute; top:2px; right:2px; background:rgba(239,68,68,0.95); color:#fff; width:18px; height:18px; border-radius:50%; font-size:10px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+
+  /* ✅ O'XSHASHLAR */
+  .similar-scroll { display:flex; gap:12px; overflow-x:auto; padding:0 16px 8px; scrollbar-width:none; margin:0 -16px; }
+  .similar-scroll::-webkit-scrollbar { display:none; }
+  .sim-card { flex:0 0 auto; width:150px; background:#131a2b; border:1px solid rgba(255,255,255,0.06); border-radius:14px; overflow:hidden; cursor:pointer; transition:all 0.15s; }
+  .sim-card:active { transform:scale(0.97); }
+  .sim-img { height:120px; background:linear-gradient(135deg,#1a2337,#0f1626); display:flex; align-items:center; justify-content:center; font-size:42px; position:relative; overflow:hidden; }
+  .sim-img img { width:100%; height:100%; object-fit:cover; }
+  .sim-info { padding:10px; }
+  .sim-name { font-size:12px; font-weight:700; margin-bottom:4px; line-height:1.3; height:32px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .sim-rating { font-size:10px; color:#fbbf24; margin-bottom:4px; }
+  .sim-price { font-size:13px; font-weight:900; color:#34d399; }
+  .sim-old { font-size:10px; color:#5b6b8a; text-decoration:line-through; margin-left:4px; }
+
+  .bottom-bar { position:fixed; bottom:60px; left:0; right:0; background:#0f1626; border-top:1px solid rgba(255,255,255,0.06); padding:12px 16px; z-index:150; display:flex; gap:10px; box-shadow:0 -10px 30px rgba(0,0,0,0.5); }
+  .bb-chat { flex:0 0 auto; padding:14px 18px; background:rgba(0,91,255,0.15); color:#60a5fa; border:1px solid rgba(0,91,255,0.3); border-radius:12px; font-size:18px; cursor:pointer; }
+  .bb-add { flex:1; padding:14px; background:linear-gradient(135deg,#005bff,#0047cc); color:#fff; border:none; border-radius:12px; font-size:14px; font-weight:800; cursor:pointer; }
+  .bb-add:disabled { opacity:0.5; cursor:not-allowed; }
+  .bb-buy { flex:1; padding:14px; background:linear-gradient(135deg,#10b981,#059669); color:#fff; border:none; border-radius:12px; font-size:14px; font-weight:800; cursor:pointer; }
+  .bb-buy:disabled { opacity:0.5; cursor:not-allowed; }
+  .empty { padding:30px 20px; text-align:center; color:#5b6b8a; }
+  .empty .ic { font-size:44px; margin-bottom:10px; opacity:0.5; }
+  .empty p { font-size:13px; }
+  .nav { position:fixed; bottom:0; left:0; right:0; background:#0f1626; border-top:1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-around; padding:10px 0 max(10px,env(safe-area-inset-bottom)); z-index:200; }
+  .nav-i { display:flex; flex-direction:column; align-items:center; gap:2px; font-size:10px; color:#5b6b8a; cursor:pointer; flex:1; padding:4px; position:relative; }
+  .nav-i.active { color:#60a5fa; }
+  .nav-i .ic { font-size:20px; }
+  .nav-i .nc { position:absolute; top:0; right:25%; background:#ff3b30; color:#fff; font-size:9px; font-weight:800; min-width:16px; height:16px; border-radius:8px; display:flex; align-items:center; justify-content:center; padding:0 3px; }
+  .toast { position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-100px); background:#005bff; color:#fff; padding:12px 20px; border-radius:12px; font-size:13px; font-weight:700; z-index:9999; transition:transform 0.3s; max-width:90%; text-align:center; box-shadow:0 10px 30px rgba(0,91,255,0.4); }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+  .toast.err { background:#ef4444; }
+  .toast.ok { background:#10b981; }
+  .modal { position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:1000; display:none; align-items:center; justify-content:center; padding:20px; }
+  .modal.show { display:flex; }
+  .modal img { max-width:100%; max-height:100%; border-radius:12px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="htop">
+    <div class="back" onclick="goBack()">←</div>
+    <div class="title">Mahsulot</div>
+    <div class="icon-btn" onclick="location.href='cart.html'">🛒<span class="dot" id="cartDot" style="display:none">0</span></div>
+  </div>
+</div>
+
+<div id="content"></div>
+
+<div class="bottom-bar" id="bottomBar" style="display:none">
+  <button class="bb-chat" onclick="contactSeller()">💬</button>
+  <button class="bb-add" id="bbAdd" onclick="addToCart()">🛒 Savatga</button>
+  <button class="bb-buy" id="bbBuy" onclick="buyNow()">⚡ Sotib olish</button>
+</div>
+
+<div class="nav">
+  <div class="nav-i" onclick="location.href='home.html'"><div class="ic">🏠</div><div>Bosh</div></div>
+  <div class="nav-i" onclick="location.href='search.html'"><div class="ic">🔍</div><div>Qidiruv</div></div>
+  <div class="nav-i" onclick="location.href='cart.html'">
+    <div class="ic">🛒</div><div>Savat</div>
+    <div class="nc" id="navCartCnt" style="display:none">0</div>
+  </div>
+  <div class="nav-i" onclick="location.href='orders.html'"><div class="ic">📦</div><div>Buyurtma</div></div>
+  <div class="nav-i" onclick="location.href='profile.html'"><div class="ic">👤</div><div>Profil</div></div>
+</div>
+
+<div class="modal" id="imgModal" onclick="closeImg()">
+  <img id="imgModalSrc" src="">
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const productId = params.get('id');
+
+let product = null;
+let selectedImg = 0;
+let reviewImages = [];
+let pickedRating = 0;
+let selectedSize = null;
+let selectedColor = null;
+
+function toast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (type === 'err' ? ' err' : type === 'ok' ? ' ok' : '');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+function num(n) { const v = Number(n)||0; return Number.isInteger(v) ? v.toString() : v.toFixed(2).replace(/\.?0+$/, ''); }
+function fmt(p) { return (Number(p)||0).toLocaleString('uz-UZ').replace(/,/g,' ') + " so'm"; }
+function esc(s) { return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function formatDate(iso) {
+  try {
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return '—';
+    const pad = n => String(n).padStart(2, '0');
+    return pad(d.getDate()) + '.' + pad(d.getMonth()+1) + '.' + d.getFullYear() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  } catch(e) { return '—'; }
+}
+function catName(k) {
+  const m = {'oziq-ovqat':'🍎 Oziq-ovqat','kiyim':'👕 Kiyim','elektronika':'📱 Elektronika','qurilish':'🏗 Qurilish','xizmatlar':'🔧 Xizmatlar'};
+  return m[k] || '—';
+}
+function loadProduct() {
+  let all = [];
+  try { all = JSON.parse(localStorage.getItem('rayis_products') || '[]'); } catch(e) {}
+  if (!Array.isArray(all)) all = [];
+  product = all.find(p => String(p.id) === String(productId));
+  if (product) {
+    if (product.sizes && product.sizes.length > 0) selectedSize = product.sizes[0];
+    if (product.colors && product.colors.length > 0) selectedColor = product.colors[0];
+  }
+  return product;
+}
+function getReviews() {
+  let all = [];
+  try { all = JSON.parse(localStorage.getItem('rayis_reviews') || '[]'); } catch(e) {}
+  if (!Array.isArray(all)) return [];
+  return all.filter(r => r && String(r.productId) === String(productId));
+}
+function getMyReview() {
+  const user = JSON.parse(localStorage.getItem('rayis_user') || '{}');
+  if (!user.userId && !user.firstName) return null;
+  const reviews = getReviews();
+  const uid = user.userId || (user.firstName + '_' + user.lastName);
+  return reviews.find(r => r.userId === uid) || null;
+}
+function calcRating(reviews) {
+  if (reviews.length === 0) return { avg: 0, count: 0, dist: [0,0,0,0,0] };
+  const sum = reviews.reduce((s, r) => s + (Number(r.rating) || 0), 0);
+  const avg = sum / reviews.length;
+  const dist = [0,0,0,0,0];
+  reviews.forEach(r => {
+    const rt = Math.max(1, Math.min(5, Number(r.rating) || 0));
+    dist[rt-1]++;
+  });
+  return { avg: Math.round(avg * 10) / 10, count: reviews.length, dist };
+}
+function getRatingFor(pId) {
+  let all = [];
+  try { all = JSON.parse(localStorage.getItem('rayis_reviews') || '[]'); } catch(e) {}
+  if (!Array.isArray(all)) return { avg: 0, count: 0 };
+  const filtered = all.filter(r => r && String(r.productId) === String(pId));
+  if (filtered.length === 0) return { avg: 0, count: 0 };
+  const sum = filtered.reduce((s, r) => s + (Number(r.rating) || 0), 0);
+  return { avg: Math.round((sum / filtered.length) * 10) / 10, count: filtered.length };
+}
+
+// ✅ O'XSHASH MAHSULOTLAR
+function getSimilarProducts() {
+  if (!product) return [];
+  let all = [];
+  try { all = JSON.parse(localStorage.getItem('rayis_products') || '[]'); } catch(e) {}
+  if (!Array.isArray(all)) return [];
+  return all
+    .filter(p => p && p.name && String(p.id) !== String(product.id) && p.category === product.category)
+    .slice(0, 8);
+}
+
+function renderSimilar() {
+  const similar = getSimilarProducts();
+  if (similar.length === 0) return '';
+
+  let html = '<div class="stitle"><h3>🔥 O\'xshash mahsulotlar</h3></div>' +
+    '<div class="similar-scroll">';
+
+  similar.forEach(p => {
+    const img = (p.images && p.images[0]) ? '<img src="' + p.images[0] + '">' : (p.emoji || '📦');
+    const r = getRatingFor(p.id);
+    const stars = r.count > 0 ? '⭐ ' + r.avg.toFixed(1) + ' (' + r.count + ')' : '☆☆☆☆☆';
+    const oldPrice = (p.oldPrice && p.oldPrice > p.price) ? '<span class="sim-old">' + fmt(p.oldPrice) + '</span>' : '';
+
+    html += '<div class="sim-card" onclick="openSimilar(' + p.id + ')">' +
+      '<div class="sim-img">' + img + '</div>' +
+      '<div class="sim-info">' +
+        '<div class="sim-name">' + esc(p.name) + '</div>' +
+        '<div class="sim-rating">' + stars + '</div>' +
+        '<div class="sim-price">' + fmt(p.price) + oldPrice + '</div>' +
+      '</div>' +
+    '</div>';
+  });
+
+  html += '</div>';
+  return html;
+}
+
+function openSimilar(id) {
+  location.href = 'product.html?id=' + id;
+}
+
+function render() {
+  const c = document.getElementById('content');
+  if (!product) {
+    c.innerHTML = '<div class="empty"><div class="ic">❓</div><p>Mahsulot topilmadi</p></div>';
+    return;
+  }
+  const reviews = getReviews();
+  const rating = calcRating(reviews);
+  const myReview = getMyReview();
+  const images = Array.isArray(product.images) ? product.images : [];
+  const hasImg = images.length > 0;
+
+  let gallery = '<div class="gallery">';
+  if (hasImg) {
+    gallery += '<div class="gallery-main" onclick="openImg(\'' + images[selectedImg] + '\')">' +
+      '<img src="' + images[selectedImg] + '" id="mainImg">' +
+      '<div class="heart" id="heartBtn" onclick="event.stopPropagation();toggleFav()">' + (isFav() ? '❤️' : '🤍') + '</div>' +
+    '</div>';
+    if (images.length > 1) {
+      gallery += '<div class="gallery-thumbs">';
+      images.forEach((img, i) => {
+        gallery += '<div class="thumb ' + (i === selectedImg ? 'active' : '') + '" onclick="selectImg(' + i + ')"><img src="' + img + '"></div>';
+      });
+      gallery += '</div>';
+    }
+  } else {
+    gallery += '<div class="gallery-main">' + (product.emoji || '📦') +
+      '<div class="heart" id="heartBtn" onclick="toggleFav()">' + (isFav() ? '❤️' : '🤍') + '</div>' +
+    '</div>';
+  }
+  gallery += '</div>';
+
+  const oldPriceHtml = (product.oldPrice && product.oldPrice > product.price) ? '<span class="old-price">' + fmt(product.oldPrice) + '</span>' : '';
+  const disc = (product.oldPrice && product.oldPrice > product.price) ? '<span class="discount">-' + Math.round((1 - product.price/product.oldPrice) * 100) + '%</span>' : '';
+  const starsFull = '⭐'.repeat(Math.round(rating.avg)) + '☆'.repeat(5 - Math.round(rating.avg));
+  const sellerName = product.sellerName || product.seller || 'Sotuvchi';
+
+  let html = gallery + '<div class="section">' +
+    '<div class="price-row"><span class="price">' + fmt(product.price) + '</span>' + oldPriceHtml + disc + '</div>' +
+    '<div class="prod-name">' + esc(product.name) + '</div>' +
+    '<div class="rating-row" onclick="scrollToReviews()">' +
+      '<span class="stars">' + (rating.count > 0 ? starsFull : '☆☆☆☆☆') + '</span>' +
+      '<span class="rating-num">' + (rating.count > 0 ? rating.avg.toFixed(1) : '0.0') + '</span>' +
+      '<span class="rating-count">(' + rating.count + ' ta sharh)</span>' +
+    '</div>';
+
+  if (product.sizes && product.sizes.length > 0) {
+    html += '<div class="var-block"><div class="var-title">📏 O\'lcham <span class="val">' + esc(selectedSize || '—') + '</span></div><div class="var-options">';
+    product.sizes.forEach(s => {
+      html += '<div class="var-opt ' + (selectedSize === s ? 'selected' : '') + '" onclick="selectSize(\'' + esc(s) + '\')">' + esc(s) + '</div>';
+    });
+    html += '</div></div>';
+  }
+
+  if (product.colors && product.colors.length > 0) {
+    html += '<div class="var-block"><div class="var-title">🎨 Rang <span class="val">' + esc(selectedColor ? selectedColor.name : '—') + '</span></div><div class="var-options">';
+    product.colors.forEach(co => {
+      const sel = selectedColor && selectedColor.name === co.name;
+      html += '<div class="var-opt color-opt ' + (sel ? 'selected' : '') + '" onclick="selectColor(\'' + esc(co.name) + '\')"><span class="swatch" style="background:' + (co.hex || '#333') + '"></span>' + esc(co.name) + '</div>';
+    });
+    html += '</div></div>';
+  }
+
+  html += '<div class="seller-card" onclick="openShop()" style="cursor:pointer">' +
+      '<div class="seller-avatar">🏪</div>' +
+      '<div class="seller-info"><div class="seller-name">' + esc(sellerName) + ' →</div><div class="seller-meta">' + catName(product.category) + ' • ' + esc(product.region || '—') + '</div></div>' +
+      '<button class="seller-chat" onclick="event.stopPropagation();contactSeller()">💬</button>' +
+    '</div>' +
+    '<div class="stock-row">' +
+      '<div class="stock-item"><div class="lbl">Ombor</div><div class="val ' + (Number(product.stock) > 10 ? 'ok' : Number(product.stock) > 0 ? 'low' : 'out') + '">' + num(product.stock) + '</div></div>' +
+      '<div class="stock-item"><div class="lbl">Birlik</div><div class="val">' + esc(product.unit || 'dona') + '</div></div>' +
+      '<div class="stock-item"><div class="lbl">Kategoriya</div><div class="val" style="font-size:11px">' + catName(product.category) + '</div></div>' +
+    '</div>' +
+    (product.description ? '<div class="stitle"><h3>Tavsif</h3></div><div class="desc">' + esc(product.description) + '</div>' : '') +
+  '</div>';
+
+  // ✅ O'XSHASHLAR — sharhlardan OLDIN
+  html += '<div class="section">' + renderSimilar() + '</div>';
+
+  html += '<div class="section" id="reviewsAnchor"><div class="stitle"><h3>⭐ Sharhlar</h3></div>';
+
+  if (rating.count > 0) {
+    html += '<div class="review-summary"><div class="rs-left"><div class="rs-big">' + rating.avg.toFixed(1) + '</div><div class="rs-stars">' + starsFull + '</div><div class="rs-count">' + rating.count + ' ta sharh</div></div><div class="rs-right">';
+    for (let i = 5; i >= 1; i--) {
+      const cnt = rating.dist[i-1];
+      const pct = (rating.count > 0) ? (cnt / rating.count) * 100 : 0;
+      html += '<div class="rs-bar"><span class="num">' + i + '</span><div class="track"><div class="fill" style="width:' + pct + '%"></div></div><span class="cnt">' + cnt + '</span></div>';
+    }
+    html += '</div></div>';
+  }
+
+  if (!myReview) {
+    html += '<button class="btn btn-primary" style="width:100%;margin-bottom:12px;padding:14px" onclick="openReviewForm()">✍️ Sharh qoldirish</button>';
+  } else {
+    html += '<button class="btn btn-secondary" style="width:100%;margin-bottom:12px;padding:14px" onclick="openReviewForm()">✏️ Sharhni tahrirlash</button>';
+  }
+
+  html += '<div class="review-form" id="reviewForm"><div class="rf-title">' + (myReview ? 'Sharhni tahrirlash' : 'Sharh qoldirish') + '</div><div class="star-picker" id="starPicker"><span data-v="1">⭐</span><span data-v="2">⭐</span><span data-v="3">⭐</span><span data-v="4">⭐</span><span data-v="5">⭐</span></div><div class="ig"><label>Sharh matni *</label><textarea id="revText" placeholder="Mahsulot haqida fikringiz..." maxlength="500"></textarea></div><div class="ig"><label>Rasm (ixtiyoriy, 1-3 ta)</label><label for="fileRev" class="img-upload"><div class="ic">📷</div><div class="tx">Rasm qo\'shish</div></label><input type="file" id="fileRev" accept="image/*" multiple style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" onchange="pickReviewImages(event)"><div class="preview" id="previewRev"></div></div><div class="rf-btns"><button class="btn btn-secondary" onclick="closeReviewForm()">Bekor</button><button class="btn btn-primary" onclick="submitReview()">✅ Yuborish</button></div></div>';
+
+  if (reviews.length === 0) {
+    html += '<div class="empty"><div class="ic">💬</div><p>Hozircha sharh yo\'q.</p></div>';
+  } else {
+    const user = JSON.parse(localStorage.getItem('rayis_user') || '{}');
+    const uid = user.userId || (user.firstName + '_' + user.lastName);
+    reviews.sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||'')).forEach(r => {
+      const isMine = r.userId === uid;
+      const stars = '⭐'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+      const initial = (r.userName || '?').charAt(0).toUpperCase();
+      html += '<div class="review ' + (isMine ? 'rev-mine' : '') + '">' +
+        '<div class="rev-head"><div class="rev-avatar">' + initial + '</div><div class="rev-info"><div class="rev-name">' + esc(r.userName || 'Foydalanuvchi') + ' ' + (isMine ? '<span class="rev-badge">SIZ</span>' : '') + '</div><div class="rev-date">' + formatDate(r.createdAt) + '</div></div><div class="rev-stars">' + stars + '</div></div>' +
+        '<div class="rev-text">' + esc(r.text) + '</div>';
+      if (r.images && r.images.length > 0) {
+        html += '<div class="rev-images">';
+        r.images.forEach(img => { html += '<div class="rev-img" onclick="openImg(\'' + img + '\')"><img src="' + img + '"></div>'; });
+        html += '</div>';
+      }
+      if (isMine) {
+        html += '<div style="margin-top:10px"><button class="btn btn-secondary" style="padding:8px;font-size:11px" onclick="deleteMyReview()">🗑 O\'chirish</button></div>';
+      }
+      html += '</div>';
+    });
+  }
+  html += '</div>';
+
+  c.innerHTML = html;
+  document.getElementById('bottomBar').style.display = 'flex';
+  document.querySelectorAll('#starPicker span').forEach(s => {
+    s.addEventListener('click', () => { pickedRating = parseInt(s.dataset.v); updateStarPicker(); });
+  });
+  if (myReview) {
+    pickedRating = myReview.rating;
+    reviewImages = Array.isArray(myReview.images) ? myReview.images.slice() : [];
+    document.getElementById('revText').value = myReview.text;
+    updateStarPicker();
+    renderReviewPreview();
+  }
+  updateBadges();
+  updateButtons();
+}
+
+function updateStarPicker() {
+  document.querySelectorAll('#starPicker span').forEach(s => {
+    const v = parseInt(s.dataset.v);
+    if (v <= pickedRating) s.classList.remove('off');
+    else s.classList.add('off');
+  });
+}
+function selectImg(i) { selectedImg = i; render(); }
+function openImg(src) { document.getElementById('imgModalSrc').src = src; document.getElementById('imgModal').classList.add('show'); }
+function closeImg() { document.getElementById('imgModal').classList.remove('show'); }
+function selectSize(s) { selectedSize = s; render(); }
+function selectColor(name) {
+  const co = (product.colors || []).find(c => c.name === name);
+  if (co) selectedColor = co;
+  render();
+}
+function updateButtons() {
+  const hasSize = product.sizes && product.sizes.length > 0;
+  const hasColor = product.colors && product.colors.length > 0;
+  const needsSize = hasSize && !selectedSize;
+  const needsColor = hasColor && !selectedColor;
+  const noStock = Number(product.stock) <= 0;
+  const disabled = needsSize || needsColor || noStock;
+  const bbAdd = document.getElementById('bbAdd');
+  const bbBuy = document.getElementById('bbBuy');
+  if (!bbAdd || !bbBuy) return;
+  if (noStock) {
+    bbAdd.disabled = true; bbAdd.textContent = '❌ Tugagan';
+    bbBuy.disabled = true; bbBuy.textContent = '❌ Tugagan';
+  } else if (needsSize || needsColor) {
+    bbAdd.disabled = true; bbAdd.textContent = '📏 Variantni tanlang';
+    bbBuy.disabled = true; bbBuy.textContent = '⚡ Sotib olish';
+  } else {
+    bbAdd.disabled = false; bbAdd.textContent = '🛒 Savatga';
+    bbBuy.disabled = false; bbBuy.textContent = '⚡ Sotib olish';
+  }
+}
+function openShop() {
+  if (!product) return;
+  const shopKey = product.sellerId || product.sellerName || product.seller;
+  if (!shopKey) return toast('Do\'kon topilmadi', 'err');
+  location.href = 'shop.html?id=' + encodeURIComponent(shopKey);
+}
+function isFav() {
+  let favs = [];
+  try { favs = JSON.parse(localStorage.getItem('rayis_favs') || '[]'); } catch(e) {}
+  if (!Array.isArray(favs)) favs = [];
+  return favs.indexOf(product.id) !== -1;
+}
+function toggleFav() {
+  let favs = [];
+  try { favs = JSON.parse(localStorage.getItem('rayis_favs') || '[]'); } catch(e) {}
+  if (!Array.isArray(favs)) favs = [];
+  const idx = favs.indexOf(product.id);
+  const el = document.getElementById('heartBtn');
+  if (idx === -1) {
+    favs.push(product.id);
+    el.textContent = '❤️'; el.classList.add('on');
+    toast('❤️ Sevimlilarga qo\'shildi', 'ok');
+  } else {
+    favs.splice(idx, 1);
+    el.textContent = '🤍'; el.classList.remove('on');
+    toast('Sevimlilardan olindi');
+  }
+  try { localStorage.setItem('rayis_favs', JSON.stringify(favs)); } catch(e) {}
+}
+function addToCart() {
+  const hasSize = product.sizes && product.sizes.length > 0;
+  const hasColor = product.colors && product.colors.length > 0;
+  if (hasSize && !selectedSize) return toast('O\'lchamni tanlang', 'err');
+  if (hasColor && !selectedColor) return toast('Rangni tanlang', 'err');
+  if (Number(product.stock) <= 0) return toast('Mahsulot tugagan', 'err');
+
+  const variantText = [
+    selectedSize ? '📏 ' + selectedSize : '',
+    selectedColor ? '🎨 ' + selectedColor.name : ''
+  ].filter(Boolean).join(' • ');
+
+  const cartKey = String(product.id) + '_' + (selectedSize || '') + '_' + (selectedColor ? selectedColor.name : '');
+
+  let cart = [];
+  try { cart = JSON.parse(localStorage.getItem('rayis_cart') || '[]'); } catch(e) {}
+  if (!Array.isArray(cart)) cart = [];
+
+  const ex = cart.find(i => i.cartKey === cartKey);
+  if (ex) { ex.qty = (Number(ex.qty) || 1) + 1; }
+  else {
+    cart.push({
+      cartKey, id: product.id, name: product.name, price: product.price,
+      unit: product.unit || 'dona', emoji: product.emoji || '📦',
+      images: product.images || [], category: product.category,
+      size: selectedSize, color: selectedColor, variantText, qty: 1
+    });
+  }
+  try { localStorage.setItem('rayis_cart', JSON.stringify(cart)); } catch(e) {
+    return toast('Xotira to\'ldi', 'err');
+  }
+  updateBadges();
+  toast('✅ Savatga qo\'shildi' + (variantText ? ' (' + variantText + ')' : ''), 'ok');
+}
+function buyNow() {
+  const hasSize = product.sizes && product.sizes.length > 0;
+  const hasColor = product.colors && product.colors.length > 0;
+  if (hasSize && !selectedSize) return toast('O\'lchamni tanlang', 'err');
+  if (hasColor && !selectedColor) return toast('Rangni tanlang', 'err');
+  addToCart();
+  setTimeout(() => location.href = 'cart.html', 500);
+}
+function contactSeller() {
+  if (!product) return toast('Mahsulot topilmadi', 'err');
+  const sellerId = product.sellerId || 'user_sotuvchi';
+  const sellerName = product.sellerName || product.seller || 'Sotuvchi';
+  const productImg = (product.images && product.images[0]) || '';
+  const url = 'chat.html?new=' + encodeURIComponent(sellerId) + '&nname=' + encodeURIComponent(sellerName) + '&p=' + encodeURIComponent(product.id) + '&pn=' + encodeURIComponent(product.name) + (productImg ? '&pi=' + encodeURIComponent(productImg) : '');
+  location.href = url;
+}
+function updateBadges() {
+  let cart = [];
+  try { cart = JSON.parse(localStorage.getItem('rayis_cart') || '[]'); } catch(e) {}
+  if (!Array.isArray(cart)) cart = [];
+  const cnt = Math.round(cart.reduce((s, i) => s + (Number(i.qty) || 0), 0));
+  const cd = document.getElementById('cartDot');
+  const nc = document.getElementById('navCartCnt');
+  if (cnt > 0) {
+    cd.textContent = cnt > 99 ? '99+' : cnt; cd.style.display = 'flex';
+    nc.textContent = cnt > 99 ? '99+' : cnt; nc.style.display = 'flex';
+  } else {
+    cd.style.display = 'none'; nc.style.display = 'none';
+  }
+}
+function openReviewForm() {
+  const user = JSON.parse(localStorage.getItem('rayis_user') || '{}');
+  if (!user.firstName && !user.name) { toast('Avval tizimga kiring', 'err'); return; }
+  document.getElementById('reviewForm').classList.add('show');
+  setTimeout(() => { document.getElementById('reviewForm').scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
+}
+function closeReviewForm() { document.getElementById('reviewForm').classList.remove('show'); }
+function scrollToReviews() { document.getElementById('reviewsAnchor').scrollIntoView({ behavior: 'smooth' }); }
+function compressImage(file, maxW, q) {
+  maxW = maxW || 800; q = q || 0.7;
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const c = document.createElement('canvas');
+          let w = img.width, h = img.height;
+          if (w > maxW) { h = (maxW/w)*h; w = maxW; }
+          c.width = w; c.height = h;
+          c.getContext('2d').drawImage(img, 0, 0, w, h);
+          resolve(c.toDataURL('image/jpeg', q));
+        } catch(err) { reject(err); }
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
+}
+async function pickReviewImages(event) {
+  const files = Array.from(event.target.files || []);
+  if (!files.length) return;
+  if (reviewImages.length + files.length > 3) { toast('Maksimal 3 ta rasm', 'err'); event.target.value = ''; return; }
+  for (const f of files) {
+    if (f.size > 5*1024*1024) { toast('Juda katta', 'err'); continue; }
+    try { reviewImages.push(await compressImage(f)); } catch(e) {}
+  }
+  renderReviewPreview();
+  event.target.value = '';
+}
+function renderReviewPreview() {
+  const c = document.getElementById('previewRev');
+  if (!c) return;
+  if (reviewImages.length === 0) { c.innerHTML = ''; return; }
+  let html = '';
+  reviewImages.forEach((src, i) => { html += '<div class="pv-item"><img src="' + src + '"><button class="rm" onclick="rmReviewImage(' + i + ')">✕</button></div>'; });
+  c.innerHTML = html;
+}
+function rmReviewImage(i) { reviewImages.splice(i, 1); renderReviewPreview(); }
+function submitReview() {
+  const user = JSON.parse(localStorage.getItem('rayis_user') || '{}');
+  if (!user.firstName && !user.name) { toast('Avval tizimga kiring', 'err'); return; }
+  const text = document.getElementById('revText').value.trim();
+  if (!pickedRating || pickedRating < 1) return toast('Yulduzcha tanlang', 'err');
+  if (!text || text.length < 5) return toast('Sharh kamida 5 belgi', 'err');
+  const uid = user.userId || (user.firstName + '_' + user.lastName);
+  const userName = user.firstName ? (user.firstName + ' ' + (user.lastName || '')).trim() : (user.name || 'Foydalanuvchi');
+  let all = [];
+  try { all = JSON.parse(localStorage.getItem('rayis_reviews') || '[]'); } catch(e) {}
+  if (!Array.isArray(all)) all = [];
+  const idx = all.findIndex(r => String(r.productId) === String(product.id) && r.userId === uid);
+  if (idx !== -1) all.splice(idx, 1);
+  all.unshift({
+    id: Date.now(), productId: product.id, productName: product.name,
+    userId: uid, userName, rating: pickedRating, text,
+    images: reviewImages.slice(), createdAt: new Date().toISOString()
+  });
+  try { localStorage.setItem('rayis_reviews', JSON.stringify(all)); } catch(e) {
+    return toast('Xotira to\'ldi', 'err');
+  }
+  toast('✅ Sharh saqlandi!', 'ok');
+  reviewImages = [];
+  pickedRating = 0;
+  render();
+}
+function deleteMyReview() {
+  if (!confirm('Sharhni o\'chirishni tasdiqlaysizmi?')) return;
+  const user = JSON.parse(localStorage.getItem('rayis_user') || '{}');
+  const uid = user.userId || (user.firstName + '_' + user.lastName);
+  let all = [];
+  try { all = JSON.parse(localStorage.getItem('rayis_reviews') || '[]'); } catch(e) {}
+  all = all.filter(r => !(String(r.productId) === String(product.id) && r.userId === uid));
+  try { localStorage.setItem('rayis_reviews', JSON.stringify(all)); } catch(e) {}
+  toast('🗑 Sharh o\'chirildi', 'ok');
+  pickedRating = 0;
+  reviewImages = [];
+  render();
+}
+function goBack() { if (history.length > 1) history.back(); else location.href = 'home.html'; }
+
+loadProduct();
+render();
+</script>
+</body>
+</html>

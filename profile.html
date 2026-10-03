@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAYIS BOZORI — Profil</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,'Segoe UI',sans-serif; }
+  body { background:#0b0f1a; color:#fff; min-height:100vh; padding-bottom:80px; }
+
+  /* HEADER */
+  .header { background:#0f1626; border-bottom:1px solid rgba(255,255,255,0.06); padding:12px 16px; position:sticky; top:0; z-index:100; }
+  .htop { display:flex; align-items:center; gap:10px; }
+  .back { font-size:22px; cursor:pointer; color:#8b9ab8; }
+  .title { font-size:16px; font-weight:800; flex:1; }
+
+  /* PROFILE CARD */
+  .profile-card { margin:16px; padding:24px 20px; background:linear-gradient(135deg,rgba(0,91,255,0.15),rgba(124,58,237,0.08)); border:1px solid rgba(0,91,255,0.25); border-radius:20px; text-align:center; position:relative; overflow:hidden; }
+  .profile-card::after { content:""; position:absolute; top:-50%; right:-30%; width:200px; height:200px; background:radial-gradient(circle,rgba(0,91,255,0.3),transparent); border-radius:50%; pointer-events:none; }
+  .avatar-big { width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg,#005bff,#7c3aed); display:flex; align-items:center; justify-content:center; font-size:40px; margin:0 auto 12px; box-shadow:0 10px 30px rgba(0,91,255,0.4); position:relative; z-index:1; }
+  .pname { font-size:20px; font-weight:900; margin-bottom:4px; position:relative; z-index:1; }
+  .prole { font-size:11px; color:#60a5fa; font-weight:800; letter-spacing:1px; position:relative; z-index:1; }
+  .pregion { font-size:12px; color:#8b9ab8; margin-top:6px; position:relative; z-index:1; }
+
+  /* STATS */
+  .stats-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin:0 16px 16px; }
+  .stat-mini { background:#131a2b; border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:14px 8px; text-align:center; }
+  .stat-mini .num { font-size:18px; font-weight:900; color:#60a5fa; }
+  .stat-mini .lbl { font-size:10px; color:#8b9ab8; margin-top:4px; font-weight:600; }
+
+  /* SECTION */
+  .section { margin:0 16px 16px; }
+  .section-title { font-size:12px; color:#5b6b8a; font-weight:800; margin-bottom:8px; padding-left:4px; letter-spacing:0.5px; text-transform:uppercase; }
+
+  /* MENU ITEM */
+  .menu-item { display:flex; align-items:center; gap:14px; padding:16px; background:#131a2b; border:1px solid rgba(255,255,255,0.06); border-radius:14px; margin-bottom:8px; cursor:pointer; transition:all 0.15s; }
+  .menu-item:active { transform:scale(0.98); background:rgba(0,91,255,0.05); border-color:rgba(0,91,255,0.3); }
+  .menu-item .ic { font-size:22px; width:32px; text-align:center; flex-shrink:0; }
+  .menu-item .info { flex:1; min-width:0; }
+  .menu-item .info .title { font-size:14px; font-weight:700; margin-bottom:2px; }
+  .menu-item .info .desc { font-size:11px; color:#8b9ab8; }
+  .menu-item .arrow { color:#4b5876; font-size:18px; }
+  .menu-item.danger { border-color:rgba(239,68,68,0.2); }
+  .menu-item.danger .info .title { color:#f87171; }
+
+  /* EDIT VIEW */
+  .edit-view { display:none; padding:16px; }
+  .edit-view.show { display:block; }
+  .ig { margin-bottom:14px; }
+  .ig label { display:block; font-size:12px; color:#8b9ab8; margin-bottom:6px; font-weight:600; }
+  .ig input, .ig select { width:100%; padding:13px 14px; background:#0f1626; border:1px solid rgba(255,255,255,0.08); border-radius:12px; color:#fff; font-size:14px; outline:none; font-family:inherit; }
+  .ig input:focus, .ig select:focus { border-color:#005bff; }
+  .ig select option { background:#0f1626; }
+  .btn { padding:15px; border:none; border-radius:12px; font-size:14px; font-weight:800; cursor:pointer; width:100%; }
+  .btn-primary { background:linear-gradient(135deg,#005bff,#0047cc); color:#fff; }
+  .btn-secondary { background:#1a2337; color:#cbd5e1; border:1px solid rgba(255,255,255,0.08); margin-top:8px; }
+
+  /* TOAST */
+  .toast { position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-100px); background:#005bff; color:#fff; padding:12px 20px; border-radius:12px; font-size:13px; font-weight:700; z-index:9999; transition:transform 0.3s; max-width:90%; text-align:center; box-shadow:0 10px 30px rgba(0,91,255,0.4); }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+  .toast.ok { background:#10b981; box-shadow:0 10px 30px rgba(16,185,129,0.4); }
+  .toast.err { background:#ef4444; }
+
+  /* BOTTOM NAV */
+  .nav { position:fixed; bottom:0; left:0; right:0; background:#0f1626; border-top:1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-around; padding:10px 0 max(10px,env(safe-area-inset-bottom)); z-index:200; }
+  .nav-i { display:flex; flex-direction:column; align-items:center; gap:2px; font-size:10px; color:#5b6b8a; cursor:pointer; flex:1; padding:4px; }
+  .nav-i.active { color:#60a5fa; }
+  .nav-i .ic { font-size:20px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="htop">
+    <div class="back" onclick="goBack()">←</div>
+    <div class="title">Profil</div>
+  </div>
+</div>
+
+<!-- MAIN VIEW -->
+<div id="mainView">
+  <div class="profile-card">
+    <div class="avatar-big" id="avatar">👤</div>
+    <div class="pname" id="pName">Foydalanuvchi</div>
+    <div class="prole" id="pRole">XARIDOR</div>
+    <div class="pregion" id="pRegion">📍 —</div>
+  </div>
+
+  <div class="stats-row" id="statsRow">
+    <div class="stat-mini"><div class="num" id="stOrders">0</div><div class="lbl">Buyurtma</div></div>
+    <div class="stat-mini"><div class="num" id="stCart">0</div><div class="lbl">Savat</div></div>
+    <div class="stat-mini"><div class="num" id="stFavs">0</div><div class="lbl">Sevimli</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">HISOB</div>
+    <div class="menu-item" onclick="editProfile()">
+      <div class="ic">✏️</div>
+      <div class="info"><div class="title">Ma'lumotlarni tahrirlash</div><div class="desc">Ism, familiya, viloyat</div></div>
+      <div class="arrow">›</div>
+    </div>
+    <div class="menu-item" onclick="location.href='orders.html'">
+      <div class="ic">📦</div>
+      <div class="info"><div class="title">Buyurtmalarim</div><div class="desc">Tarix va holat</div></div>
+      <div class="arrow">›</div>
+    </div>
+    <div class="menu-item" onclick="location.href='cart.html'">
+      <div class="ic">🛒</div>
+      <div class="info"><div class="title">Savat</div><div class="desc">Tanlangan mahsulotlar</div></div>
+      <div class="arrow">›</div>
+    </div>
+    <div class="menu-item" onclick="location.href='search.html'">
+      <div class="ic">❤️</div>
+      <div class="info"><div class="title">Sevimlilar</div><div class="desc">Saqlangan mahsulotlar</div></div>
+      <div class="arrow">›</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">YORDAM</div>
+    <div class="menu-item" onclick="showAbout()">
+      <div class="ic">ℹ️</div>
+      <div class="info"><div class="title">RAYIS BOZORI haqida</div><div class="desc">Versiya va ma'lumot</div></div>
+      <div class="arrow">›</div>
+    </div>
+    <div class="menu-item danger" onclick="logout()">
+      <div class="ic">🚪</div>
+      <div class="info"><div class="title">Chiqish</div><div class="desc">Hisobdan chiqish</div></div>
+      <div class="arrow">›</div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT VIEW -->
+<div class="edit-view" id="editView">
+  <div style="font-size:16px;font-weight:800;margin-bottom:16px">Ma'lumotlarni tahrirlash</div>
+  <div class="ig"><label>Ism</label><input type="text" id="eName" placeholder="Ali"></div>
+  <div class="ig"><label>Familiya</label><input type="text" id="eSurname" placeholder="Valiyev"></div>
+  <div class="ig">
+    <label>Viloyat</label>
+    <select id="eRegion">
+      <option value="">Tanlang...</option>
+      <option value="Toshkent shahri">Toshkent shahri</option>
+      <option value="Toshkent viloyati">Toshkent viloyati</option>
+      <option value="Samarqand">Samarqand</option>
+      <option value="Buxoro">Buxoro</option>
+      <option value="Navoiy">Navoiy</option>
+      <option value="Qashqadaryo">Qashqadaryo</option>
+      <option value="Surxondaryo">Surxondaryo</option>
+      <option value="Jizzax">Jizzax</option>
+      <option value="Sirdaryo">Sirdaryo</option>
+      <option value="Farg'ona">Farg'ona</option>
+      <option value="Andijon">Andijon</option>
+      <option value="Namangan">Namangan</option>
+      <option value="Xorazm">Xorazm</option>
+      <option value="Qoraqalpog'iston">Qoraqalpog'iston</option>
+    </select>
+  </div>
+  <button class="btn btn-primary" onclick="saveProfile()">💾 Saqlash</button>
+  <button class="btn btn-secondary" onclick="cancelEdit()">← Orqaga</button>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="nav">
+  <div class="nav-i" onclick="location.href='home.html'"><div class="ic">🏠</div><div>Bosh</div></div>
+  <div class="nav-i" onclick="location.href='search.html'"><div class="ic">🔍</div><div>Qidiruv</div></div>
+  <div class="nav-i" onclick="location.href='cart.html'"><div class="ic">🛒</div><div>Savat</div></div>
+  <div class="nav-i" onclick="location.href='orders.html'"><div class="ic">📦</div><div>Buyurtma</div></div>
+  <div class="nav-i active"><div class="ic">👤</div><div>Profil</div></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================
+// USER
+// ============================================
+let user = {};
+try { user = JSON.parse(localStorage.getItem('rayis_user') || '{}'); } catch(e) { user = {}; }
+
+// ============================================
+// TOAST
+// ============================================
+function toast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (type === 'err' ? ' err' : type === 'ok' ? ' ok' : '');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ============================================
+// RENDER
+// ============================================
+function render() {
+  if (!user || !user.role) {
+    location.href = 'index.html';
+    return;
+  }
+
+  const isBuyer = user.role === 'xaridor';
+  const displayName = isBuyer
+    ? ((user.firstName || '') + ' ' + (user.lastName || '')).trim() || 'Xaridor'
+    : user.name || 'Foydalanuvchi';
+
+  document.getElementById('avatar').textContent = user.icon || (isBuyer ? '🛒' : '👤');
+  document.getElementById('pName').textContent = displayName;
+  document.getElementById('pRole').textContent = (user.role || '').toUpperCase();
+  document.getElementById('pRegion').textContent = '📍 ' + (user.region || 'Hudud tanlanmagan');
+
+  // Statistika
+  let orders = [];
+  try { orders = JSON.parse(localStorage.getItem('rayis_orders') || '[]'); } catch(e) {}
+  if (!Array.isArray(orders)) orders = [];
+  document.getElementById('stOrders').textContent = orders.length;
+
+  let cart = [];
+  try { cart = JSON.parse(localStorage.getItem('rayis_cart') || '[]'); } catch(e) {}
+  if (!Array.isArray(cart)) cart = [];
+  document.getElementById('stCart').textContent = cart.reduce((s,i) => s + (i.qty||0), 0);
+
+  let favs = [];
+  try { favs = JSON.parse(localStorage.getItem('rayis_favs') || '[]'); } catch(e) {}
+  if (!Array.isArray(favs)) favs = [];
+  document.getElementById('stFavs').textContent = favs.length;
+}
+
+// ============================================
+// EDIT
+// ============================================
+function editProfile() {
+  document.getElementById('mainView').style.display = 'none';
+  document.getElementById('editView').classList.add('show');
+
+  document.getElementById('eName').value = user.firstName || user.name || '';
+  document.getElementById('eSurname').value = user.lastName || '';
+  document.getElementById('eRegion').value = user.region || '';
+}
+
+function cancelEdit() {
+  document.getElementById('editView').classList.remove('show');
+  document.getElementById('mainView').style.display = 'block';
+}
+
+function saveProfile() {
+  const name = document.getElementById('eName').value.trim();
+  const surname = document.getElementById('eSurname').value.trim();
+  const region = document.getElementById('eRegion').value;
+
+  if (!name || name.length < 2) return toast('Ismni kiriting', 'err');
+  if (!region) return toast('Viloyatni tanlang', 'err');
+
+  if (user.role === 'xaridor') {
+    user.firstName = name;
+    user.lastName = surname;
+  } else {
+    user.name = name;
+  }
+  user.region = region;
+
+  try { localStorage.setItem('rayis_user', JSON.stringify(user)); } catch(e) {}
+
+  toast('✅ Saqlandi', 'ok');
+  setTimeout(() => {
+    cancelEdit();
+    render();
+  }, 500);
+}
+
+// ============================================
+// ABOUT
+// ============================================
+function showAbout() {
+  alert('RAYIS BOZORI v1.0\n\nO\'zbekistonning universal bozori\n\n© 2026');
+}
+
+// ============================================
+// LOGOUT
+// ============================================
+function logout() {
+  if (!confirm('Chiqishni tasdiqlaysizmi?')) return;
+  localStorage.removeItem('rayis_user');
+  location.href = 'index.html';
+}
+
+// ============================================
+// GO BACK
+// ============================================
+function goBack() {
+  const backMap = {
+    'xaridor': 'home.html',
+    'sotuvchi': 'seller.html',
+    'usta': 'master.html',
+    'admin': 'admin.html',
+    'xojayin': 'admin.html',
+    'omborchi': 'warehouse.html',
+    'hisobchi': 'accountant.html',
+    'nazoratchi': 'supervisor.html',
+    'ijarachi': 'renter.html',
+    'xizmat': 'service.html'
+  };
+  location.href = backMap[user.role] || 'home.html';
+}
+
+// ============================================
+// BOSHLASH
+// ============================================
+render();
+</script>
+</body>
+</html>

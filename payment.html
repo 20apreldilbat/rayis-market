@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAYIS BOZORI — To'lov</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,'Segoe UI',sans-serif; }
+  body { background:#0b0f1a; color:#fff; min-height:100vh; padding-bottom:40px; }
+
+  .header { background:#0f1626; border-bottom:1px solid rgba(255,255,255,0.06); padding:12px 16px; position:sticky; top:0; z-index:100; }
+  .htop { display:flex; align-items:center; gap:10px; }
+  .back { font-size:22px; cursor:pointer; color:#8b9ab8; }
+  .title { font-size:16px; font-weight:800; flex:1; }
+
+  .section { padding:16px; }
+
+  /* ORDER SUMMARY */
+  .summary { background:linear-gradient(135deg,#005bff,#7c3aed); border-radius:16px; padding:20px; margin-bottom:16px; box-shadow:0 10px 30px rgba(0,91,255,0.3); }
+  .summary .lbl { font-size:12px; opacity:0.9; margin-bottom:4px; font-weight:600; }
+  .summary .oid { font-size:13px; font-weight:800; margin-bottom:12px; letter-spacing:0.5px; }
+  .summary .amount { font-size:32px; font-weight:900; letter-spacing:-1px; }
+  .summary .sub { font-size:11px; opacity:0.85; margin-top:6px; }
+
+  /* PAYMENT METHODS */
+  .stitle { display:flex; justify-content:space-between; align-items:center; margin:20px 0 12px; }
+  .stitle h3 { font-size:15px; font-weight:800; }
+
+  .pay-method { background:#131a2b; border:2px solid rgba(255,255,255,0.06); border-radius:14px; padding:14px; margin-bottom:10px; cursor:pointer; display:flex; align-items:center; gap:12px; transition:all 0.15s; }
+  .pay-method:active { transform:scale(0.99); }
+  .pay-method.selected { border-color:#005bff; background:rgba(0,91,255,0.08); }
+  .pay-logo { width:52px; height:52px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:900; flex-shrink:0; }
+  .pay-info { flex:1; min-width:0; }
+  .pay-name { font-size:14px; font-weight:800; margin-bottom:3px; }
+  .pay-desc { font-size:11px; color:#8b9ab8; }
+  .pay-radio { width:22px; height:22px; border-radius:50%; border:2px solid #4b5876; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+  .pay-method.selected .pay-radio { border-color:#005bff; background:#005bff; }
+  .pay-method.selected .pay-radio::after { content:""; width:8px; height:8px; border-radius:50%; background:#fff; }
+
+  .pay-logo.payme { background:linear-gradient(135deg,#33cccc,#00b3b3); color:#fff; }
+  .pay-logo.click { background:linear-gradient(135deg,#0099ff,#0066cc); color:#fff; }
+  .pay-logo.uzum { background:linear-gradient(135deg,#7000ff,#4d00b3); color:#fff; }
+  .pay-logo.cash { background:linear-gradient(135deg,#10b981,#059669); color:#fff; }
+  .pay-logo.installment { background:linear-gradient(135deg,#fbbf24,#f59e0b); color:#0b0f1a; }
+  .pay-logo.balance { background:linear-gradient(135deg,#7c3aed,#5b21b6); color:#fff; }
+
+  /* BALANCE INFO */
+  .balance-info { background:#131a2b; border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:12px; margin-top:8px; display:flex; justify-content:space-between; align-items:center; }
+  .balance-info .lbl { font-size:12px; color:#8b9ab8; }
+  .balance-info .val { font-size:14px; font-weight:800; color:#34d399; }
+
+  /* INSTALLMENT DETAILS */
+  .installment-detail { background:rgba(251,191,36,0.08); border:1px solid rgba(251,191,36,0.3); border-radius:12px; padding:12px; margin-top:10px; display:none; }
+  .installment-detail.show { display:block; }
+  .inst-row { display:flex; justify-content:space-between; padding:4px 0; font-size:12px; }
+  .inst-row .l { color:#8b9ab8; }
+  .inst-row .r { color:#fbbf24; font-weight:700; }
+  .inst-row.big { border-top:1px dashed rgba(251,191,36,0.3); margin-top:6px; padding-top:8px; font-size:13px; }
+  .inst-row.big .r { font-size:15px; font-weight:900; }
+
+  /* CARD FORM */
+  .card-form { background:#131a2b; border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:16px; margin-top:12px; display:none; }
+  .card-form.show { display:block; }
+  .ig { margin-bottom:12px; }
+  .ig label { display:block; font-size:12px; color:#8b9ab8; margin-bottom:6px; font-weight:600; }
+  .ig input { width:100%; padding:13px 14px; background:#0f1626; border:1px solid rgba(255,255,255,0.08); border-radius:12px; color:#fff; font-size:15px; outline:none; font-family:inherit; letter-spacing:1px; }
+  .ig input:focus { border-color:#005bff; }
+  .ig input::placeholder { color:#4b5876; letter-spacing:0; }
+  .row { display:grid; grid-template-columns:2fr 1fr; gap:10px; }
+
+  .btn { padding:16px; border:none; border-radius:12px; font-size:15px; font-weight:800; cursor:pointer; width:100%; }
+  .btn:active { transform:scale(0.98); }
+  .btn:disabled { opacity:0.4; }
+  .btn-primary { background:linear-gradient(135deg,#10b981,#059669); color:#fff; }
+  .btn-secondary { background:#1a2337; color:#cbd5e1; border:1px solid rgba(255,255,255,0.08); margin-top:8px; }
+
+  /* PROCESSING */
+  .processing { padding:60px 20px; text-align:center; display:none; }
+  .processing.show { display:block; }
+  .spinner { width:60px; height:60px; border:4px solid rgba(0,91,255,0.2); border-top-color:#005bff; border-radius:50%; margin:0 auto 20px; animation:spin 1s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .processing h3 { font-size:18px; font-weight:800; margin-bottom:8px; }
+  .processing p { font-size:13px; color:#8b9ab8; }
+
+  /* SUCCESS */
+  .success { padding:60px 20px; text-align:center; display:none; }
+  .success.show { display:block; }
+  .success .ic { font-size:80px; margin-bottom:20px; }
+  .success h2 { font-size:22px; margin-bottom:10px; color:#34d399; font-weight:900; }
+  .success p { font-size:13px; color:#8b9ab8; line-height:1.7; margin-bottom:24px; }
+  .success .rec { display:inline-block; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); color:#34d399; padding:10px 18px; border-radius:12px; font-weight:800; font-size:14px; margin:10px 0 20px; font-family:monospace; letter-spacing:1px; }
+
+  .toast { position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-100px); background:#005bff; color:#fff; padding:12px 20px; border-radius:12px; font-size:13px; font-weight:700; z-index:9999; transition:transform 0.3s; max-width:90%; text-align:center; box-shadow:0 10px 30px rgba(0,91,255,0.4); }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+  .toast.err { background:#ef4444; }
+  .toast.ok { background:#10b981; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="htop">
+    <div class="back" onclick="goBack()">←</div>
+    <div class="title">To'lov</div>
+  </div>
+</div>
+
+<!-- ASOSIY -->
+<div id="mainView">
+  <div class="section">
+    <div class="summary">
+      <div class="lbl">TO'LANADIGAN SUMMA</div>
+      <div class="oid" id="orderIdLbl">—</div>
+      <div class="amount" id="amountLbl">0 so'm</div>
+      <div class="sub" id="subLbl">—</div>
+    </div>
+
+    <div class="stitle"><h3>💳 To'lov usulini tanlang</h3></div>
+
+    <div id="payMethods"></div>
+
+    <!-- KARTA FORMASI -->
+    <div class="card-form" id="cardForm">
+      <div class="ig"><label>Karta raqami *</label><input type="tel" id="cardNum" placeholder="8600 0000 0000 0000" maxlength="19" inputmode="numeric"></div>
+      <div class="row">
+        <div class="ig"><label>Amal qilish muddati</label><input type="tel" id="cardExp" placeholder="MM/YY" maxlength="5" inputmode="numeric"></div>
+        <div class="ig"><label>CVV</label><input type="tel" id="cardCvv" placeholder="123" maxlength="4" inputmode="numeric"></div>
+      </div>
+      <div class="ig"><label>Karta egasi</label><input type="text" id="cardName" placeholder="ALI VALIYEV" maxlength="40" style="text-transform:uppercase"></div>
+    </div>
+
+    <button class="btn btn-primary" style="margin-top:16px" id="payBtn" onclick="processPayment()">🔒 To'lash</button>
+    <button class="btn btn-secondary" onclick="goBack()">← Bekor qilish</button>
+
+    <div style="text-align:center;font-size:11px;color:#5b6b8a;margin-top:16px;line-height:1.5">
+      🔒 Barcha to'lovlar xavfsiz shifrlangan<br>
+      Demo tizim — haqiqiy pul yechilmaydi
+    </div>
+  </div>
+</div>
+
+<!-- PROCESSING -->
+<div class="processing" id="procView">
+  <div class="spinner"></div>
+  <h3>To'lov amalga oshirilmoqda...</h3>
+  <p id="procText">Iltimos, kuting</p>
+</div>
+
+<!-- SUCCESS -->
+<div class="success" id="successView">
+  <div class="ic">✅</div>
+  <h2>To'lov muvaffaqiyatli!</h2>
+  <p>Buyurtmangiz qabul qilindi.<br>Tez orada operator siz bilan bog'lanadi.</p>
+  <div class="rec" id="recLbl">REC-000000</div>
+  <button class="btn btn-primary" onclick="location.href='orders.html'">📦 Buyurtmalarim</button>
+  <button class="btn btn-secondary" onclick="location.href='home.html'">🏠 Bosh sahifa</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const orderId = params.get('order');
+
+let order = null;
+let selectedMethod = 'cash';
+let selectedType = 'cash';
+
+const PAY_METHODS = [
+  { id:'payme', name:'Payme', desc:'Oson va tez to\'lov', logo:'💳', cls:'payme', type:'card' },
+  { id:'click', name:'Click', desc:'Karta yoki Click Up', logo:'🌊', cls:'click', type:'card' },
+  { id:'uzum', name:'Uzum Bank', desc:'Uzum orqali to\'lash', logo:'🟣', cls:'uzum', type:'card' },
+  { id:'card', name:'Bank kartasi', desc:'Humo / Uzcard / Visa / MC', logo:'💳', cls:'uzum', type:'card' },
+  { id:'installment', name:'Bo\'lib to\'lash', desc:'0% — 140 kun (3-12 oy)', logo:'📅', cls:'installment', type:'installment' },
+  { id:'cash', name:'Naqd pul', desc:'Yetkazib berishda to\'lash', logo:'💵', cls:'cash', type:'cash' }
+];
+
+function toast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (type === 'err' ? ' err' : type === 'ok' ? ' ok' : '');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+function fmt(p) { return (Number(p)||0).toLocaleString('uz-UZ').replace(/,/g,' ') + " so'm"; }
+function esc(s) { return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function loadOrder() {
+  if (!orderId) return null;
+  let all = [];
+  try { all = JSON.parse(localStorage.getItem('rayis_orders') || '[]'); } catch(e) {}
+  if (!Array.isArray(all)) all = [];
+  order = all.find(o => o.id === orderId);
+  return order;
+}
+
+function renderMethods() {
+  const c = document.getElementById('payMethods');
+  let html = '';
+  PAY_METHODS.forEach(m => {
+    const sel = selectedMethod === m.id;
+    html += '<div class="pay-method ' + (sel ? 'selected' : '') + '" onclick="selectMethod(\'' + m.id + '\',\'' + m.type + '\')">' +
+      '<div class="pay-logo ' + m.cls + '">' + m.logo + '</div>' +
+      '<div class="pay-info">' +
+        '<div class="pay-name">' + m.name + '</div>' +
+        '<div class="pay-desc">' + m.desc + '</div>' +
+      '</div>' +
+      '<div class="pay-radio"></div>' +
+    '</div>';
+  });
+  c.innerHTML = html;
+}
+
+function selectMethod(id, type) {
+  selectedMethod = id;
+  selectedType = type;
+
+  // Card form
+  const cf = document.getElementById('cardForm');
+  if (type === 'card') cf.classList.add('show');
+  else cf.classList.remove('show');
+
+  // Installment detail
+  const inst = document.getElementById('installmentDetail');
+  if (inst) inst.classList.remove('show');
+
+  // Pay button text
+  const btn = document.getElementById('payBtn');
+  if (type === 'cash') btn.textContent = '✅ Buyurtmani tasdiqlash';
+  else if (type === 'installment') btn.textContent = '📅 Bo\'lib to\'lashni boshlash';
+  else btn.textContent = '🔒 To\'lash';
+
+  renderMethods();
+}
+
+function processPayment() {
+  if (!order) return toast('Buyurtma topilmadi', 'err');
+
+  // Karta tekshiruvi
+  if (selectedType === 'card') {
+    const num = (document.getElementById('cardNum').value || '').replace(/\s/g, '');
+    const exp = (document.getElementById('cardExp').value || '').trim();
+    const cvv = (document.getElementById('cardCvv').value || '').trim();
+    const name = (document.getElementById('cardName').value || '').trim();
+
+    if (num.length < 16) return toast('Karta raqami to\'liq emas', 'err');
+    if (!/^\d{2}\/\d{2}$/.test(exp)) return toast('Muddat MM/YY formatida', 'err');
+    if (cvv.length < 3) return toast('CVV xato', 'err');
+    if (name.length < 3) return toast('Karta egasi ismini kiriting', 'err');
+  }
+
+  // Processing
+  document.getElementById('mainView').style.display = 'none';
+  document.getElementById('procView').classList.add('show');
+
+  const methodName = PAY_METHODS.find(m => m.id === selectedMethod)?.name || 'To\'lov';
+  const procText = document.getElementById('procText');
+  let dots = '';
+  const intv = setInterval(() => {
+    dots = dots.length >= 3 ? '' : dots + '.';
+    procText.textContent = methodName + ' orqali ulanmoqda' + dots;
+  }, 400);
+
+  setTimeout(() => {
+    clearInterval(intv);
+    // To'lovni muvaffaqiyatli deb belgilash
+    let all = [];
+    try { all = JSON.parse(localStorage.getItem('rayis_orders') || '[]'); } catch(e) {}
+    if (!Array.isArray(all)) all = [];
+    const idx = all.findIndex(o => o.id === orderId);
+    if (idx !== -1) {
+      all[idx].paymentMethod = selectedMethod;
+      all[idx].paymentStatus = selectedType === 'cash' ? 'cash_on_delivery' : 'paid';
+      all[idx].paidAt = selectedType === 'cash' ? null : new Date().toISOString();
+      all[idx].receiptId = 'REC-' + Date.now().toString().slice(-8);
+      try { localStorage.setItem('rayis_orders', JSON.stringify(all)); } catch(e) {}
+      document.getElementById('recLbl').textContent = all[idx].receiptId;
+    }
+
+    document.getElementById('procView').classList.remove('show');
+    document.getElementById('successView').classList.add('show');
+  }, 2500);
+}
+
+function goBack() {
+  if (orderId) {
+    if (confirm('To\'lovni bekor qilasizmi?')) {
+      location.href = 'orders.html';
+    }
+  } else {
+    location.href = 'home.html';
+  }
+}
+
+// ============================================
+// BOSHLASH
+// ============================================
+loadOrder();
+
+if (!order) {
+  document.getElementById('mainView').innerHTML = '<div style="padding:80px 20px;text-align:center;color:#5b6b8a"><div style="font-size:64px;margin-bottom:14px;opacity:0.5">❓</div><p>Buyurtma topilmadi</p><button class="btn btn-primary" style="margin-top:20px;max-width:250px" onclick="location.href=\'home.html\'">🏠 Bosh sahifa</button></div>';
+} else {
+  document.getElementById('orderIdLbl').textContent = order.id;
+  document.getElementById('amountLbl').textContent = fmt(order.total);
+  document.getElementById('subLbl').textContent = order.items.length + ' ta mahsulot' + (order.discount ? ' • Chegirma: −' + fmt(order.discount) : '');
+  renderMethods();
+}
+</script>
+</body>
+</html>

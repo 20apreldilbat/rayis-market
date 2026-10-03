@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAYIS BOZORI — Xaridor kirishi</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,'Segoe UI',sans-serif; }
+  body {
+    background:linear-gradient(135deg,#0a1929 0%,#1a3a2e 100%);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    color:#fff;
+  }
+  .box {
+    background:rgba(255,255,255,0.05);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:24px;
+    padding:32px 24px;
+    max-width:420px;
+    width:100%;
+  }
+  h1 {
+    font-size:24px;
+    font-weight:800;
+    background:linear-gradient(135deg,#3b82f6,#60a5fa);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    text-align:center;
+    letter-spacing:2px;
+  }
+  .sub {
+    font-size:12px;
+    color:#94a3b8;
+    text-align:center;
+    margin-top:4px;
+    margin-bottom:24px;
+  }
+  h2 { font-size:20px; margin-bottom:8px; }
+  .hint { font-size:14px; color:#94a3b8; margin-bottom:20px; line-height:1.5; }
+  .step { display:none; }
+  .step.active { display:block; }
+  .input-group { margin-bottom:14px; }
+  .input-group label {
+    display:block;
+    font-size:12px;
+    color:#94a3b8;
+    margin-bottom:6px;
+    font-weight:600;
+  }
+  .input-group input, .input-group select {
+    width:100%;
+    padding:14px 16px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:12px;
+    color:#fff;
+    font-size:15px;
+    outline:none;
+    font-family:inherit;
+  }
+  .input-group input:focus, .input-group select:focus { border-color:#3b82f6; }
+  .input-group input::placeholder { color:#64748b; }
+  .input-group select option { background:#0a1929; }
+
+  .phone-row { display:flex; gap:8px; }
+  .phone-prefix {
+    padding:14px 12px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:12px;
+    color:#3b82f6;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    flex-shrink:0;
+  }
+
+  .otp-inputs {
+    display:flex;
+    gap:8px;
+    justify-content:center;
+    margin:20px 0;
+  }
+  .otp-inputs input {
+    width:46px;
+    height:56px;
+    text-align:center;
+    font-size:24px;
+    font-weight:700;
+    background:rgba(255,255,255,0.05);
+    border:2px solid rgba(255,255,255,0.1);
+    border-radius:12px;
+    color:#3b82f6;
+    outline:none;
+    font-family:'Courier New',monospace;
+  }
+  .otp-inputs input:focus {
+    border-color:#3b82f6;
+    background:rgba(59,130,246,0.1);
+  }
+
+  .btn {
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:12px;
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
+    margin-top:8px;
+    transition:all 0.2s;
+  }
+  .btn:active { transform:scale(0.97); }
+  .btn-primary { background:linear-gradient(135deg,#3b82f6,#2563eb); color:#fff; }
+  .btn-gray { background:rgba(255,255,255,0.05); color:#cbd5e1; border:1px solid rgba(255,255,255,0.1); }
+  .btn:disabled { opacity:0.5; }
+
+  .error {
+    color:#ef4444;
+    font-size:13px;
+    margin-top:10px;
+    text-align:center;
+    min-height:18px;
+  }
+  .timer {
+    text-align:center;
+    font-size:13px;
+    color:#94a3b8;
+    margin-top:14px;
+  }
+  .timer span { color:#3b82f6; font-weight:700; }
+  .timer a { color:#3b82f6; cursor:pointer; font-weight:700; text-decoration:underline; }
+
+  .demo-info {
+    background:rgba(251,191,36,0.08);
+    border:1px solid rgba(251,191,36,0.25);
+    border-radius:12px;
+    padding:12px;
+    font-size:12px;
+    color:#fcd34d;
+    margin-top:16px;
+    line-height:1.5;
+    text-align:center;
+  }
+  .demo-info b { color:#fbbf24; font-size:14px; }
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>RAYIS BOZORI</h1>
+  <p class="sub">Xaridor kirishi</p>
+
+  <!-- QADAM 1: Telefon -->
+  <div class="step active" id="stepPhone">
+    <h2>Telefon raqamingiz</h2>
+    <p class="hint">Sizga 6 xonali kod yuboriladi</p>
+
+    <div class="input-group">
+      <label>Telefon raqam</label>
+      <div class="phone-row">
+        <div class="phone-prefix">+998</div>
+        <input type="tel" id="phoneInput" placeholder="90 123 45 67" maxlength="12" inputmode="numeric">
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="sendBtn">Kod yuborish</button>
+    <div class="error" id="errPhone"></div>
+  </div>
+
+  <!-- QADAM 2: OTP -->
+  <div class="step" id="stepOtp">
+    <h2>Kodni kiriting</h2>
+    <p class="hint">Telefoningizga 6 xonali kod yuborildi</p>
+
+    <div class="otp-inputs">
+      <input type="tel" maxlength="1" data-i="0" inputmode="numeric">
+      <input type="tel" maxlength="1" data-i="1" inputmode="numeric">
+      <input type="tel" maxlength="1" data-i="2" inputmode="numeric">
+      <input type="tel" maxlength="1" data-i="3" inputmode="numeric">
+      <input type="tel" maxlength="1" data-i="4" inputmode="numeric">
+      <input type="tel" maxlength="1" data-i="5" inputmode="numeric">
+    </div>
+
+    <button class="btn btn-primary" id="verifyBtn">Tasdiqlash</button>
+    <button class="btn btn-gray" id="backBtn">← Orqaga</button>
+
+    <div class="timer" id="timer">Qayta yuborish: <span>60</span>s</div>
+    <div class="error" id="errOtp"></div>
+
+    <div class="demo-info">
+      🧪 Demo kod: <b id="demoCode">—</b>
+    </div>
+  </div>
+
+  <!-- QADAM 3: Profil -->
+  <div class="step" id="stepProfile">
+    <h2>Ma’lumotlaringiz</h2>
+    <p class="hint">Ism, familiya va viloyatni kiriting</p>
+
+    <div class="input-group">
+      <label>Ism *</label>
+      <input type="text" id="firstName" placeholder="Ali" maxlength="40">
+    </div>
+
+    <div class="input-group">
+      <label>Familiya *</label>
+      <input type="text" id="lastName" placeholder="Valiyev" maxlength="40">
+    </div>
+
+    <div class="input-group">
+      <label>Viloyat *</label>
+      <select id="regionSelect">
+        <option value="">Tanlang...</option>
+        <option value="Toshkent shahri">Toshkent shahri</option>
+        <option value="Toshkent viloyati">Toshkent viloyati</option>
+        <option value="Samarqand">Samarqand</option>
+        <option value="Buxoro">Buxoro</option>
+        <option value="Navoiy">Navoiy</option>
+        <option value="Qashqadaryo">Qashqadaryo</option>
+        <option value="Surxondaryo">Surxondaryo</option>
+        <option value="Jizzax">Jizzax</option>
+        <option value="Sirdaryo">Sirdaryo</option>
+        <option value="Farg‘ona">Farg‘ona</option>
+        <option value="Andijon">Andijon</option>
+        <option value="Namangan">Namangan</option>
+        <option value="Xorazm">Xorazm</option>
+        <option value="Qoraqalpog‘iston">Qoraqalpog‘iston</option>
+      </select>
+    </div>
+
+    <button class="btn btn-primary" id="saveBtn">Kirish</button>
+    <div class="error" id="errProfile"></div>
+  </div>
+</div>
+
+<script>
+// ============================================
+// HOLAT
+// ============================================
+let currentPhone = '';
+let generatedCode = '';
+let countdownInterval = null;
+
+// ============================================
+// YORDAMCHI
+// ============================================
+function showStep(id) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function randomCode() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+function formatPhone(v) {
+  const d = v.replace(/\D/g, '').slice(0, 9);
+  let out = '';
+  if (d.length > 0) out = d.slice(0, 2);
+  if (d.length > 2) out += ' ' + d.slice(2, 5);
+  if (d.length > 5) out += ' ' + d.slice(5, 7);
+  if (d.length > 7) out += ' ' + d.slice(7, 9);
+  return out;
+}
+
+// ============================================
+// QADAM 1: TELEFON
+// ============================================
+const phoneInput = document.getElementById('phoneInput');
+const sendBtn = document.getElementById('sendBtn');
+const errPhone = document.getElementById('errPhone');
+
+phoneInput.addEventListener('input', (e) => {
+  e.target.value = formatPhone(e.target.value);
+});
+
+sendBtn.addEventListener('click', sendCode);
+
+function sendCode() {
+  const digits = phoneInput.value.replace(/\D/g, '');
+  errPhone.textContent = '';
+
+  if (digits.length !== 9) {
+    errPhone.textContent = 'To‘liq telefon raqam kiriting';
+    return;
+  }
+
+  currentPhone = '+998' + digits;
+  generatedCode = randomCode();
+
+  sendBtn.disabled = true;
+  sendBtn.textContent = 'Yuborilmoqda...';
+
+  setTimeout(() => {
+    sendBtn.disabled = false;
+    sendBtn.textContent = 'Kod yuborish';
+
+    document.getElementById('demoCode').textContent = generatedCode;
+    showStep('stepOtp');
+    document.getElementById('errOtp').textContent = '';
+    otpInputs.forEach(i => i.value = '');
+    otpInputs[0].focus();
+    startTimer(60);
+  }, 600);
+}
+
+// ============================================
+// QADAM 2: OTP
+// ============================================
+const otpInputs = document.querySelectorAll('.otp-inputs input');
+const verifyBtn = document.getElementById('verifyBtn');
+const backBtn = document.getElementById('backBtn');
+const errOtp = document.getElementById('errOtp');
+const timerEl = document.getElementById('timer');
+
+otpInputs.forEach((input, i) => {
+  input.addEventListener('input', (e) => {
+    const v = e.target.value.replace(/\D/g, '');
+    e.target.value = v;
+    if (v && i < 5) otpInputs[i + 1].focus();
+    if (getOtp().length === 6) verifyCode();
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Backspace' && !e.target.value && i > 0) {
+      otpInputs[i - 1].focus();
+    }
+  });
+
+  input.addEventListener('paste', (e) => {
+    e.preventDefault();
+    const pasted = (e.clipboardData.getData('text') || '').replace(/\D/g, '').slice(0, 6);
+    pasted.split('').forEach((c, idx) => { if (otpInputs[idx]) otpInputs[idx].value = c; });
+    if (pasted.length === 6) verifyCode();
+  });
+});
+
+function getOtp() {
+  return Array.from(otpInputs).map(i => i.value).join('');
+}
+
+verifyBtn.addEventListener('click', verifyCode);
+
+function verifyCode() {
+  const code = getOtp();
+  errOtp.textContent = '';
+
+  if (code.length !== 6) {
+    errOtp.textContent = '6 xonali kodni kiriting';
+    return;
+  }
+
+  verifyBtn.disabled = true;
+  verifyBtn.textContent = 'Tekshirilmoqda...';
+
+  setTimeout(() => {
+    if (code !== generatedCode) {
+      errOtp.textContent = '❌ Kod noto‘g‘ri';
+      verifyBtn.disabled = false;
+      verifyBtn.textContent = 'Tasdiqlash';
+      otpInputs.forEach(i => i.value = '');
+      otpInputs[0].focus();
+      return;
+    }
+
+    verifyBtn.disabled = false;
+    verifyBtn.textContent = 'Tasdiqlash';
+
+    // Bazada bormi?
+    const users = getUsers();
+    const existing = users.find(u => u.phone === currentPhone);
+
+    if (existing) {
+      localStorage.setItem('rayis_user', JSON.stringify(existing));
+      location.href = 'home.html';
+    } else {
+      showStep('stepProfile');
+      document.getElementById('errProfile').textContent = '';
+    }
+  }, 500);
+}
+
+backBtn.addEventListener('click', () => {
+  clearInterval(countdownInterval);
+  showStep('stepPhone');
+});
+
+function startTimer(sec) {
+  clearInterval(countdownInterval);
+  let left = sec;
+  timerEl.innerHTML = `Qayta yuborish: <span>${left}</span>s`;
+
+  countdownInterval = setInterval(() => {
+    left--;
+    if (left <= 0) {
+      clearInterval(countdownInterval);
+      timerEl.innerHTML = `<a id="resendLink">Kodni qayta yuborish</a>`;
+      document.getElementById('resendLink')?.addEventListener('click', resend);
+    } else {
+      timerEl.innerHTML = `Qayta yuborish: <span>${left}</span>s`;
+    }
+  }, 1000);
+}
+
+function resend() {
+  generatedCode = randomCode();
+  document.getElementById('demoCode').textContent = generatedCode;
+  otpInputs.forEach(i => i.value = '');
+  otpInputs[0].focus();
+  errOtp.textContent = '';
+  startTimer(60);
+}
+
+// ============================================
+// QADAM 3: PROFIL
+// ============================================
+const saveBtn = document.getElementById('saveBtn');
+const errProfile = document.getElementById('errProfile');
+
+saveBtn.addEventListener('click', () => {
+  const firstName = document.getElementById('firstName').value.trim();
+  const lastName = document.getElementById('lastName').value.trim();
+  const region = document.getElementById('regionSelect').value;
+  errProfile.textContent = '';
+
+  if (!firstName || firstName.length < 2) { errProfile.textContent = 'Ismingizni kiriting'; return; }
+  if (!lastName || lastName.length < 2) { errProfile.textContent = 'Familiyangizni kiriting'; return; }
+  if (!region) { errProfile.textContent = 'Viloyatni tanlang'; return; }
+
+  const userId = 'buyer_' + currentPhone.replace(/\D/g, '');
+
+  const userData = {
+    userId,
+    phone: currentPhone,
+    role: 'xaridor',
+    firstName,
+    lastName,
+    region,
+    name: firstName + ' ' + lastName,
+    icon: '🛒',
+    createdAt: new Date().toISOString()
+  };
+
+  // Saqlash
+  let users = getUsers();
+  const idx = users.findIndex(u => u.phone === currentPhone);
+  if (idx !== -1) users[idx] = userData;
+  else users.push(userData);
+  try { localStorage.setItem('rayis_users', JSON.stringify(users)); } catch(e) {}
+
+  localStorage.setItem('rayis_user', JSON.stringify(userData));
+  location.href = 'home.html';
+});
+
+function getUsers() {
+  let all = [];
+  try { all = JSON.parse(localStorage.getItem('rayis_users') || '[]'); } catch(e) {}
+  return Array.isArray(all) ? all : [];
+}
+</script>
+</body>
+</html>
