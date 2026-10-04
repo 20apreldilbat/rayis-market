@@ -2,946 +2,1218 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RAYIS BOZORI — Qurilish Kalkulyatori</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#0B1119">
+<title>Qurilish Kalkulyatori — RAYIS</title>
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,'Segoe UI',sans-serif; -webkit-tap-highlight-color:transparent; }
-  body { background:#0b0f1a; color:#fff; min-height:100vh; padding:0 0 100px; }
-
-  .header { background:#0f1626; border-bottom:1px solid rgba(255,255,255,0.06); padding:12px 16px; position:sticky; top:0; z-index:100; }
-  .htop { display:flex; align-items:center; gap:10px; }
-  .back { font-size:22px; cursor:pointer; color:#8b9ab8; }
-  .title { font-size:16px; font-weight:800; flex:1; }
-  .title span { color:#60a5fa; }
-
-  .progress { display:flex; gap:4px; padding:12px 16px; }
-  .pbar { flex:1; height:4px; background:rgba(255,255,255,0.08); border-radius:2px; transition:all 0.3s; }
-  .pbar.done { background:#005bff; }
-  .pbar.active { background:#60a5fa; }
-
-  .step { display:none; padding:16px; animation:fade 0.3s; }
-  .step.active { display:block; }
-  @keyframes fade { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-
-  .step-counter { font-size:11px; color:#60a5fa; font-weight:800; letter-spacing:1px; margin-bottom:8px; }
-  .step h2 { font-size:20px; font-weight:800; margin-bottom:6px; line-height:1.3; }
-  .step .subtitle { font-size:13px; color:#8b9ab8; margin-bottom:20px; line-height:1.5; }
-
-  .ig { margin-bottom:14px; }
-  .ig label { display:block; font-size:12px; color:#8b9ab8; margin-bottom:6px; font-weight:600; }
-  .ig input, .ig select { width:100%; padding:14px 16px; background:#0f1626; border:1px solid rgba(255,255,255,0.08); border-radius:12px; color:#fff; font-size:15px; outline:none; font-family:inherit; -webkit-appearance:none; }
-  .ig input:focus, .ig select:focus { border-color:#005bff; }
-  .ig input::placeholder { color:#4b5876; }
-  .ig select option { background:#0f1626; }
-  .row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-  .row-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
-
-  .options-grid { display:grid; grid-template-columns:1fr; gap:10px; margin-bottom:16px; }
-  .options-grid.two { grid-template-columns:1fr 1fr; }
-  .option-card { padding:16px 14px; background:#131a2b; border:2px solid rgba(255,255,255,0.06); border-radius:14px; cursor:pointer; transition:all 0.2s; text-align:center; user-select:none; }
-  .option-card:active { transform:scale(0.97); }
-  .option-card.selected { border-color:#005bff; background:rgba(0,91,255,0.1); }
-  .option-card .icon { font-size:28px; margin-bottom:6px; }
-  .option-card .title { font-size:14px; font-weight:700; margin-bottom:2px; }
-  .option-card .desc { font-size:11px; color:#8b9ab8; }
-
-  .sub-fields { background:rgba(0,0,0,0.25); border-radius:14px; padding:14px; margin-bottom:14px; border:1px solid rgba(0,91,255,0.15); }
-
-  .check-item { display:flex; align-items:center; gap:12px; padding:14px 16px; background:#131a2b; border:2px solid rgba(255,255,255,0.06); border-radius:12px; cursor:pointer; margin-bottom:10px; user-select:none; }
-  .check-item.selected { border-color:#005bff; background:rgba(0,91,255,0.1); }
-  .check-item .box { width:22px; height:22px; border:2px solid #4b5876; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:14px; color:transparent; transition:all 0.2s; flex-shrink:0; }
-  .check-item.selected .box { background:#005bff; border-color:#005bff; color:#fff; }
-  .check-item .label { font-size:14px; font-weight:600; }
-
-  .btn-group { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:20px; }
-  .btn-group.single { grid-template-columns:1fr; }
-  .btn { padding:16px; border:none; border-radius:12px; font-size:15px; font-weight:800; cursor:pointer; transition:all 0.2s; }
-  .btn:active { transform:scale(0.97); }
-  .btn:disabled { opacity:0.4; }
-  .btn-primary { background:linear-gradient(135deg,#005bff,#0047cc); color:#fff; }
-  .btn-secondary { background:#1a2337; color:#cbd5e1; border:1px solid rgba(255,255,255,0.08); }
-  .btn-success { background:linear-gradient(135deg,#10b981,#059669); color:#fff; }
-  .btn-warn { background:linear-gradient(135deg,#fbbf24,#f59e0b); color:#0b0f1a; }
-  .btn-full { width:100%; }
-
-  .info-box { background:rgba(0,91,255,0.08); border:1px solid rgba(0,91,255,0.25); border-radius:12px; padding:12px 14px; font-size:12px; color:#93c5fd; line-height:1.6; margin-bottom:14px; }
-  .warning-box { background:rgba(251,191,36,0.08); border:1px solid rgba(251,191,36,0.25); border-radius:12px; padding:12px 14px; font-size:12px; color:#fcd34d; line-height:1.6; margin-top:12px; }
-
-  .result-total { background:linear-gradient(135deg,#005bff,#7c3aed); padding:24px 20px; border-radius:18px; text-align:center; margin-bottom:16px; box-shadow:0 10px 30px rgba(0,91,255,0.3); }
-  .result-total .label { font-size:12px; opacity:0.9; margin-bottom:6px; font-weight:600; }
-  .result-total .amount { font-size:26px; font-weight:900; letter-spacing:-0.5px; line-height:1.2; word-break:break-word; }
-  .result-total .range { font-size:11px; opacity:0.85; margin-top:8px; }
-
-  .section { background:#131a2b; border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:14px; margin-bottom:12px; }
-  .section-title { font-size:13px; font-weight:800; color:#60a5fa; margin-bottom:12px; display:flex; align-items:center; gap:6px; }
-
-  .material-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; font-size:13px; border-bottom:1px solid rgba(255,255,255,0.04); gap:8px; }
-  .material-row:last-child { border-bottom:none; }
-  .material-row .name { color:#cbd5e1; flex:1; }
-  .material-row .qty { color:#8b9ab8; font-size:11px; margin:0 6px; white-space:nowrap; }
-  .material-row .price { color:#fff; font-weight:700; white-space:nowrap; }
-
-  .section-total { display:flex; justify-content:space-between; padding-top:10px; margin-top:6px; border-top:1px dashed rgba(0,91,255,0.3); font-weight:800; font-size:14px; color:#60a5fa; }
-
-  .summary-card { background:rgba(0,91,255,0.1); border:1px solid rgba(0,91,255,0.3); border-radius:14px; padding:14px; margin-bottom:14px; }
-  .sum-row { display:flex; justify-content:space-between; padding:6px 0; font-size:13px; gap:8px; }
-  .sum-row .l { color:#8b9ab8; }
-  .sum-row .v { color:#cbd5e1; font-weight:700; }
-  .sum-row.big { border-top:1px solid rgba(0,91,255,0.3); margin-top:8px; padding-top:12px; }
-  .sum-row.big .l { color:#60a5fa; font-weight:800; }
-  .sum-row.big .v { color:#60a5fa; font-size:16px; font-weight:900; }
-
-  .toast { position:fixed; bottom:100px; left:50%; transform:translateX(-50%) translateY(20px); background:#005bff; color:#fff; padding:12px 20px; border-radius:12px; font-size:13px; font-weight:700; z-index:9999; opacity:0; transition:all 0.3s; max-width:90%; text-align:center; box-shadow:0 10px 30px rgba(0,91,255,0.4); pointer-events:none; }
-  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
-  .toast.ok { background:#10b981; box-shadow:0 10px 30px rgba(16,185,129,0.4); }
-  .toast.err { background:#ef4444; }
+:root{--bg:#0B1119;--sf:#151C26;--sf2:#1E2733;--bd:#2A3441;--tx:#F1F5F9;--tx2:#94A3B8;--tx3:#64748B;--pr:#10B981;--pr2:#34D399;--prS:#064E3B;--ac:#3B82F6;--acS:#1E3A8A;--er:#EF4444}
+[data-t="light"]{--bg:#F5F7FA;--sf:#FFF;--sf2:#EEF2F7;--bd:#E2E8F0;--tx:#0F172A;--tx2:#475569;--tx3:#94A3B8;--prS:#ECFDF5;--acS:#EFF6FF}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--tx);font-size:15px;line-height:1.5;min-height:100vh;padding-bottom:100px}
+.app{max-width:640px;margin:0 auto;padding:14px}
+.hdr{display:flex;align-items:center;gap:8px;padding:10px;background:var(--sf);border:1px solid var(--bd);border-radius:16px;margin-bottom:12px;position:sticky;top:8px;z-index:40}
+.hb{width:40px;height:40px;border-radius:10px;background:var(--sf2);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;color:var(--tx);flex-shrink:0}
+.hb:active{transform:scale(.92)}
+.ht{flex:1;min-width:0}
+.ht1{font-size:15px;font-weight:800}
+.ht2{font-size:11px;color:var(--tx2);margin-top:2px}
+.prog{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:11px;margin-bottom:12px}
+.pi{display:flex;justify-content:space-between;font-size:11px;color:var(--tx2);margin-bottom:8px;font-weight:600}
+.pi .c{color:var(--pr2);font-weight:800}
+.pb{display:flex;gap:3px}
+.pbs{flex:1;height:4px;background:var(--sf2);border-radius:2px;transition:.4s}
+.pbs.d{background:var(--pr2)}
+.pbs.a{background:var(--pr2);animation:pl 1.5s infinite}
+@keyframes pl{0%,100%{opacity:1}50%{opacity:.4}}
+.sh{margin-bottom:14px}
+.sn{display:inline-block;padding:3px 9px;background:var(--prS);color:var(--pr2);font-size:11px;font-weight:800;border-radius:6px;margin-bottom:6px}
+.st{font-size:22px;font-weight:800;line-height:1.15;margin-bottom:3px}
+.sd{font-size:13px;color:var(--tx2)}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:14px;margin-bottom:12px}
+.f{margin-bottom:12px}
+.f:last-child{margin-bottom:0}
+.fl{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
+.fl .hint{color:var(--tx3);font-weight:400;font-size:11px}
+.inp,.sel{width:100%;padding:12px 14px;background:var(--sf2);border:2px solid transparent;border-radius:10px;color:var(--tx);font-size:15px;font-weight:600;font-family:inherit;outline:none}
+.inp:focus,.sel:focus{border-color:var(--pr2)}
+.sel{-webkit-appearance:none;cursor:pointer;padding-right:40px;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%2394A3B8'><path d='M7 10L2 5h10z'/></svg>");background-repeat:no-repeat;background-position:right 14px center}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.r3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.opts{display:grid;gap:8px}
+.opts.t{grid-template-columns:1fr 1fr}
+.opts.th{grid-template-columns:1fr 1fr 1fr}
+.opt{background:var(--sf2);border:2px solid transparent;border-radius:10px;padding:12px;cursor:pointer;text-align:center;position:relative;user-select:none}
+.opt:active{transform:scale(.97)}
+.opt.on{border-color:var(--pr2);background:var(--prS)}
+.opt.on::after{content:"✓";position:absolute;top:5px;right:8px;color:var(--pr2);font-weight:900;font-size:13px}
+.oi{font-size:24px;margin-bottom:4px;line-height:1}
+.ot{font-size:12.5px;font-weight:700;line-height:1.25}
+.od{font-size:10.5px;color:var(--tx2);margin-top:2px}
+.chk{display:flex;align-items:center;gap:10px;padding:12px;background:var(--sf2);border:2px solid transparent;border-radius:10px;margin-bottom:8px;cursor:pointer}
+.chk.on{border-color:var(--pr2);background:var(--prS)}
+.chk input{width:22px;height:22px;accent-color:var(--pr2);cursor:pointer}
+.chk-lbl{flex:1;font-size:13.5px;font-weight:700}
+.chk-sub{font-size:11px;color:var(--tx2);margin-top:2px;font-weight:400}
+.info{background:var(--acS);border-left:3px solid var(--ac);border-radius:8px;padding:10px 12px;font-size:12.5px;line-height:1.5;margin-bottom:12px}
+.info b{color:var(--ac)}
+.auto-hint{background:rgba(46,204,113,.1);border-left:3px solid var(--pr2);border-radius:8px;padding:8px 10px;font-size:11.5px;color:#8DF0B5;margin-top:6px;line-height:1.6}
+.auto-hint b{color:var(--pr2)}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.btns.one{grid-template-columns:1fr}
+.btn{padding:13px;border-radius:10px;border:none;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;min-height:46px}
+.btn:active{transform:scale(.97)}
+.bp{background:linear-gradient(135deg,var(--pr2),var(--pr));color:#fff;box-shadow:0 4px 14px rgba(16,185,129,.3)}
+.bg{background:var(--sf2);color:var(--tx);border:1px solid var(--bd)}
+.ba{background:linear-gradient(135deg,#3B82F6,#2563EB);color:#fff}
+.bsm{padding:9px 12px;min-height:38px;font-size:12px}
+.hero{background:linear-gradient(135deg,var(--pr2),var(--pr));border-radius:24px;padding:26px 18px;text-align:center;color:#fff;margin-bottom:14px;box-shadow:0 12px 32px rgba(16,185,129,.3)}
+.hl{font-size:12px;font-weight:600;opacity:.95;margin-bottom:4px}
+.hv{font-size:26px;font-weight:900;line-height:1.1;word-break:break-word}
+.hr{font-size:11px;opacity:.9;margin-top:6px}
+.hs{font-size:11px;opacity:.85;margin-top:3px}
+.sec{background:var(--sf);border:1px solid var(--bd);border-radius:16px;margin-bottom:12px;overflow:hidden}
+.sch{padding:11px 14px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;background:var(--sf2)}
+.sct{font-size:13px;font-weight:800;display:flex;align-items:center;gap:6px}
+.scc{font-size:11px;color:var(--tx2);font-weight:600}
+.scb{padding:2px 14px}
+.mr{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--bd);gap:8px;font-size:12.5px}
+.mr:last-child{border-bottom:none}
+.mn{flex:1;min-width:0}
+.mq{color:var(--tx2);font-size:11px;white-space:nowrap;font-weight:600}
+.mp{color:var(--pr2);font-weight:800;white-space:nowrap;font-size:12.5px}
+.mr.tot{border-top:2px solid var(--bd);margin-top:4px;padding-top:12px;font-weight:800}
+.mr.tot .mn,.mr.tot .mp{color:var(--pr2);font-size:15px}
+.md{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;display:none;align-items:flex-end;justify-content:center}
+.md.on{display:flex}
+.mbox{background:var(--sf);border-radius:24px 24px 0 0;width:100%;max-width:640px;max-height:92vh;overflow-y:auto;padding:18px}
+.mh{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.mt{font-size:18px;font-weight:800}
+.mx{width:36px;height:36px;border-radius:50%;background:var(--sf2);border:none;color:var(--tx);font-size:18px;cursor:pointer}
+.tst{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--tx);color:var(--bg);padding:10px 20px;border-radius:100px;font-size:13px;font-weight:700;z-index:300;opacity:0;transition:.3s;pointer-events:none;max-width:90%;text-align:center}
+.tst.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.tst.e{background:var(--er);color:#fff}
+.tst.o{background:#10B981;color:#fff}
+@media print{.hdr,.prog,.btns,.md,.tst{display:none!important}body{background:#fff;color:#000;padding:0}}
 </style>
 </head>
-<body>
-
-<div class="header">
-  <div class="htop">
-    <div class="back" onclick="goBack()">←</div>
-    <div class="title">🏗 Qurilish <span>Kalkulyatori</span></div>
+<body data-t="dark">
+<div class="app">
+  <div class="hdr">
+    <button class="hb" onclick="goBack()">←</button>
+    <div class="ht">
+      <div class="ht1">Qurilish Kalkulyatori</div>
+      <div class="ht2">To'liq uy qurish hisobi</div>
+    </div>
+    <button class="hb" onclick="openSave()">📁</button>
+    <button class="hb" onclick="toggleTheme()" id="thBtn">☀️</button>
   </div>
+  <div class="prog" id="progWrap"></div>
+  <div id="content"></div>
 </div>
-
-<div class="progress" id="progress"></div>
-
-<!-- STEP 1 -->
-<div class="step active" data-step="1">
-  <div class="step-counter">QADAM 1 / 6</div>
-  <h2>Loyiha ma'lumotlari</h2>
-  <p class="subtitle">Uy maydoni va o'lchamlarini kiriting</p>
-
-  <div class="ig">
-    <label>Uy maydoni (m²)</label>
-    <input type="number" id="area" value="100" min="10" max="1000" step="1">
-  </div>
-
-  <div class="row">
-    <div class="ig">
-      <label>Qavatlar soni</label>
-      <select id="floors">
-        <option value="1">1 qavat</option>
-        <option value="2" selected>2 qavat</option>
-        <option value="3">3 qavat</option>
-      </select>
-    </div>
-    <div class="ig">
-      <label>Devor balandligi (m)</label>
-      <input type="number" id="wallH" value="3" step="0.1" min="2" max="5">
-    </div>
-  </div>
-
-  <div class="ig">
-    <label>Xonalar soni</label>
-    <input type="number" id="rooms" value="4" min="1" max="30" step="1">
-  </div>
-
-  <div class="info-box">
-    💡 Umumiy yashash maydoni: <b id="totalArea">200</b> m² (avtomatik)
-  </div>
-
-  <div class="btn-group single">
-    <button class="btn btn-primary btn-full" onclick="goToStep(2)">Keyingi →</button>
-  </div>
+<div class="md" id="md" onclick="if(event.target.id==='md')closeMd()">
+  <div class="mbox" id="mbox"></div>
 </div>
+<div class="tst" id="tst"></div>
 
-<!-- STEP 2 -->
-<div class="step" data-step="2">
-  <div class="step-counter">QADAM 2 / 6</div>
-  <h2>Poydevor</h2>
-  <p class="subtitle">Poydevor turini tanlang</p>
+<script>/* ═══ FIREBASE ═══ */
+var FBC={apiKey:"AIzaSyA0k805pm7Cz2rw50XxIVb_cMJpCpeMxA",authDomain:"rayis-bozori-88f50.firebaseapp.com",databaseURL:"https://rayis-bozori-88f50-default-rtdb.firebaseio.com",projectId:"rayis-bozori-88f50",storageBucket:"rayis-bozori-88f50.firebasestorage.app",messagingSenderId:"591830364579",appId:"1:591830364579:web:a681f6f0e6fff2cc3d6a16"};
+var DB=null;
+try{if(!firebase.apps.length)firebase.initializeApp(FBC);DB=firebase.database();}catch(e){console.warn('FB:',e);}
 
-  <div class="options-grid two" id="foundOptions">
-    <div class="option-card selected" data-value="lenta" onclick="pickFound('lenta')">
-      <div class="title">🔷 Lenta</div>
-      <div class="desc">Tavsiya etiladi</div>
-    </div>
-    <div class="option-card" data-value="plita" onclick="pickFound('plita')">
-      <div class="title">⬛ Plita</div>
-      <div class="desc">Mustahkam</div>
-    </div>
-  </div>
-
-  <div id="lentaFields" class="sub-fields">
-    <div class="ig">
-      <label>Lenta perimetri (pm)</label>
-      <input type="number" id="perimeter" value="40" min="10" max="300">
-    </div>
-    <div class="row">
-      <div class="ig">
-        <label>Lenta eni (m)</label>
-        <select id="lentaW">
-          <option value="0.3">0.3</option>
-          <option value="0.4" selected>0.4</option>
-          <option value="0.5">0.5</option>
-          <option value="0.6">0.6</option>
-        </select>
-      </div>
-      <div class="ig">
-        <label>Lenta balandligi (m)</label>
-        <select id="lentaH">
-          <option value="0.6">0.6</option>
-          <option value="0.8" selected>0.8</option>
-          <option value="1">1.0</option>
-          <option value="1.2">1.2</option>
-        </select>
-      </div>
-    </div>
-  </div>
-
-  <div id="plitaFields" class="sub-fields" style="display:none">
-    <div class="ig">
-      <label>Plita qalinligi (m)</label>
-      <select id="slabT">
-        <option value="0.2">0.2</option>
-        <option value="0.25" selected>0.25</option>
-        <option value="0.3">0.3</option>
-      </select>
-    </div>
-    <div class="info-box">Plita maydoni = uy maydoni (avtomatik)</div>
-  </div>
-
-  <div class="btn-group">
-    <button class="btn btn-secondary" onclick="goToStep(1)">← Orqaga</button>
-    <button class="btn btn-primary" onclick="goToStep(3)">Keyingi →</button>
-  </div>
-</div>
-
-<!-- STEP 3 -->
-<div class="step" data-step="3">
-  <div class="step-counter">QADAM 3 / 6</div>
-  <h2>Devor</h2>
-  <p class="subtitle">Devor materialini tanlang</p>
-
-  <div class="ig">
-    <label>Devor turi</label>
-    <select id="wallType" onchange="toggleWall()">
-      <option value="gisht_std" selected>🧱 Pishgan g'isht standart (250×120×65)</option>
-      <option value="gisht_pol">🧱 Pishgan g'isht paltarashka (250×120×88)</option>
-      <option value="xom_std">🟫 Xom g'isht standart</option>
-      <option value="xom_pol">🟫 Xom g'isht paltarashka</option>
-      <option value="shlakoblok">⬛ Shlakoblok (390×190×188)</option>
-      <option value="gazoblok600">🧊 Gazoblok (600×300×200)</option>
-      <option value="gazoblok500">🧊 Gazoblok (500×300×200)</option>
-      <option value="paxsa">🟤 Paxsa (m³)</option>
-    </select>
-  </div>
-
-  <div class="ig">
-    <label>Ichki devorlar (%)</label>
-    <select id="innerWall">
-      <option value="0">Yo'q</option>
-      <option value="20" selected>20%</option>
-      <option value="30">30%</option>
-      <option value="40">40%</option>
-    </select>
-  </div>
-
-  <div id="paxsaFields" class="sub-fields" style="display:none">
-    <div class="ig">
-      <label>Paxsa devor qalinligi (m)</label>
-      <select id="paxsaW">
-        <option value="0.5">0.5</option>
-        <option value="0.6" selected>0.6</option>
-        <option value="0.7">0.7</option>
-        <option value="0.8">0.8</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="btn-group">
-    <button class="btn btn-secondary" onclick="goToStep(2)">← Orqaga</button>
-    <button class="btn btn-primary" onclick="goToStep(4)">Keyingi →</button>
-  </div>
-</div>
-
-<!-- STEP 4 -->
-<div class="step" data-step="4">
-  <div class="step-counter">QADAM 4 / 6</div>
-  <h2>Ustun va karkas</h2>
-  <p class="subtitle">Qo'shimcha beton elementlari</p>
-
-  <div class="ig">
-    <label>Armapoyas (armatura kamar) kiritilsinmi?</label>
-    <select id="armapoyasIn" onchange="toggleArmapoyas()">
-      <option value="ha" selected>Ha</option>
-      <option value="yoq">Yo'q</option>
-    </select>
-  </div>
-
-  <div id="armapoyasFields" class="sub-fields">
-    <div class="row-3">
-      <div class="ig"><label>Eni (m)</label><input type="number" id="apW" value="0.3" step="0.05"></div>
-      <div class="ig"><label>Balandligi (m)</label><input type="number" id="apH" value="0.3" step="0.05"></div>
-      <div class="ig"><label>Uzunligi (m)</label><input type="number" id="apL" value="40"></div>
-    </div>
-  </div>
-
-  <div class="ig">
-    <label>Peremichka soni</label>
-    <input type="number" id="peremCount" value="0" min="0" oninput="togglePerem()">
-  </div>
-
-  <div id="peremFields" class="sub-fields" style="display:none">
-    <div class="row-3">
-      <div class="ig"><label>Eni (m)</label><input type="number" id="pmW" value="0.3" step="0.05"></div>
-      <div class="ig"><label>Balandligi (m)</label><input type="number" id="pmH" value="0.3" step="0.05"></div>
-      <div class="ig"><label>Uzunligi (m)</label><input type="number" id="pmL" value="1.5" step="0.1"></div>
-    </div>
-  </div>
-
-  <div class="ig">
-    <label>Kolonna soni</label>
-    <input type="number" id="kolCount" value="0" min="0" oninput="toggleKol()">
-  </div>
-
-  <div id="kolFields" class="sub-fields" style="display:none">
-    <div class="row-3">
-      <div class="ig"><label>Eni (m)</label><input type="number" id="klW" value="0.3" step="0.05"></div>
-      <div class="ig"><label>Eni×2 (m)</label><input type="number" id="klW2" value="0.3" step="0.05"></div>
-      <div class="ig"><label>Balandligi (m)</label><input type="number" id="klH" value="3" step="0.1"></div>
-    </div>
-  </div>
-
-  <div class="ig">
-    <label>Vassalash (karkas) strapila turi</label>
-    <select id="vassType">
-      <option value="yoq">Yo'q</option>
-      <option value="5x15_6">5×15×6 m</option>
-      <option value="4x14_6" selected>4×14×6 m</option>
-      <option value="5x15_4">5×15×4 m</option>
-      <option value="4x14_4">4×14×4 m</option>
-    </select>
-  </div>
-
-  <div class="ig">
-    <label>Vassalash soni (dona)</label>
-    <input type="number" id="vassL" value="0" min="0" step="1">
-  </div>
-
-  <div class="btn-group">
-    <button class="btn btn-secondary" onclick="goToStep(3)">← Orqaga</button>
-    <button class="btn btn-primary" onclick="goToStep(5)">Keyingi →</button>
-  </div>
-</div>
-
-<!-- STEP 5 -->
-<div class="step" data-step="5">
-  <div class="step-counter">QADAM 5 / 6</div>
-  <h2>Tom</h2>
-  <p class="subtitle">Tom materiallari va qo'shimcha elementlar</p>
-
-  <div class="ig">
-    <label>Tom strapila turi</label>
-    <select id="strapType">
-      <option value="5x15_6">5×15×6 m</option>
-      <option value="4x14_6" selected>4×14×6 m</option>
-      <option value="4x14_4">4×14×4 m</option>
-    </select>
-  </div>
-
-  <div class="ig">
-    <label>Tom qoplama turi</label>
-    <select id="coverType">
-      <option value="shifer" selected>Shifer</option>
-      <option value="metallocherepitsa">Metallocherepitsa</option>
-      <option value="ondulin">Ondulin</option>
-    </select>
-  </div>
-
-  <div class="ig">
-    <label>Tornov turi</label>
-    <select id="tornovType">
-      <option value="yoq">Yo'q</option>
-      <option value="yupqa">Yupka tornov</option>
-      <option value="oddiy" selected>Oddiy tornov</option>
-    </select>
-  </div>
-
-  <div class="row">
-    <div class="ig">
-      <label>Konyok (m²)</label>
-      <input type="number" id="konyokS" value="0" step="0.1" min="0">
-    </div>
-    <div class="ig">
-      <label>Mourlant (pm)</label>
-      <input type="number" id="mourlL" value="0" min="0">
-    </div>
-  </div>
-
-  <div class="section" style="background:rgba(0,91,255,0.05);border-color:rgba(0,91,255,0.2)">
-    <div class="section-title" style="margin-bottom:10px">🔧 Qo'shimcha materiallar (ixtiyoriy)</div>
-
-    <div class="row">
-      <div class="ig">
-        <label>Qamish (bog'langan, dona)</label>
-        <input type="number" id="qamishCount" value="0" min="0">
-      </div>
-      <div class="ig">
-        <label>Bo'yra (m.kv)</label>
-        <input type="number" id="boyraS" value="0" step="0.1" min="0">
-      </div>
-    </div>
-
-    <div class="ig">
-      <label>Lombz (m³)</label>
-      <input type="number" id="lombzV" value="0" step="0.1" min="0">
-    </div>
-
-    <div class="row">
-      <div class="ig"><label>Mix 70 (kg)</label><input type="number" id="mix70" value="0" min="0"></div>
-      <div class="ig"><label>Mix 100 (kg)</label><input type="number" id="mix100" value="0" min="0"></div>
-    </div>
-    <div class="row">
-      <div class="ig"><label>Mix 150 (kg)</label><input type="number" id="mix150" value="0" min="0"></div>
-      <div class="ig"><label>Sim 4 (kg)</label><input type="number" id="sim4" value="0" min="0"></div>
-    </div>
-    <div class="ig">
-      <label>Reka 5×5×6 m (dona)</label>
-      <input type="number" id="rekaDona" value="0" min="0">
-    </div>
-  </div>
-
-  <div class="btn-group">
-    <button class="btn btn-secondary" onclick="goToStep(4)">← Orqaga</button>
-    <button class="btn btn-primary" onclick="goToStep(6)">Keyingi →</button>
-  </div>
-</div>
-
-<!-- STEP 6 -->
-<div class="step" data-step="6">
-  <div class="step-counter">QADAM 6 / 6</div>
-  <h2>Xizmat</h2>
-  <p class="subtitle">Kim quradi?</p>
-
-  <div class="options-grid" id="workOptions">
-    <div class="option-card" data-value="self" onclick="pickWork('self')">
-      <div class="title">🙋 O'zim quraman</div>
-      <div class="desc">Usta haqi 0</div>
-    </div>
-    <div class="option-card selected" data-value="brigade" onclick="pickWork('brigade')">
-      <div class="title">👷 Brigada</div>
-      <div class="desc">Materialning 30%</div>
-    </div>
-    <div class="option-card" data-value="super" onclick="pickWork('super')">
-      <div class="title">🏆 Super brigada</div>
-      <div class="desc">Materialning 40%</div>
-    </div>
-  </div>
-
-  <div class="btn-group">
-    <button class="btn btn-secondary" onclick="goToStep(5)">← Orqaga</button>
-    <button class="btn btn-success" onclick="calculate()">🧮 Hisoblash</button>
-  </div>
-</div>
-
-<!-- STEP 7 -->
-<div class="step" data-step="7">
-  <div class="step-counter">NATIJA</div>
-  <h2>Hisob-kitob tayyor!</h2>
-  <p class="subtitle" id="resultSummary"></p>
-
-  <div id="resultContent"></div>
-
-  <div class="warning-box">
-    ⚠️ Bu taxminiy hisob. Aniq smeta uchun mutaxassis bilan maslahatlashing.
-  </div>
-
-  <div class="btn-group single" style="margin-top:12px">
-    <button class="btn btn-primary btn-full" onclick="addAllToCart()">🛒 Materiallarni savatga</button>
-    <button class="btn btn-warn btn-full" onclick="callUsta()" style="margin-top:8px">📞 Usta chaqirish</button>
-    <button class="btn btn-secondary btn-full" onclick="printResult()" style="margin-top:8px">📄 PDF / Chop etish</button>
-    <button class="btn btn-secondary btn-full" onclick="location.reload()" style="margin-top:8px">🔄 Yangi hisob</button>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script>
-// ============================================
-// NARXLAR
-// ============================================
-var PRICES = {
-  beton: {min:320000, max:380000, unit:"m3", name:"Beton M200"},
-  tsement: {min:42000, max:50000, unit:"qop", name:"Tsement M400 (50kg)"},
-  qum: {min:250000, max:320000, unit:"m3", name:"Yuvilgan qum"},
-  shagal: {min:230000, max:280000, unit:"m3", name:"Shag'al"},
-  armatura: {min:8200000, max:9000000, unit:"tonna", name:"Armatura 12mm"},
-  reka: {min:3000000, max:3600000, unit:"m3", name:"Reka (yog'och)"},
-  opalubka: {min:500000, max:650000, unit:"m2", name:"Opalubka"},
-  gisht_std: {min:800, max:900, unit:"dona", name:"Pishgan g'isht standart"},
-  gisht_pol: {min:1000, max:1200, unit:"dona", name:"Pishgan g'isht paltarashka"},
-  xom_std: {min:500, max:600, unit:"dona", name:"Xom g'isht standart"},
-  xom_pol: {min:650, max:750, unit:"dona", name:"Xom g'isht paltarashka"},
-  shlakoblok: {min:8000, max:9500, unit:"dona", name:"Shlakoblok"},
-  gazoblok600: {min:26000, max:30000, unit:"dona", name:"Gazoblok 600×300×200"},
-  gazoblok500: {min:24000, max:28000, unit:"dona", name:"Gazoblok 500×300×200"},
-  paxsa: {min:150000, max:200000, unit:"m3", name:"Paxsa"},
-  strapila_5x15_6: {min:3200000, max:3800000, unit:"m3", name:"Strapila 5×15×6m"},
-  strapila_4x14_6: {min:2900000, max:3400000, unit:"m3", name:"Strapila 4×14×6m"},
-  strapila_5x15_4: {min:3000000, max:3500000, unit:"m3", name:"Strapila 5×15×4m"},
-  strapila_4x14_4: {min:2600000, max:3100000, unit:"m3", name:"Strapila 4×14×4m"},
-  qamish: {min:30000, max:40000, unit:"dona", name:"Qamish bog'langan"},
-  boyra: {min:15000, max:25000, unit:"m2", name:"Bo'yra"},
-  lombz: {min:120000, max:150000, unit:"m3", name:"Lombz"},
-  shifer: {min:75000, max:90000, unit:"list", name:"Shifer 8 to'lqin"},
-  metallocherepitsa: {min:85000, max:105000, unit:"m2", name:"Metallocherepitsa"},
-  ondulin: {min:95000, max:115000, unit:"m2", name:"Ondulin"},
-  tornov_yupqa: {min:15000, max:20000, unit:"pm", name:"Yupka tornov"},
-  tornov_oddiy: {min:25000, max:35000, unit:"pm", name:"Tornov oddiy"},
-  konyok: {min:35000, max:45000, unit:"m2", name:"Konyok"},
-  mix70: {min:12000, max:15000, unit:"kg", name:"Mix 70 lik"},
-  mix100: {min:13000, max:16000, unit:"kg", name:"Mix 100 lik"},
-  mix150: {min:14000, max:17000, unit:"kg", name:"Mix 150 lik"},
-  sim4: {min:15000, max:18000, unit:"kg", name:"Sim 4 lik"},
-  reka_5x5x6: {min:35000, max:45000, unit:"dona", name:"Reka 5×5×6m"}
+/* ═══ NARXLAR ═══ */
+var P={
+traktor_soat:{n:"Traktor (soat)",u:"soat",a:250000,b:400000},
+ekskavator_soat:{n:"Ekskavator (soat)",u:"soat",a:300000,b:500000},
+qazish_qolda:{n:"Qazish (qo'lda)",u:"m³",a:40000,b:60000},
+qazish_traktor:{n:"Qazish (traktor)",u:"m³",a:25000,b:40000},
+tekislash_qolda:{n:"Tekislash (qo'lda)",u:"m²",a:8000,b:15000},
+tekislash_traktor:{n:"Tekislash (traktor)",u:"m²",a:5000,b:9000},
+qumtosh_qolda:{n:"Qum to'shash (qo'lda)",u:"m³",a:250000,b:320000},
+qumtosh_traktor:{n:"Qum to'shash (traktor)",u:"m³",a:180000,b:250000},
+sheben_qolda:{n:"Shag'al to'shash (qo'lda)",u:"m³",a:230000,b:280000},
+sheben_traktor:{n:"Shag'al to'shash (traktor)",u:"m³",a:170000,b:230000},
+mustahkamlash:{n:"Mustahkamlash (geotekstil)",u:"m²",a:8000,b:12000},
+beton:{n:"Beton M200",u:"m³",a:320000,b:380000},
+beton300:{n:"Beton M300",u:"m³",a:370000,b:430000},
+tsement:{n:"Tsement M400",u:"qop",a:42000,b:50000},
+qumtosh:{n:"Qum (m³)",u:"m³",a:250000,b:320000},
+sheben:{n:"Shag'al (m³)",u:"m³",a:230000,b:280000},
+armatura10:{n:"Armatura 10mm",u:"tonna",a:8200000,b:8800000},
+armatura12:{n:"Armatura 12mm",u:"tonna",a:8500000,b:9200000},
+reka:{n:"Yog'och (reka)",u:"m³",a:3000000,b:3600000},
+opalubka:{n:"Opalubka (arenda)",u:"m²",a:50000,b:80000},
+gidro:{n:"Gidroizolyatsiya",u:"m²",a:25000,b:40000},
+/* DEVOR — TO'LIQ G'ISHT TURLARI */
+gazo600_38:{n:"Gazoblok 38sm",u:"dona",a:26000,b:30000},
+gazo600_25:{n:"Gazoblok 25sm",u:"dona",a:18000,b:22000},
+gisht_std_38:{n:"Pishgan g'isht std 38sm",u:"dona",a:800,b:900},
+gisht_std_25:{n:"Pishgan g'isht std 25sm",u:"dona",a:600,b:700},
+gisht_pol_38:{n:"Pishgan g'isht paltarashka 38sm",u:"dona",a:1000,b:1200},
+gisht_pol_25:{n:"Pishgan g'isht paltarashka 25sm",u:"dona",a:750,b:900},
+gisht_evro:{n:"G'isht yevro 250×85×65",u:"dona",a:1100,b:1300},
+xom_std_38:{n:"Xom g'isht std 38sm",u:"dona",a:500,b:600},
+xom_std_25:{n:"Xom g'isht std 25sm",u:"dona",a:350,b:450},
+xom_pol_38:{n:"Xom g'isht paltarashka 38sm",u:"dona",a:650,b:750},
+xom_pol_25:{n:"Xom g'isht paltarashka 25sm",u:"dona",a:500,b:600},
+shlak_38:{n:"Shlakoblok 38sm",u:"dona",a:8000,b:9500},
+shlak_25:{n:"Shlakoblok 25sm",u:"dona",a:5500,b:7000},
+peregorodka:{n:"Peregorodka blok 10sm",u:"dona",a:4500,b:6000},
+paxsa:{n:"Paxsa (m³)",u:"m³",a:150000,b:200000},
+klei:{n:"Klei (bloklar)",u:"kg",a:3000,b:4000},
+setka:{n:"Armatura to'r",u:"m²",a:3500,b:4500},
+beton_k:{n:"Beton (karkas)",u:"m³",a:350000,b:420000},
+armat_k:{n:"Armatura (karkas)",u:"tonna",a:8500000,b:9200000},
+plita_p:{n:"Beton plita",u:"m²",a:280000,b:380000},
+penoplast:{n:"Penoplast EPS 5sm",u:"m²",a:40000,b:60000},
+vass5156:{n:"Vassalash 5×15×6m",u:"m³",a:3200000,b:3800000},
+vass4146:{n:"Vassalash 4×14×6m",u:"m³",a:2900000,b:3400000},
+vass5154:{n:"Vassalash 5×15×4m",u:"m³",a:3000000,b:3500000},
+vass4144:{n:"Vassalash 4×14×4m",u:"m³",a:2600000,b:3100000},
+strapila_4m:{n:"Strapila 4m (dona)",u:"dona",a:80000,b:120000},
+strapila_6m:{n:"Strapila 6m (dona)",u:"dona",a:120000,b:180000},
+reka_5x5_6m:{n:"Reka 5×5 6m",u:"dona",a:35000,b:45000},
+reka_3x10_6m:{n:"Yog'och 3×10 6m",u:"dona",a:80000,b:120000},
+boyra:{n:"Bo'yra",u:"m²",a:15000,b:25000},
+qamish_bog:{n:"Qamish (bog')",u:"bog'",a:35000,b:50000},
+somon_pres:{n:"Somon (pres)",u:"dona",a:25000,b:40000},
+lombz:{n:"Lombz (m³)",u:"m³",a:120000,b:150000},
+tuproq_m3:{n:"Tuproq (m³)",u:"m³",a:80000,b:120000},
+somon_loy:{n:"Somon-loy suvoq",u:"m²",a:35000,b:55000},
+mourlat_5x15:{n:"Mourlat 5×15",u:"pm",a:45000,b:55000},
+strapila:{n:"Strapila (yog'och)",u:"m³",a:3200000,b:3800000},
+shifer:{n:"Shifer 8 to'lqin",u:"list",a:75000,b:90000},
+metal:{n:"Metallocherepitsa",u:"m²",a:85000,b:105000},
+ondulin:{n:"Ondulin",u:"m²",a:95000,b:115000},
+profnastil:{n:"Profnastil",u:"m²",a:65000,b:70000},
+tom_mix:{n:"Tom mixi",u:"dona",a:800,b:1200},
+tornov_y:{n:"Tornov yupqa",u:"pm",a:15000,b:20000},
+tornov_o:{n:"Tornov oddiy",u:"pm",a:25000,b:35000},
+konyok:{n:"Konyok",u:"m²",a:35000,b:45000},
+deraza_std:{n:"Deraza 1.5×1.5",u:"dona",a:1500000,b:1800000},
+deraza_3k:{n:"Deraza 3-kamera",u:"dona",a:2000000,b:2500000},
+deraza_bor:{n:"Deraza balkon",u:"dona",a:2500000,b:3500000},
+eshik_i:{n:"Ichki eshik",u:"dona",a:800000,b:1200000},
+eshik_t:{n:"Tashqi eshik",u:"dona",a:2500000,b:3500000},
+eshik_temir:{n:"Temir eshik",u:"dona",a:3500000,b:5500000},
+fasad_sht:{n:"Fasad shtukaturka",u:"m²",a:80000,b:150000},
+fasad_boy:{n:"Fasad bo'yoq",u:"litr",a:30000,b:50000},
+dekor_tosh:{n:"Dekorativ tosh",u:"m²",a:150000,b:300000},
+fasad_panel:{n:"Fasad panel",u:"m²",a:180000,b:350000},
+setka_f:{n:"Fasad setka",u:"m²",a:5000,b:15000},
+yltka:{n:"Yo'lka plitkasi",u:"m²",a:80000,b:150000},
+bordyur:{n:"Bordyur",u:"pm",a:50000,b:80000},
+darvoza_a:{n:"Avtomatik darvoza",u:"dona",a:5000000,b:15000000},
+darvoza_k:{n:"Kichik darvoza",u:"dona",a:1500000,b:3000000},
+kochat:{n:"Daraxt ko'chati",u:"dona",a:35000,b:100000},
+gulzor:{n:"Gulzor",u:"m²",a:100000,b:300000},
+suvoq:{n:"Qum-tsement suvoq",u:"m²",a:45000,b:65000},
+shpak:{n:"Shpaklyovka",u:"kg",a:8000,b:10000},
+grunt:{n:"Grunt",u:"litr",a:8000,b:12000},
+boyoq:{n:"Ichki bo'yoq",u:"litr",a:25000,b:35000},
+gulqogoz:{n:"Gulqog'oz (rulon)",u:"rulon",a:80000,b:200000},
+panel:{n:"Wall panel MDF",u:"m²",a:120000,b:250000},
+kafel_d:{n:"Kafel (devor)",u:"m²",a:90000,b:180000},
+dekor_plast:{n:"Dekor plast",u:"m²",a:60000,b:120000},
+aziya_plast:{n:"Aziya plast",u:"m²",a:70000,b:140000},
+vagonka:{n:"Vagonka",u:"m²",a:80000,b:150000},
+laminat:{n:"Laminat",u:"m²",a:180000,b:250000},
+parket:{n:"Parket",u:"m²",a:400000,b:700000},
+linoleum:{n:"Linoleum",u:"m²",a:80000,b:150000},
+kafel_p:{n:"Kafel (pol)",u:"m²",a:80000,b:200000},
+plintus:{n:"Plintus",u:"m",a:15000,b:30000},
+gips:{n:"Gipsokarton list",u:"list",a:40000,b:60000},
+profil:{n:"Gips profil",u:"dona",a:15000,b:25000},
+kabel25:{n:"Kabel 3×2.5",u:"m",a:12000,b:15000},
+kabel15:{n:"Kabel 3×1.5",u:"m",a:8000,b:10000},
+rozetka:{n:"Rozetka",u:"dona",a:25000,b:45000},
+vikl:{n:"Vikluchatel",u:"dona",a:30000,b:50000},
+chiroq:{n:"LED chiroq",u:"dona",a:25000,b:45000},
+avtomat:{n:"Avtomat",u:"dona",a:45000,b:85000},
+shit:{n:"Elektr shit",u:"dona",a:450000,b:650000},
+gofra:{n:"GOFRA",u:"m",a:3000,b:5000},
+ppr:{n:"Suv trubasi PPR",u:"m",a:25000,b:35000},
+kanal:{n:"Kanalizatsiya",u:"m",a:20000,b:40000},
+unitaz:{n:"Unitaz",u:"dona",a:800000,b:2000000},
+rakovina:{n:"Rakovina",u:"dona",a:400000,b:800000},
+vanna:{n:"Vanna",u:"dona",a:1500000,b:4000000},
+dush:{n:"Dush kabina",u:"dona",a:1000000,b:3000000},
+smes:{n:"Smesitel",u:"dona",a:100000,b:500000},
+boyler:{n:"Boiler",u:"dona",a:1500000,b:3000000},
+pechka:{n:"Pechka",u:"dona",a:800000,b:1500000},
+radiator:{n:"Isitish rad.",u:"dona",a:650000,b:950000},
+qozon_otin:{n:"Qozon (o'tin/ko'mir)",u:"dona",a:2500000,b:4500000},
+qozon_gaz:{n:"Qozon (gaz)",u:"dona",a:3500000,b:6500000},
+qozon_el:{n:"Qozon (elektr)",u:"dona",a:2500000,b:5000000},
+qozon_univ:{n:"Qozon (universal)",u:"dona",a:5000000,b:9000000},
+isitish_tr:{n:"Isitish trubasi",u:"m",a:25000,b:35000},
+issiq_pol:{n:"Issiq pol",u:"m²",a:150000,b:250000},
+oshxona_std:{n:"Oshxona mebeli (std)",u:"to'plam",a:3000000,b:8000000},
+oshxona_lux:{n:"Oshxona mebeli (lyuks)",u:"to'plam",a:8000000,b:20000000},
+sanuzel:{n:"Sanuzel",u:"to'plam",a:500000,b:1000000},
+kond9:{n:"Konditsioner 9000",u:"dona",a:3000000,b:4000000},
+kond12:{n:"Konditsioner 12000",u:"dona",a:4000000,b:5000000},
+kond18:{n:"Konditsioner 18000",u:"dona",a:5500000,b:7000000},
+kamin:{n:"Kamin",u:"dona",a:2000000,b:5000000},
+alarm:{n:"Signalizatsiya",u:"to'plam",a:1000000,b:3000000},
+video:{n:"Video kamera",u:"dona",a:500000,b:2000000}
 };
 
-var LABOR = {
-  beton: {min:100000, max:150000, unit:"m3", name:"Beton quyish"},
-  armatura: {min:500000, max:700000, unit:"tonna", name:"Armatura bog'lash"},
-  gisht: {min:800, max:1200, unit:"dona", name:"G'isht terish"},
-  shlakoblok: {min:15000, max:25000, unit:"dona", name:"Shlakoblok terish"},
-  gazoblok: {min:25000, max:35000, unit:"dona", name:"Gazoblok terish"},
-  paxsa: {min:40000, max:60000, unit:"m3", name:"Paxsa qurish"},
-  strapila: {min:40000, max:60000, unit:"m2", name:"Strapila o'rnatish"},
-  tom_qoplash: {min:35000, max:50000, unit:"m2", name:"Tom qoplash"},
-  konyok: {min:20000, max:30000, unit:"m2", name:"Konyok o'rnatish"}
+/* ═══ ISH HAQI ═══ */
+var L={
+qazish_i:{n:"Qazish",u:"m³",a:30000,b:50000},
+tekislash_i:{n:"Tekislash",u:"m²",a:8000,b:15000},
+beton_q:{n:"Beton quyish",u:"m³",a:100000,b:150000},
+arm_bog:{n:"Armatura bog'lash",u:"tonna",a:500000,b:700000},
+opalubka_i:{n:"Opalubka yig'ish",u:"m²",a:25000,b:40000},
+gisht_t:{n:"G'isht terish",u:"dona",a:900,b:1200},
+gazo_t:{n:"Gazoblok terish",u:"dona",a:25000,b:35000},
+shlak_t:{n:"Shlakoblok terish",u:"dona",a:15000,b:25000},
+pereg_t:{n:"Peregorodka terish",u:"dona",a:8000,b:12000},
+paxsa_q:{n:"Paxsa qurish",u:"m³",a:40000,b:60000},
+karkas_q:{n:"Karkas quyish",u:"m³",a:120000,b:180000},
+shift_q:{n:"Shift quyish",u:"m²",a:60000,b:90000},
+vassalash_i:{n:"Vassalash o'rnatish",u:"m²",a:40000,b:60000},
+dastar_i:{n:"Dastarlash",u:"m²",a:20000,b:35000},
+lombz_i:{n:"Lo'mboz yotqizish",u:"m²",a:20000,b:35000},
+qamish_i:{n:"Qamish yotqizish",u:"m²",a:25000,b:40000},
+somon_loy_i:{n:"Somon-loy suvoq",u:"m²",a:35000,b:55000},
+tom_q:{n:"Tom qoplash",u:"m²",a:35000,b:50000},
+strapila_i:{n:"Strapila yig'ish",u:"m²",a:45000,b:65000},
+konyok_q:{n:"Konyok o'rnatish",u:"m²",a:20000,b:30000},
+tornov_i:{n:"Tornov o'rnatish",u:"pm",a:35000,b:50000},
+deraza_o:{n:"Deraza o'rnatish",u:"dona",a:150000,b:250000},
+eshik_o:{n:"Eshik o'rnatish",u:"dona",a:100000,b:200000},
+fasad_i:{n:"Fasad ishlari",u:"m²",a:60000,b:100000},
+shtukat_i:{n:"Shtukaturka",u:"m²",a:45000,b:65000},
+landshaft_i:{n:"Landshaft ishlari",u:"m²",a:30000,b:50000},
+yltka_i:{n:"Yo'lka yotqizish",u:"m²",a:40000,b:60000},
+darvoza_o:{n:"Darvoza o'rnatish",u:"dona",a:500000,b:1000000},
+suvoq_i:{n:"Suvoq ishlari",u:"m²",a:45000,b:65000},
+shpak_i:{n:"Shpaklyovka",u:"m²",a:30000,b:50000},
+pol_q:{n:"Pol yotqizish",u:"m²",a:35000,b:50000},
+kafel_q:{n:"Kafel yotqizish",u:"m²",a:70000,b:120000},
+devor_qop_i:{n:"Devor qoplash",u:"m²",a:30000,b:50000},
+shift_qop_i:{n:"Shift qoplash",u:"m²",a:40000,b:60000},
+elektr_i:{n:"Elektr montaji",u:"m²",a:30000,b:45000},
+sant_i:{n:"Santexnika montaji",u:"m²",a:25000,b:40000},
+isit_i:{n:"Isitish montaji",u:"m²",a:25000,b:40000},
+pechka_i:{n:"Pechka o'rnatish",u:"dona",a:1500000,b:3000000},
+suv_i:{n:"Suv montaji",u:"m²",a:15000,b:25000}
 };
 
-var state = {
-  area: 100, floors: 2, wallH: 3, rooms: 4,
-  found: 'lenta', wall: 'gisht_std', innerWall: 20, work: 'brigade'
+/* ═══ BO'LIMLAR ═══ */
+var SECTIONS=[
+{id:"loyiha",n:"Loyiha",ic:"📐",stage:"1. QURILISH",desc:"Maydon, qavatlar, xonalar"},
+{id:"maydon",n:"Maydon tayyorlash",ic:"🚜",stage:"1. QURILISH",desc:"Qazish, tekislash, to'shash"},
+{id:"poydevor",n:"Poydevor",ic:"🔷",stage:"1. QURILISH",desc:"Lenta yoki plita"},
+{id:"tsokol",n:"Tsokol",ic:"⬛",stage:"1. QURILISH",desc:"Podval qismi"},
+{id:"devor",n:"Devor",ic:"🧱",stage:"1. QURILISH",desc:"Eni va material"},
+{id:"karkas",n:"Karkas",ic:"🏗",stage:"1. QURILISH",desc:"Armopoyas, ustun"},
+{id:"shift",n:"Shift",ic:"🔲",stage:"1. QURILISH",desc:"Qavatlararo"},
+{id:"vassalash",n:"Vassalash + Dastar",ic:"🪵",stage:"1. QURILISH",desc:"Strapila va reka"},
+{id:"lombz",n:"Lo'mboz",ic:"🌾",stage:"1. QURILISH",desc:"Qamish, somon, loy"},
+{id:"tom",n:"Tom yopish",ic:"🏠",stage:"1. QURILISH",desc:"Mourlat, strapila"},
+{id:"tornov",n:"Tornov + Konyok",ic:"🔺",stage:"1. QURILISH",desc:"Tom chetlari"},
+{id:"deraza",n:"Deraza + Eshik",ic:"🪟",stage:"2. TASHQI",desc:"Ichki va tashqi"},
+{id:"fasad",n:"Fasad",ic:"🏛",stage:"2. TASHQI",desc:"Shtukaturka, tosh"},
+{id:"landshaft",n:"Landshaft",ic:"🌳",stage:"2. TASHQI",desc:"Hovli, darvoza"},
+{id:"suvoq",n:"Suvoq",ic:"🎨",stage:"3. ICHKI",desc:"Devor tekislash"},
+{id:"pol",n:"Pol",ic:"🪵",stage:"3. ICHKI",desc:"Laminat, parket"},
+{id:"devor_qop",n:"Devor qoplama",ic:"🖼",stage:"3. ICHKI",desc:"Gulqog'oz, panel"},
+{id:"shift_qop",n:"Shift qoplama",ic:"⬜",stage:"3. ICHKI",desc:"Gipsokarton"},
+{id:"elektr",n:"Elektr",ic:"⚡",stage:"4. KOMMUNIKATSIYA",desc:"Kabel, rozetka"},
+{id:"sant",n:"Santexnika",ic:"🚿",stage:"4. KOMMUNIKATSIYA",desc:"Hammom"},
+{id:"isitish",n:"Isitish",ic:"🔥",stage:"4. KOMMUNIKATSIYA",desc:"Pechka, qozon"},
+{id:"suv",n:"Suv",ic:"💧",stage:"4. KOMMUNIKATSIYA",desc:"Boiler"},
+{id:"oshxona",n:"Oshxona",ic:"🍳",stage:"5. JIHOZLASH",desc:"Mebel"},
+{id:"hammom_j",n:"Hammom",ic:"🛁",stage:"5. JIHOZLASH",desc:"Sanuzel, qoplama"},
+{id:"qoshimcha",n:"Qo'shimcha",ic:"❄️",stage:"5. JIHOZLASH",desc:"AC, xavfsizlik"}
+];
+
+/* ═══ STATE ═══ */
+var S={
+stage:0,step:0,activeSections:{},
+d:{
+area:135,floors:2,wallH:3,rooms:5,
+maydonItems:{qazish:false,qazishType:"qolda",tekislash:true,tekislashType:"qolda",qumtosh:false,qumtoshType:"qolda",sheben:false,shebenType:"qolda",mustahkamlash:false},
+tractorH:0,
+pType:"lenta",pPerim:0,pW:0.4,pH:0.8,pSlabT:0.25,
+tsokol:"ha",tsokolH:0.5,tsokolIzol:"ha",
+wExterior:"gazo600_38",wInterior:"gazo600_25",wPereg:"peregorodka",innerPct:20,paxsaW:0.6,
+arm:"ha",apW:0.3,apH:0.3,apL:0,perem:0,kol:0,
+shift:"plita",shiftT:0.2,shiftIzol:"ha",
+vassType:"vass4146",strapila_soni:0,reka_soni:0,rekaOri:"15",
+lombzT:"boyra",lombzPct:100,boyra_m2:0,qamish_bog:0,somon_pres:0,tuproq_m3:0,
+roofType:"gable",cover:"shifer",mourlat_pm:0,strapila_tom:0,reka_tom_pm:0,
+tornov:"oddiy",tornov_pm:0,konyok:0,
+derazaQ:0,derazaT:"std",eshikIQ:0,eshikTQ:1,eshikTT:"std",
+fasadT:"shtukaturka",fasadPct:100,fasadIzol:"ha",
+yltkaPct:30,darvozaT:"k",
+suvoqPct:100,
+polType:"laminat",polPct:100,
+devorQop:"gulqogoz",devorPct:80,
+shiftQop:"gips",shiftQopPct:100,
+rozetkaQ:0,viklQ:0,chiroqQ:0,
+unitazQ:1,rakovinaQ:1,vannaQ:0,dushQ:1,
+isitishT:"pechka",pechkaQ:0,qozonT:"gaz",radiatorQ:0,issiqPol:"ha",
+boylerQ:1,oshxonaT:"std",hammomQop:"kafel",
+kondT:"kond12",kondQ:2,kamin:"yoq",alarm:"ha",videoQ:0,
+work:"brig"
+},
+res:null
 };
 
-var currentStep = 1;
-var lastResult = null;
+/* ═══ YORDAMCHI ═══ */
+function fmt(n){return Math.round(Number(n)||0).toLocaleString('ru-RU').replace(/,/g,' ')+" so'm";}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function nf(n){var v=Number(n)||0;return Number.isInteger(v)?v.toString():v.toFixed(2).replace(/\.?0+$/,'');}
+function toast(m,tp){var e=document.getElementById('tst');e.textContent=m;e.className='tst on'+(tp==='e'?' e':tp==='o'?' o':'');clearTimeout(e._t);e._t=setTimeout(function(){e.className='tst'+(tp==='e'?' e':tp==='o'?' o':'');},2200);}
+function closeMd(){document.getElementById('md').classList.remove('on');}
+function openMd(){document.getElementById('md').classList.add('on');}
+function toggleTheme(){var c=document.body.dataset.t;var n=c==='dark'?'light':'dark';document.body.dataset.t=n;localStorage.setItem('rayis_calc_theme',n);document.getElementById('thBtn').textContent=n==='dark'?'☀️':'🌙';}
+function saveL(){try{localStorage.setItem('rayis_calc_v10',JSON.stringify({d:S.d,activeSections:S.activeSections}));}catch(e){}}
+function loadL(){try{var s=localStorage.getItem('rayis_calc_v10');if(s){var p=JSON.parse(s);if(p.d)S.d=Object.assign(S.d,p.d);if(p.activeSections)S.activeSections=p.activeSections;}}catch(e){}}
 
-// ============================================
-// YORDAMCHI
-// ============================================
-function toast(msg, type) {
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast' + (type === 'err' ? ' err' : type === 'ok' ? ' ok' : '');
-  t.classList.add('show');
-  setTimeout(function(){ t.classList.remove('show'); }, 2200);
+/* ═══ AUTO HISOBLASH ═══ */
+function calcTotalArea(){return S.d.area*S.d.floors;}
+function calcPerim(){return Math.round(4*Math.sqrt(S.d.area));}
+function calcRoofArea(){return S.d.area*(S.d.roofType==='hip'?1.6:1.4)*S.d.floors;}
+function autoFromArea(){
+var A=S.d.area;
+if(!S.d.strapila_soni)S.d.strapila_soni=Math.ceil(A*0.4);
+if(!S.d.reka_soni)S.d.reka_soni=Math.ceil(A*0.75);
+if(!S.d.boyra_m2)S.d.boyra_m2=A;
+if(!S.d.qamish_bog)S.d.qamish_bog=Math.ceil(A/4);
+if(!S.d.somon_pres)S.d.somon_pres=Math.ceil(A/9);
+if(!S.d.tuproq_m3)S.d.tuproq_m3=Math.round(A/20*10)/10;
+if(!S.d.mourlat_pm)S.d.mourlat_pm=calcPerim();
+if(!S.d.strapila_tom)S.d.strapila_tom=Math.ceil(A*0.3);
+if(!S.d.reka_tom_pm)S.d.reka_tom_pm=Math.round(A*5.2);
+if(!S.d.tornov_pm)S.d.tornov_pm=calcPerim();
 }
-
-function fmt(n) {
-  return Math.round(n).toLocaleString('uz-UZ').replace(/,/g, ' ') + " so'm";
+function autoFromRooms(){
+var r=S.d.rooms;
+if(!S.d.eshikIQ)S.d.eshikIQ=r;
+if(!S.d.rozetkaQ)S.d.rozetkaQ=r*4;
+if(!S.d.viklQ)S.d.viklQ=r*2;
+if(!S.d.chiroqQ)S.d.chiroqQ=r*2;
+if(!S.d.radiatorQ)S.d.radiatorQ=Math.max(4,Math.round(calcTotalArea()/12));
+if(!S.d.pechkaQ)S.d.pechkaQ=Math.max(1,Math.ceil(r/3));
 }
+function autoFromPerim(){if(!S.d.pPerim)S.d.pPerim=calcPerim();}
 
-function renderProgress() {
-  var bar = document.getElementById('progress');
-  bar.innerHTML = '';
-  for (var i = 1; i <= 6; i++) {
-    var d = document.createElement('div');
-    d.className = 'pbar';
-    if (i < currentStep) d.classList.add('done');
-    if (i === currentStep) d.classList.add('active');
-    bar.appendChild(d);
-  }
-}
-
-function goToStep(n) {
-  document.querySelectorAll('.step').forEach(function(s){ s.classList.remove('active'); });
-  document.querySelector('.step[data-step="' + n + '"]').classList.add('active');
-  currentStep = n;
-  renderProgress();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function goBack() {
-  if (currentStep > 1 && currentStep < 7) goToStep(currentStep - 1);
-  else location.href = 'home.html';
-}
-
-// ============================================
-// STEP 1
-// ============================================
-function updateTotalArea() {
-  var area = parseFloat(document.getElementById('area').value) || 0;
-  var floors = parseInt(document.getElementById('floors').value) || 1;
-  document.getElementById('totalArea').textContent = (area * floors).toFixed(0);
-}
-document.getElementById('area').addEventListener('input', updateTotalArea);
-document.getElementById('floors').addEventListener('change', updateTotalArea);
-
-// ============================================
-// STEP 2
-// ============================================
-function pickFound(v) {
-  state.found = v;
-  document.querySelectorAll('#foundOptions .option-card').forEach(function(c){
-    c.classList.toggle('selected', c.dataset.value === v);
-  });
-  document.getElementById('lentaFields').style.display = v === 'lenta' ? 'block' : 'none';
-  document.getElementById('plitaFields').style.display = v === 'plita' ? 'block' : 'none';
-}
-
-// ============================================
-// STEP 3
-// ============================================
-function toggleWall() {
-  var v = document.getElementById('wallType').value;
-  document.getElementById('paxsaFields').style.display = v === 'paxsa' ? 'block' : 'none';
-}
-
-// ============================================
-// STEP 4
-// ============================================
-function toggleArmapoyas() {
-  var v = document.getElementById('armapoyasIn').value;
-  document.getElementById('armapoyasFields').style.display = v === 'ha' ? 'block' : 'none';
-}
-
-function togglePerem() {
-  var v = parseInt(document.getElementById('peremCount').value) || 0;
-  document.getElementById('peremFields').style.display = v > 0 ? 'block' : 'none';
-}
-
-function toggleKol() {
-  var v = parseInt(document.getElementById('kolCount').value) || 0;
-  document.getElementById('kolFields').style.display = v > 0 ? 'block' : 'none';
-}
-
-// ============================================
-// STEP 6
-// ============================================
-function pickWork(v) {
-  state.work = v;
-  document.querySelectorAll('#workOptions .option-card').forEach(function(c){
-    c.classList.toggle('selected', c.dataset.value === v);
-  });
-}
-
-// ============================================
-// HISOBLASH
-// ============================================
-function calculate() {
-  var matList = [];
-  var laborList = [];
-  var mA = 0, mB = 0, lA = 0, lB = 0;
-
-  var area = parseFloat(document.getElementById('area').value) || 0;
-  var floors = parseInt(document.getElementById('floors').value) || 1;
-  var wallH = parseFloat(document.getElementById('wallH').value) || 3;
-  var totalH = floors * wallH;
-  var rooms = parseInt(document.getElementById('rooms').value) || 4;
-
-  if (area <= 0) { toast('Maydonni kiriting', 'err'); return; }
-
-  var fType = state.found;
-  var betonV = 0, opalubkaS = 0;
-
-  if (fType === 'lenta') {
-    var per = parseFloat(document.getElementById('perimeter').value) || 0;
-    var lw = parseFloat(document.getElementById('lentaW').value) || 0.4;
-    var lh = parseFloat(document.getElementById('lentaH').value) || 0.8;
-    betonV = per * lw * lh * 1.02;
-    opalubkaS = per * 2 * lh;
-  } else {
-    var st = parseFloat(document.getElementById('slabT').value) || 0.25;
-    betonV = area * st * 1.02;
-    opalubkaS = area * 0.5;
-  }
-
-  var tsQ = betonV * 6;
-  var qumV = betonV * 0.5;
-  var shagV = betonV * 0.85;
-  var armT = betonV * 0.08;
-  var rekV = betonV * 0.02;
-
-  var wType = document.getElementById('wallType').value;
-  var baseInPct = (parseInt(document.getElementById('innerWall').value) || 0) / 100;
-  var roomsBonus = rooms > 4 ? (rooms - 4) * 0.02 : 0;
-  var inPct = Math.min(baseInPct + roomsBonus, 0.6);
-  var paxsaW = parseFloat((document.getElementById('paxsaW') || {}).value) || 0.6;
-
-  var perW = (fType === 'lenta') ? (parseFloat(document.getElementById('perimeter').value) || 40) : 4.5 * Math.sqrt(area);
-  var wOutS = perW * totalH * 0.85;
-  var wInS = wOutS * inPct;
-  var wTotS = wOutS + wInS;
-
-  var wPM2 = 0, wName = '', wPriceKey = '';
-  if (wType === 'gisht_std') { wPM2 = 400; wName = PRICES.gisht_std.name; wPriceKey = 'gisht_std'; }
-  else if (wType === 'gisht_pol') { wPM2 = 300; wName = PRICES.gisht_pol.name; wPriceKey = 'gisht_pol'; }
-  else if (wType === 'xom_std') { wPM2 = 400; wName = PRICES.xom_std.name; wPriceKey = 'xom_std'; }
-  else if (wType === 'xom_pol') { wPM2 = 300; wName = PRICES.xom_pol.name; wPriceKey = 'xom_pol'; }
-  else if (wType === 'shlakoblok') { wPM2 = 13; wName = PRICES.shlakoblok.name; wPriceKey = 'shlakoblok'; }
-  else if (wType === 'gazoblok600') { wPM2 = 8.33; wName = PRICES.gazoblok600.name; wPriceKey = 'gazoblok600'; }
-  else if (wType === 'gazoblok500') { wPM2 = 10; wName = PRICES.gazoblok500.name; wPriceKey = 'gazoblok500'; }
-  else if (wType === 'paxsa') { wPM2 = 0; wName = PRICES.paxsa.name; wPriceKey = 'paxsa'; }
-
-  var wQty = wType === 'paxsa' ? (wTotS * paxsaW) : (wTotS * wPM2);
-  var wUnit = wType === 'paxsa' ? 'm3' : 'dona';
-  var wPrice = wType === 'paxsa' ? PRICES.paxsa : PRICES[wPriceKey];
-
-  var armapoyasIn = document.getElementById('armapoyasIn').value === 'ha';
-  var apV = 0;
-  if (armapoyasIn) {
-    var apW = parseFloat(document.getElementById('apW').value) || 0.3;
-    var apH = parseFloat(document.getElementById('apH').value) || 0.3;
-    var apL = parseFloat(document.getElementById('apL').value) || 40;
-    apV = apW * apH * apL;
-  }
-
-  var peremCount = parseInt(document.getElementById('peremCount').value) || 0;
-  var pmV = 0;
-  if (peremCount > 0) {
-    var pmW = parseFloat(document.getElementById('pmW').value) || 0.3;
-    var pmH = parseFloat(document.getElementById('pmH').value) || 0.3;
-    var pmL = parseFloat(document.getElementById('pmL').value) || 1.5;
-    pmV = pmW * pmH * pmL * peremCount;
-  }
-
-  var kolCount = parseInt(document.getElementById('kolCount').value) || 0;
-  var klV = 0;
-  if (kolCount > 0) {
-    var klW = parseFloat(document.getElementById('klW').value) || 0.3;
-    var klW2 = parseFloat(document.getElementById('klW2').value) || 0.3;
-    var klH = parseFloat(document.getElementById('klH').value) || 3;
-    klV = klW * klW2 * klH * kolCount;
-  }
-
-  var totalBetonV2 = apV + pmV + klV;
-  var vassType = document.getElementById('vassType').value;
-  var vassCount = parseInt(document.getElementById('vassL').value) || 0;
-  var vassStrapV = 0;
-  if (vassType !== 'yoq' && vassCount > 0) {
-    vassStrapV = vassCount * 3 * 0.03;
-  }
-
-  var roofS = area * 1.4;
-  var strapType = document.getElementById('strapType').value;
-  var strapV = roofS * 0.025;
-  var rekaTomV = roofS * 0.018;
-
-  var qamishCount = parseInt(document.getElementById('qamishCount').value) || 0;
-  var boyraS = parseFloat(document.getElementById('boyraS').value) || 0;
-  var lombzV = parseFloat(document.getElementById('lombzV').value) || 0;
-  var mourlL = parseFloat(document.getElementById('mourlL').value) || 0;
-
-  var coverType = document.getElementById('coverType').value;
-  var covQty = 0, covUnit = 'm2';
-  if (coverType === 'shifer') { covQty = roofS * 0.15; covUnit = 'list'; }
-  else { covQty = roofS * 1.1; }
-
-  var tornovType = document.getElementById('tornovType').value;
-  var tornovL = perW;
-  var konyokS = parseFloat(document.getElementById('konyokS').value) || 0;
-  var mix70 = parseFloat(document.getElementById('mix70').value) || 0;
-  var mix100 = parseFloat(document.getElementById('mix100').value) || 0;
-  var mix150 = parseFloat(document.getElementById('mix150').value) || 0;
-  var sim4 = parseFloat(document.getElementById('sim4').value) || 0;
-  var rekaDona = parseInt(document.getElementById('rekaDona').value) || 0;
-
-  var matOut = '';
-
-  function addMat(name, qty, unit, priceObj) {
-    if (qty <= 0) return;
-    var a = qty * priceObj.min;
-    var b = qty * priceObj.max;
-    mA += a; mB += b;
-    matOut += '<div class="material-row">' +
-      '<span class="name">' + name + '</span>' +
-      '<span class="qty">' + (Math.round(qty*100)/100) + ' ' + unit + '</span>' +
-      '<span class="price">' + fmt(a) + '</span>' +
-    '</div>';
-    matList.push({ name: name, qty: qty, unit: unit, price: priceObj.min, priceMax: priceObj.max });
-  }
-
-  addMat('Beton M200', betonV, 'm3', PRICES.beton);
-  addMat('Tsement M400', tsQ, 'qop', PRICES.tsement);
-  addMat('Yuvilgan qum', qumV, 'm3', PRICES.qum);
-  addMat("Shag'al", shagV, 'm3', PRICES.shagal);
-  addMat('Armatura 12mm', armT, 'tonna', PRICES.armatura);
-  addMat('Reka (qolip)', rekV, 'm3', PRICES.reka);
-  addMat('Opalubka (arenda)', opalubkaS, 'm2', PRICES.opalubka);
-
-  addMat(wName, wQty, wUnit, wPrice);
-
-  if (totalBetonV2 > 0) {
-    addMat('Beton (ustun/karkas)', totalBetonV2, 'm3', PRICES.beton);
-    addMat('Armatura (ustun/karkas)', totalBetonV2 * 0.08, 'tonna', PRICES.armatura);
-  }
-  if (vassStrapV > 0) {
-    var vsKey = 'strapila_' + vassType;
-    addMat('Strapila (vassalash)', vassStrapV, 'm3', PRICES[vsKey] || PRICES.strapila_4x14_6);
-  }
-
-  var stKey = 'strapila_' + strapType;
-  addMat('Strapila (tom)', strapV, 'm3', PRICES[stKey] || PRICES.strapila_4x14_6);
-  addMat('Reka (tom)', rekaTomV, 'm3', PRICES.reka);
-  if (qamishCount > 0) addMat("Qamish bog'langan", qamishCount, 'dona', PRICES.qamish);
-  if (boyraS > 0) addMat("Bo'yra", boyraS, 'm2', PRICES.boyra);
-  if (lombzV > 0) addMat('Lombz', lombzV, 'm3', PRICES.lombz);
-  if (mourlL > 0) addMat('Mourlant', mourlL, 'pm', PRICES.reka);
-  addMat(coverType === 'shifer' ? 'Shifer' : coverType === 'metallocherepitsa' ? 'Metallocherepitsa' : 'Ondulin', covQty, covUnit, PRICES[coverType]);
-  if (tornovType === 'yupqa') addMat('Yupka tornov', tornovL, 'pm', PRICES.tornov_yupqa);
-  else if (tornovType === 'oddiy') addMat('Tornov oddiy', tornovL, 'pm', PRICES.tornov_oddiy);
-  if (konyokS > 0) addMat('Konyok', konyokS, 'm2', PRICES.konyok);
-  if (mix70 > 0) addMat('Mix 70 lik', mix70, 'kg', PRICES.mix70);
-  if (mix100 > 0) addMat('Mix 100 lik', mix100, 'kg', PRICES.mix100);
-  if (mix150 > 0) addMat('Mix 150 lik', mix150, 'kg', PRICES.mix150);
-  if (sim4 > 0) addMat('Sim 4 lik', sim4, 'kg', PRICES.sim4);
-  if (rekaDona > 0) addMat('Reka 5×5×6m', rekaDona, 'dona', PRICES.reka_5x5x6);
-
-  var laborOut = '';
-  var wWork = state.work;
-
-  if (wWork === 'self') {
-    laborOut = '<div style="color:#8b9ab8;padding:14px;text-align:center;font-size:13px">Usta xizmati yo\'q (o\'zim quraman)</div>';
-  } else {
-    function addLab(name, qty, unit, priceObj) {
-      if (qty <= 0) return;
-      var a = qty * priceObj.min;
-      var b = qty * priceObj.max;
-      lA += a; lB += b;
-      laborOut += '<div class="material-row">' +
-        '<span class="name">' + name + '</span>' +
-        '<span class="qty">' + (Math.round(qty*100)/100) + ' ' + unit + '</span>' +
-        '<span class="price">' + fmt(a) + '</span>' +
-      '</div>';
-      laborList.push({ name: name, qty: qty, unit: unit, price: priceObj.min });
-    }
-
-    if (betonV > 0) addLab('Beton quyish', betonV, 'm3', LABOR.beton);
-    if (armT > 0) addLab("Armatura bog'lash", armT, 'tonna', LABOR.armatura);
-
-    var lk = 'gisht';
-    if (wType.indexOf('gazoblok') === 0) lk = 'gazoblok';
-    else if (wType === 'shlakoblok') lk = 'shlakoblok';
-    else if (wType === 'paxsa') lk = 'paxsa';
-
-    var terUnit = wType === 'paxsa' ? 'm3' : 'dona';
-    var terQty = wType === 'paxsa' ? (wTotS * paxsaW) : wQty;
-    if (terQty > 0) addLab('Devor terish (' + wName + ')', terQty, terUnit, LABOR[lk]);
-
-    if (roofS > 0) addLab("Strapila yig'ish", roofS, 'm2', LABOR.strapila);
-    if (roofS > 0) addLab('Tom qoplash', roofS, 'm2', LABOR.tom_qoplash);
-    if (konyokS > 0) addLab("Konyok o'rnatish", konyokS, 'm2', LABOR.konyok);
-
-    var bonusPct = wWork === 'super' ? 0.40 : 0.30;
-    var bonusA = mA * bonusPct;
-    var bonusB = mB * bonusPct;
-    lA += bonusA;
-    lB += bonusB;
-    laborOut += '<div class="material-row" style="border-top:1px dashed rgba(0,91,255,0.3);margin-top:8px;padding-top:10px">' +
-      '<span class="name" style="color:#60a5fa;font-weight:800">Brigada ustama (' + (bonusPct*100) + '%)</span>' +
-      '<span class="price" style="color:#60a5fa">' + fmt(bonusA) + '</span>' +
-    '</div>';
-  }
-
-  var tA = mA + lA;
-  var tB = mB + lB;
-
-  var houseTypeNames = { 1: '1 qavatli', 2: '2 qavatli', 3: '3 qavatli' };
-
-  document.getElementById('resultSummary').textContent =
-    houseTypeNames[floors] + ' uy • ' + area + ' m² • ' + rooms + ' xona';
-
-  var finalHtml = '' +
-    '<div class="result-total">' +
-      '<div class="label">UMUMIY XARAJAT</div>' +
-      '<div class="amount">' + fmt(tB) + '</div>' +
-      '<div class="range">Min: ' + fmt(tA) + ' — Max: ' + fmt(tB) + '</div>' +
-    '</div>' +
-    '<div class="section">' +
-      '<div class="section-title">🧱 MATERIAL</div>' +
-      (matOut || '<div style="text-align:center;padding:20px;color:#8b9ab8;font-size:13px">Material yo\'q</div>') +
-    '</div>' +
-    '<div class="section">' +
-      '<div class="section-title">👷 XIZMAT</div>' +
-      (laborOut || '') +
-    '</div>' +
-    '<div class="summary-card">' +
-      '<div class="sum-row"><span class="l">Material jami</span><span class="v">' + fmt(mA) + ' — ' + fmt(mB) + '</span></div>' +
-      '<div class="sum-row"><span class="l">Usta haqi</span><span class="v">' + fmt(lA) + ' — ' + fmt(lB) + '</span></div>' +
-      '<div class="sum-row big"><span class="l">YAKUNIY</span><span class="v">' + fmt(tB) + '</span></div>' +
-    '</div>';
-
-  document.getElementById('resultContent').innerHTML = finalHtml;
-
-  lastResult = { matList: matList, laborList: laborList, totalA: tA, totalB: tB, area: area, floors: floors };
-
-  goToStep(7);
-  toast('✅ Hisob tayyor!', 'ok');
-}
-
-function addAllToCart() {
-  if (!lastResult) { toast('Avval hisoblang', 'err'); return; }
-  var cart = [];
-  try { cart = JSON.parse(localStorage.getItem('rayis_cart')) || []; } catch(e) { cart = []; }
-
-  var added = 0;
-  lastResult.matList.forEach(function(item) {
-    var ex = cart.find(function(c){ return c.name === item.name && c.fromCalc; });
-    if (ex) {
-      ex.qty += item.qty;
-    } else {
-      cart.push({
-        id: 'calc_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
-        name: item.name,
-        qty: item.qty,
-        unit: item.unit,
-        price: item.price,
-        emoji: '🧮',
-        images: [],
-        category: 'qurilish',
-        fromCalc: true
-      });
-    }
-    added++;
-  });
-
-  try { localStorage.setItem('rayis_cart', JSON.stringify(cart)); } catch(e) {
-    return toast('Xotira to\'ldi', 'err');
-  }
-  toast('✅ ' + added + ' ta material savatga', 'ok');
-  setTimeout(function(){
-    if (confirm('Savatga o\'tishni xohlaysizmi?')) location.href = 'cart.html';
-  }, 1000);
-}
-
-function callUsta() {
-  if (!lastResult) { toast('Avval hisoblang', 'err'); return; }
-  var text = 'RAYIS Qurilish: ' + lastResult.area + ' m², ' + lastResult.floors + ' qavat uy uchun usta kerak.';
-  if (confirm(text + '\n\nQo\'ng\'iroq qilinsinmi?')) {
-    location.href = 'tel:+998915850487';
-  }
-}
-
-function printResult() { window.print(); }
-
-// ============================================
-// ✅ INPUT: "0" avtomatik o'chirish
-// ============================================
-document.querySelectorAll('input[type="number"]').forEach(function(inp) {
-  inp.addEventListener('focus', function() {
-    if (this.value === '0' || this.value === '0.0' || this.value === '0.00' || this.value === '0.000') {
-      this.value = '';
-    }
-    var self = this;
-    setTimeout(function() { try { self.select(); } catch(e) {} }, 10);
-  });
-
-  inp.addEventListener('blur', function() {
-    if (this.value === '' || this.value === '-' || this.value === '.') {
-      this.value = '0';
-    }
-  });
+function bindZeroClear(){
+var inputs=document.querySelectorAll('input[type="number"]');
+for(var i=0;i<inputs.length;i++){
+var inp=inputs[i];
+if(inp.dataset.zc)continue;
+inp.dataset.zc='1';
+inp.addEventListener('focus',function(){
+if(this.value==='0'||this.value==='0.0'||this.value==='0.00')this.value='';
+var self=this;setTimeout(function(){try{self.select();}catch(e){}},20);
 });
+inp.addEventListener('blur',function(){
+if(this.value===''||this.value==='-'||this.value==='.')this.value='0';
+});
+}
+}/* ═══ RENDER ═══ */
+function render(){
+var c=document.getElementById('content');
+if(S.stage===0)c.innerHTML=vSelect();
+else if(S.stage===2)c.innerHTML=vResult();
+else c.innerHTML=vStep();
+renderProg();
+setTimeout(bindZeroClear,50);
+}
+function getSelectedSections(){return SECTIONS.filter(function(s){return S.activeSections[s.id];});}
+function renderProg(){
+var w=document.getElementById('progWrap');
+if(S.stage===0){w.innerHTML='<div class="pi"><span>Boshlash</span><span>Bo\'limlarni tanlang</span></div><div class="pb"><div class="pbs a" style="flex:1"></div></div>';return;}
+if(S.stage===2){w.innerHTML='<div class="pi"><span>Natija</span><span>✓</span></div><div class="pb"><div class="pbs d" style="flex:1"></div></div>';return;}
+var sel=getSelectedSections();var cur=S.step+1;var pct=cur/sel.length*100;var s=sel[S.step];
+w.innerHTML='<div class="pi"><span>'+s.stage+'</span><span><span class="c">'+cur+'</span> / '+sel.length+'</span></div><div class="pb"><div class="pbs d" style="width:'+pct+'%"></div></div>';
+}
 
-// ============================================
-// BOSHLASH
-// ============================================
-renderProgress();
-updateTotalArea();
+/* ═══ STAGE 0 — TANLOV ═══ */
+function vSelect(){
+if(Object.keys(S.activeSections).length===0){SECTIONS.forEach(function(s){S.activeSections[s.id]=true;});}
+var h='<div class="sh"><span class="sn">BOSHLASH</span><div class="st">Qaysi bo\'limlar kerak?</div><div class="sd">Kerak bo\'lmaganini o\'chirib tashlang</div></div>';
+var stages={};
+SECTIONS.forEach(function(s){if(!stages[s.stage])stages[s.stage]=[];stages[s.stage].push(s);});
+Object.keys(stages).forEach(function(st){
+h+='<div class="card"><div style="font-weight:800;font-size:13px;margin-bottom:10px;color:var(--pr2)">'+st+'</div><div class="r2" style="gap:6px">';
+stages[st].forEach(function(sec){
+var on=S.activeSections[sec.id]?'on':'';
+h+='<div class="opt '+on+'" onclick="toggleSel(\''+sec.id+'\')" style="padding:10px 8px"><div class="oi" style="font-size:20px">'+sec.ic+'</div><div class="ot" style="font-size:11.5px">'+sec.n+'</div></div>';
+});
+h+='</div></div>';
+});
+var cnt=Object.keys(S.activeSections).filter(function(k){return S.activeSections[k];}).length;
+h+='<div class="info">✅ <b>'+cnt+'</b> ta bo\'lim tanlangan</div>';
+h+='<div class="btns one" style="margin-top:12px"><button class="btn bp" onclick="startCalc()">▶ BOSHLASH</button></div>';
+return h;
+}
+function toggleSel(id){
+if(id==="loyiha"){toast("Loyiha majburiy",'e');return;}
+S.activeSections[id]=!S.activeSections[id];saveL();render();
+}
+function startCalc(){
+autoFromArea();autoFromRooms();autoFromPerim();
+var sel=getSelectedSections();
+if(sel.length===0){toast("Bo'lim tanlanmagan",'e');return;}
+S.stage=1;S.step=0;render();
+}
+
+/* ═══ STAGE 1 — WIZARD ═══ */
+function vStep(){
+var sel=getSelectedSections();var sec=sel[S.step];
+if(!sec)return '<div class="info">Topilmadi</div>';
+var h='<div class="sh"><span class="sn">'+sec.ic+' QADAM '+(S.step+1)+'</span><div class="st">'+sec.n+'</div><div class="sd">'+sec.desc+'</div></div>';
+h+='<div class="card">'+renderFields(sec.id)+'</div>';
+h+='<div class="btns" style="margin-top:14px">';
+if(S.step>0)h+='<button class="btn bg" onclick="prevStep()">← Orqaga</button>';
+else h+='<button class="btn bg" onclick="backToSelect()">← Tanlov</button>';
+if(S.step<sel.length-1)h+='<button class="btn bp" onclick="nextStep()">Keyingi →</button>';
+else h+='<button class="btn bp" onclick="calculate()">🧮 HISOBLASH</button>';
+h+='</div>';
+h+='<div style="text-align:center;font-size:11px;color:var(--tx3);margin-top:14px">Bo\'lim '+(S.step+1)+' / '+sel.length+'</div>';
+return h;
+}
+function nextStep(){collect();var sel=getSelectedSections();if(S.step<sel.length-1){S.step++;saveL();render();window.scrollTo({top:0,behavior:'smooth'});}else calculate();}
+function prevStep(){collect();if(S.step>0){S.step--;saveL();render();window.scrollTo({top:0,behavior:'smooth'});}}
+function backToSelect(){collect();S.stage=0;render();}
+
+/* ═══ MAYDONLAR ═══ */
+function renderFields(id){
+var d=S.d,totalArea=calcTotalArea();
+if(id==="loyiha"){
+return '<div class="f"><label class="fl">Qurilish maydoni (m²)</label><input class="inp" type="number" id="i_area" value="'+d.area+'" oninput="onAreaChange(this.value)"></div>'+
+'<div class="r2"><div class="f"><label class="fl">Qavatlar</label><select class="sel" id="i_floors" onchange="onFloorsChange(this.value)"><option value="1" '+(d.floors==1?'selected':'')+'>1</option><option value="2" '+(d.floors==2?'selected':'')+'>2</option><option value="3" '+(d.floors==3?'selected':'')+'>3</option></select></div>'+
+'<div class="f"><label class="fl">Devor balandligi (m)</label><input class="inp" type="number" step="0.1" id="i_wallH" value="'+d.wallH+'"></div></div>'+
+'<div class="f"><label class="fl">Xonalar soni</label><input class="inp" type="number" id="i_rooms" value="'+d.rooms+'" oninput="onRoomsChange(this.value)"></div>'+
+'<div class="auto-hint">📐 Umumiy: <b>'+totalArea+' m²</b><br>📏 Perimetr: <b>'+calcPerim()+' pm</b><br>🚪 Eshik: <b>'+d.eshikIQ+'</b> · 🔌 Rozetka: <b>'+d.rozetkaQ+'</b> · 💡 Chiroq: <b>'+d.chiroqQ+'</b></div>'+
+'<div class="f" style="margin-top:12px"><label class="fl">Kim quradi?</label><div class="opts th"><div class="opt '+(d.work==='self'?'on':'')+'" onclick="pick(\'work\',\'self\')"><div class="ot">O\'zim</div></div><div class="opt '+(d.work==='brig'?'on':'')+'" onclick="pick(\'work\',\'brig\')"><div class="ot">Brigada</div><div class="od">+30%</div></div><div class="opt '+(d.work==='sup'?'on':'')+'" onclick="pick(\'work\',\'sup\')"><div class="ot">Super</div><div class="od">+40%</div></div></div></div>';
+}
+if(id==="maydon"){
+var m=d.maydonItems;
+var h='<div class="info">Har bir ishni <b>alohida</b> belgilang</div>';
+h+='<div class="chk '+(m.qazish?'on':'')+'" onclick="toggleMaydon(\'qazish\')"><input type="checkbox" '+(m.qazish?'checked':'')+'><div><div class="chk-lbl">🚜 Qazish</div><div class="chk-sub">Tuproq qazish</div></div></div>';
+if(m.qazish){h+='<div class="r2" style="margin:6px 0 12px 0"><div class="opt '+(m.qazishType==='qolda'?'on':'')+'" onclick="pickMaydon(\'qazishType\',\'qolda\')" style="padding:10px"><div class="ot">Qo\'lda</div></div><div class="opt '+(m.qazishType==='traktor'?'on':'')+'" onclick="pickMaydon(\'qazishType\',\'traktor\')" style="padding:10px"><div class="ot">Traktor</div></div></div>';}
+h+='<div class="chk '+(m.tekislash?'on':'')+'" onclick="toggleMaydon(\'tekislash\')"><input type="checkbox" '+(m.tekislash?'checked':'')+'><div><div class="chk-lbl">📏 Tekislash</div><div class="chk-sub">Maydonni tekislash</div></div></div>';
+if(m.tekislash){h+='<div class="r2" style="margin:6px 0 12px 0"><div class="opt '+(m.tekislashType==='qolda'?'on':'')+'" onclick="pickMaydon(\'tekislashType\',\'qolda\')" style="padding:10px"><div class="ot">Qo\'lda</div></div><div class="opt '+(m.tekislashType==='traktor'?'on':'')+'" onclick="pickMaydon(\'tekislashType\',\'traktor\')" style="padding:10px"><div class="ot">Traktor</div></div></div>';}
+h+='<div class="chk '+(m.qumtosh?'on':'')+'" onclick="toggleMaydon(\'qumtosh\')"><input type="checkbox" '+(m.qumtosh?'checked':'')+'><div><div class="chk-lbl">🏖 Qum to\'shash</div><div class="chk-sub">Podushka uchun</div></div></div>';
+if(m.qumtosh){h+='<div class="r2" style="margin:6px 0 12px 0"><div class="opt '+(m.qumtoshType==='qolda'?'on':'')+'" onclick="pickMaydon(\'qumtoshType\',\'qolda\')" style="padding:10px"><div class="ot">Qo\'lda</div></div><div class="opt '+(m.qumtoshType==='traktor'?'on':'')+'" onclick="pickMaydon(\'qumtoshType\',\'traktor\')" style="padding:10px"><div class="ot">Traktor</div></div></div>';}
+h+='<div class="chk '+(m.sheben?'on':'')+'" onclick="toggleMaydon(\'sheben\')"><input type="checkbox" '+(m.sheben?'checked':'')+'><div><div class="chk-lbl">🪨 Shag\'al to\'shash</div><div class="chk-sub">Beton ostiga</div></div></div>';
+if(m.sheben){h+='<div class="r2" style="margin:6px 0 12px 0"><div class="opt '+(m.shebenType==='qolda'?'on':'')+'" onclick="pickMaydon(\'shebenType\',\'qolda\')" style="padding:10px"><div class="ot">Qo\'lda</div></div><div class="opt '+(m.shebenType==='traktor'?'on':'')+'" onclick="pickMaydon(\'shebenType\',\'traktor\')" style="padding:10px"><div class="ot">Traktor</div></div></div>';}
+h+='<div class="chk '+(m.mustahkamlash?'on':'')+'" onclick="toggleMaydon(\'mustahkamlash\')"><input type="checkbox" '+(m.mustahkamlash?'checked':'')+'><div><div class="chk-lbl">🔧 Mustahkamlash</div><div class="chk-sub">Geotekstil / to\'r</div></div></div>';
+if((m.qazish&&m.qazishType==='traktor')||(m.tekislash&&m.tekislashType==='traktor')||(m.qumtosh&&m.qumtoshType==='traktor')||(m.sheben&&m.shebenType==='traktor')){
+h+='<div class="f" style="margin-top:12px"><label class="fl">Traktor ish soati</label><input class="inp" type="number" id="i_tractorH" value="'+d.tractorH+'"></div>';
+}
+h+='<div class="auto-hint">Maydon: <b>'+totalArea+' m²</b> → avtomatik hajmlar</div>';
+return h;
+}
+if(id==="poydevor"){
+return '<div class="opts t"><div class="opt '+(d.pType==='lenta'?'on':'')+'" onclick="pick(\'pType\',\'lenta\')"><div class="oi">🔷</div><div class="ot">Lenta</div></div><div class="opt '+(d.pType==='plita'?'on':'')+'" onclick="pick(\'pType\',\'plita\')"><div class="oi">⬛</div><div class="ot">Plita</div></div></div>'+
+(d.pType==='lenta'?'<div class="f" style="margin-top:12px"><label class="fl">Perimetr (pm) <span class="hint">— 0 bo\'lsa avto '+calcPerim()+'</span></label><input class="inp" type="number" id="i_pPerim" value="'+d.pPerim+'"></div><div class="r2"><div class="f"><label class="fl">Eni (m)</label><input class="inp" type="number" step="0.05" id="i_pW" value="'+d.pW+'"></div><div class="f"><label class="fl">Balandligi (m)</label><input class="inp" type="number" step="0.05" id="i_pH" value="'+d.pH+'"></div></div>':'<div class="f" style="margin-top:12px"><label class="fl">Plita qalinligi (m)</label><input class="inp" type="number" step="0.05" id="i_pSlabT" value="'+d.pSlabT+'"></div>');
+}
+if(id==="tsokol"){
+return '<div class="opts t"><div class="opt '+(d.tsokol==='ha'?'on':'')+'" onclick="pick(\'tsokol\',\'ha\')"><div class="ot">Ha</div></div><div class="opt '+(d.tsokol==='yoq'?'on':'')+'" onclick="pick(\'tsokol\',\'yoq\')"><div class="ot">Yo\'q</div></div></div>'+
+(d.tsokol==='ha'?'<div class="f" style="margin-top:12px"><label class="fl">Balandligi (m)</label><input class="inp" type="number" step="0.1" id="i_tsokolH" value="'+d.tsokolH+'"></div><div class="f"><label class="fl">Izolyatsiya?</label><div class="opts t"><div class="opt '+(d.tsokolIzol==='ha'?'on':'')+'" onclick="pick(\'tsokolIzol\',\'ha\')"><div class="ot">Ha</div></div><div class="opt '+(d.tsokolIzol==='yoq'?'on':'')+'" onclick="pick(\'tsokolIzol\',\'yoq\')"><div class="ot">Yo\'q</div></div></div></div>':'');
+}
+if(id==="devor"){
+var exOpts=[
+['gazo600_38','Gazoblok 38sm'],['gazo600_25','Gazoblok 25sm'],
+['gisht_std_38',"Pishgan g'isht std 38sm"],['gisht_std_25',"Pishgan g'isht std 25sm"],
+['gisht_pol_38',"Pishgan g'isht palt 38sm"],['gisht_pol_25',"Pishgan g'isht palt 25sm"],
+['gisht_evro',"G'isht yevro"],['xom_std_38',"Xom g'isht std 38sm"],
+['xom_std_25',"Xom g'isht std 25sm"],['xom_pol_38',"Xom g'isht palt 38sm"],
+['xom_pol_25',"Xom g'isht palt 25sm"],['shlak_38','Shlakoblok 38sm'],
+['shlak_25','Shlakoblok 25sm'],['paxsa','Paxsa']
+];
+var inOpts=[
+['gazo600_25','Gazoblok 25sm'],['gisht_std_25',"Pishgan g'isht std 25sm"],
+['gisht_pol_25',"Pishgan g'isht palt 25sm"],['xom_std_25',"Xom g'isht std 25sm"],
+['xom_pol_25',"Xom g'isht palt 25sm"],['shlak_25','Shlakoblok 25sm'],['paxsa','Paxsa']
+];
+var prOpts=[['peregorodka','Peregorodka blok 10sm'],['gisht_std_25',"G'isht 25sm"]];
+return '<div class="f"><label class="fl">Tashqi devor (38 sm) — turi</label><select class="sel" id="i_wExterior">'+exOpts.map(function(o){return '<option value="'+o[0]+'" '+(d.wExterior===o[0]?'selected':'')+'>'+o[1]+'</option>';}).join('')+'</select></div>'+
+'<div class="f"><label class="fl">Ichki devor (25 sm)</label><select class="sel" id="i_wInterior">'+inOpts.map(function(o){return '<option value="'+o[0]+'" '+(d.wInterior===o[0]?'selected':'')+'>'+o[1]+'</option>';}).join('')+'</select></div>'+
+'<div class="f"><label class="fl">Peregorodka (10 sm)</label><select class="sel" id="i_wPereg">'+prOpts.map(function(o){return '<option value="'+o[0]+'" '+(d.wPereg===o[0]?'selected':'')+'>'+o[1]+'</option>';}).join('')+'</select></div>'+
+'<div class="f"><label class="fl">Ichki devorlar (%)</label><select class="sel" id="i_innerPct"><option value="0" '+(d.innerPct==0?'selected':'')+'>Yo\'q</option><option value="15" '+(d.innerPct==15?'selected':'')+'>15%</option><option value="20" '+(d.innerPct==20?'selected':'')+'>20%</option><option value="30" '+(d.innerPct==30?'selected':'')+'>30%</option><option value="40" '+(d.innerPct==40?'selected':'')+'>40%</option></select></div>'+
+(d.wExterior==='paxsa'?'<div class="f"><label class="fl">Paxsa qalinligi (m)</label><input class="inp" type="number" step="0.1" id="i_paxsaW" value="'+d.paxsaW+'"></div>':'')+
+'<div class="auto-hint">🏗 Tashqi: <b>38 sm</b> · Ichki: <b>25 sm</b> · Peregorodka: <b>10 sm</b></div>';
+}
+if(id==="karkas"){
+return '<div class="f"><label class="fl">Armapoyas?</label><div class="opts t"><div class="opt '+(d.arm==='ha'?'on':'')+'" onclick="pick(\'arm\',\'ha\')"><div class="ot">Ha</div></div><div class="opt '+(d.arm==='yoq'?'on':'')+'" onclick="pick(\'arm\',\'yoq\')"><div class="ot">Yo\'q</div></div></div></div>'+
+(d.arm==='ha'?'<div class="r3"><div class="f"><label class="fl">Eni</label><input class="inp" type="number" step="0.05" id="i_apW" value="'+d.apW+'"></div><div class="f"><label class="fl">Baland</label><input class="inp" type="number" step="0.05" id="i_apH" value="'+d.apH+'"></div><div class="f"><label class="fl">Uzunlik</label><input class="inp" type="number" id="i_apL" value="'+(d.apL||d.pPerim||calcPerim())+'"></div></div>':'')+
+'<div class="f"><label class="fl">Peremichka soni</label><input class="inp" type="number" id="i_perem" value="'+d.perem+'"></div>'+
+'<div class="f"><label class="fl">Kolonna soni</label><input class="inp" type="number" id="i_kol" value="'+d.kol+'"></div>';
+}
+if(id==="shift"){
+if(d.floors<2)return '<div class="info">1 qavat uchun shift kerak emas — keyingisiga o\'ting</div>';
+return '<div class="opts t"><div class="opt '+(d.shift==='plita'?'on':'')+'" onclick="pick(\'shift\',\'plita\')"><div class="oi">⬛</div><div class="ot">Beton</div></div><div class="opt '+(d.shift==='yogoch'?'on':'')+'" onclick="pick(\'shift\',\'yogoch\')"><div class="oi">🪵</div><div class="ot">Yog\'och</div></div></div>'+
+'<div class="f" style="margin-top:12px"><label class="fl">Qalinlik (m)</label><input class="inp" type="number" step="0.05" id="i_shiftT" value="'+d.shiftT+'"></div>'+
+'<div class="f"><label class="fl">Izolyatsiya?</label><div class="opts t"><div class="opt '+(d.shiftIzol==='ha'?'on':'')+'" onclick="pick(\'shiftIzol\',\'ha\')"><div class="ot">Ha</div></div><div class="opt '+(d.shiftIzol==='yoq'?'on':'')+'" onclick="pick(\'shiftIzol\',\'yoq\')"><div class="ot">Yo\'q</div></div></div></div>';
+}
+if(id==="vassalash"){
+return '<div class="f"><label class="fl">Vassalash turi</label><select class="sel" id="i_vassType"><option value="vass5156" '+(d.vassType==='vass5156'?'selected':'')+'>5×15×6 m</option><option value="vass4146" '+(d.vassType==='vass4146'?'selected':'')+'>4×14×6 m</option><option value="vass5154" '+(d.vassType==='vass5154'?'selected':'')+'>5×15×4 m</option><option value="vass4144" '+(d.vassType==='vass4144'?'selected':'')+'>4×14×4 m</option></select></div>'+
+'<div class="r2"><div class="f"><label class="fl">Strapila soni (dona)</label><input class="inp" type="number" id="i_strapila_soni" value="'+d.strapila_soni+'"></div><div class="f"><label class="fl">Reka 5×5 6m (dona)</label><input class="inp" type="number" id="i_reka_soni" value="'+d.reka_soni+'"></div></div>'+
+'<div class="f"><label class="fl">Reka orasi</label><select class="sel" id="i_rekaOri"><option value="15" '+(d.rekaOri==='15'?'selected':'')+'>15 sm</option><option value="20" '+(d.rekaOri==='20'?'selected':'')+'>20 sm</option><option value="30" '+(d.rekaOri==='30'?'selected':'')+'>30 sm</option></select></div>'+
+'<div class="auto-hint">135 m² uyga o\'rta hisob: <b>55 strapila</b>, <b>100 reka 6m</b></div>';
+}
+if(id==="lombz"){
+return '<div class="f"><label class="fl">Izolyatsiya turi</label><div class="opts t"><div class="opt '+(d.lombzT==='boyra'?'on':'')+'" onclick="pick(\'lombzT\',\'boyra\')"><div class="ot">Bo\'yra</div></div><div class="opt '+(d.lombzT==='qamish'?'on':'')+'" onclick="pick(\'lombzT\',\'qamish\')"><div class="ot">Qamish</div></div></div></div>'+
+'<div class="f"><label class="fl">Qoplash foizi (%)</label><input class="inp" type="number" id="i_lombzPct" value="'+d.lombzPct+'"></div>'+
+'<div class="r2"><div class="f"><label class="fl">Bo\'yra (m²)</label><input class="inp" type="number" id="i_boyra_m2" value="'+d.boyra_m2+'"></div><div class="f"><label class="fl">Qamish (bog\')</label><input class="inp" type="number" id="i_qamish_bog" value="'+d.qamish_bog+'"></div></div>'+
+'<div class="r2"><div class="f"><label class="fl">Somon (pres)</label><input class="inp" type="number" id="i_somon_pres" value="'+d.somon_pres+'"></div><div class="f"><label class="fl">Tuproq (m³)</label><input class="inp" type="number" step="0.1" id="i_tuproq_m3" value="'+d.tuproq_m3+'"></div></div>'+
+'<div class="auto-hint">135 m² uyga: <b>135 m² bo\'yra</b>, <b>35 bog\' qamish</b>, <b>15 somon</b>, <b>7 m³ tuproq</b></div>';
+}
+if(id==="tom"){
+return '<div class="f"><label class="fl">Tom turi</label><div class="opts t"><div class="opt '+(d.roofType==='gable'?'on':'')+'" onclick="pick(\'roofType\',\'gable\')"><div class="ot">Ikki nishabli</div></div><div class="opt '+(d.roofType==='hip'?'on':'')+'" onclick="pick(\'roofType\',\'hip\')"><div class="ot">To\'rt nishabli</div></div></div></div>'+
+'<div class="f"><label class="fl">Qoplama</label><select class="sel" id="i_cover"><option value="shifer" '+(d.cover==='shifer'?'selected':'')+'>Shifer 8 to\'lqin</option><option value="metal" '+(d.cover==='metal'?'selected':'')+'>Metallocherepitsa</option><option value="ondulin" '+(d.cover==='ondulin'?'selected':'')+'>Ondulin</option><option value="profnastil" '+(d.cover==='profnastil'?'selected':'')+'>Profnastil</option></select></div>'+
+'<div class="r2"><div class="f"><label class="fl">Mourlat 5×15 (pm)</label><input class="inp" type="number" id="i_mourlat_pm" value="'+d.mourlat_pm+'"></div><div class="f"><label class="fl">Tom strapila (dona)</label><input class="inp" type="number" id="i_strapila_tom" value="'+d.strapila_tom+'"></div></div>'+
+'<div class="f"><label class="fl">Reka (pm) <span class="hint">— 700 pm / 135 m²</span></label><input class="inp" type="number" id="i_reka_tom_pm" value="'+d.reka_tom_pm+'"></div>'+
+'<div class="auto-hint">Tom maydoni: <b>'+Math.round(calcRoofArea())+' m²</b></div>';
+}
+if(id==="tornov"){
+return '<div class="f"><label class="fl">Tornov turi</label><div class="opts t"><div class="opt '+(d.tornov==='yoq'?'on':'')+'" onclick="pick(\'tornov\',\'yoq\')"><div class="ot">Yo\'q</div></div><div class="opt '+(d.tornov==='yupqa'?'on':'')+'" onclick="pick(\'tornov\',\'yupqa\')"><div class="ot">Yupqa</div></div></div><div class="opts t" style="margin-top:6px"><div class="opt '+(d.tornov==='oddiy'?'on':'')+'" onclick="pick(\'tornov\',\'oddiy\')"><div class="ot">Oddiy</div></div></div></div>'+
+'<div class="f"><label class="fl">Tornov uzunligi (pm)</label><input class="inp" type="number" id="i_tornov_pm" value="'+d.tornov_pm+'"></div>'+
+'<div class="f"><label class="fl">Konyok (m²)</label><input class="inp" type="number" id="i_konyok" value="'+d.konyok+'"></div>';
+}
+if(id==="deraza"){
+return '<div class="f"><label class="fl">Derazalar soni</label><input class="inp" type="number" id="i_derazaQ" value="'+d.derazaQ+'"></div>'+
+'<div class="f"><label class="fl">Deraza turi</label><div class="opts th"><div class="opt '+(d.derazaT==='std'?'on':'')+'" onclick="pick(\'derazaT\',\'std\')"><div class="ot">Std</div></div><div class="opt '+(d.derazaT==='3k'?'on':'')+'" onclick="pick(\'derazaT\',\'3k\')"><div class="ot">3-kam</div></div><div class="opt '+(d.derazaT==='bor'?'on':'')+'" onclick="pick(\'derazaT\',\'bor\')"><div class="ot">Balkon</div></div></div></div>'+
+'<div class="r2"><div class="f"><label class="fl">Ichki eshiklar</label><input class="inp" type="number" id="i_eshikIQ" value="'+d.eshikIQ+'"></div><div class="f"><label class="fl">Tashqi eshiklar</label><input class="inp" type="number" id="i_eshikTQ" value="'+d.eshikTQ+'"></div></div>'+
+'<div class="f"><label class="fl">Tashqi eshik turi</label><div class="opts t"><div class="opt '+(d.eshikTT==='std'?'on':'')+'" onclick="pick(\'eshikTT\',\'std\')"><div class="ot">Oddiy</div></div><div class="opt '+(d.eshikTT==='temir'?'on':'')+'" onclick="pick(\'eshikTT\',\'temir\')"><div class="ot">Temir</div></div></div></div>';
+}
+if(id==="fasad"){
+return '<div class="f"><label class="fl">Qoplama turi</label><div class="opts t"><div class="opt '+(d.fasadT==='shtukaturka'?'on':'')+'" onclick="pick(\'fasadT\',\'shtukaturka\')"><div class="ot">Shtukaturka</div></div><div class="opt '+(d.fasadT==='dekor_tosh'?'on':'')+'" onclick="pick(\'fasadT\',\'dekor_tosh\')"><div class="ot">Dekor tosh</div></div></div><div class="opts t" style="margin-top:6px"><div class="opt '+(d.fasadT==='fasad_panel'?'on':'')+'" onclick="pick(\'fasadT\',\'fasad_panel\')"><div class="ot">Panel</div></div></div></div>'+
+'<div class="f"><label class="fl">Qoplash foizi (%)</label><input class="inp" type="number" id="i_fasadPct" value="'+d.fasadPct+'"></div>'+
+'<div class="f"><label class="fl">Penoplast izolyatsiya?</label><div class="opts t"><div class="opt '+(d.fasadIzol==='ha'?'on':'')+'" onclick="pick(\'fasadIzol\',\'ha\')"><div class="ot">Ha</div></div><div class="opt '+(d.fasadIzol==='yoq'?'on':'')+'" onclick="pick(\'fasadIzol\',\'yoq\')"><div class="ot">Yo\'q</div></div></div></div>';
+}
+if(id==="landshaft"){
+return '<div class="f"><label class="fl">Yo\'lka plitkasi (%)</label><input class="inp" type="number" id="i_yltkaPct" value="'+d.yltkaPct+'"></div>'+
+'<div class="f"><label class="fl">Darvoza turi</label><div class="opts t"><div class="opt '+(d.darvozaT==='k'?'on':'')+'" onclick="pick(\'darvozaT\',\'k\')"><div class="ot">Kichik</div></div><div class="opt '+(d.darvozaT==='a'?'on':'')+'" onclick="pick(\'darvozaT\',\'a\')"><div class="ot">Avtomatik</div></div></div></div>';
+}
+if(id==="suvoq"){
+return '<div class="f"><label class="fl">Qoplash foizi (%)</label><input class="inp" type="number" id="i_suvoqPct" value="'+d.suvoqPct+'"></div><div class="auto-hint">Devor maydoni: <b>'+Math.round((d.pPerim||calcPerim())*(d.floors*d.wallH)*1.85)+' m²</b></div>';
+}
+if(id==="pol"){
+return '<div class="opts t"><div class="opt '+(d.polType==='laminat'?'on':'')+'" onclick="pick(\'polType\',\'laminat\')"><div class="oi">🪵</div><div class="ot">Laminat</div></div><div class="opt '+(d.polType==='parket'?'on':'')+'" onclick="pick(\'polType\',\'parket\')"><div class="oi">🌳</div><div class="ot">Parket</div></div></div>'+
+'<div class="opts t" style="margin-top:8px"><div class="opt '+(d.polType==='linoleum'?'on':'')+'" onclick="pick(\'polType\',\'linoleum\')"><div class="ot">Linoleum</div></div><div class="opt '+(d.polType==='kafel_p'?'on':'')+'" onclick="pick(\'polType\',\'kafel_p\')"><div class="ot">Kafel</div></div></div>'+
+'<div class="f" style="margin-top:12px"><label class="fl">Qoplash foizi (%)</label><input class="inp" type="number" id="i_polPct" value="'+d.polPct+'"></div>';
+}
+if(id==="devor_qop"){
+return '<div class="opts t"><div class="opt '+(d.devorQop==='gulqogoz'?'on':'')+'" onclick="pick(\'devorQop\',\'gulqogoz\')"><div class="oi">📄</div><div class="ot">Gulqog\'oz</div></div><div class="opt '+(d.devorQop==='panel'?'on':'')+'" onclick="pick(\'devorQop\',\'panel\')"><div class="ot">Panel</div></div></div>'+
+'<div class="opts t" style="margin-top:8px"><div class="opt '+(d.devorQop==='kafel_d'?'on':'')+'" onclick="pick(\'devorQop\',\'kafel_d\')"><div class="ot">Kafel</div></div><div class="opt '+(d.devorQop==='boyoq'?'on':'')+'" onclick="pick(\'devorQop\',\'boyoq\')"><div class="ot">Bo\'yoq</div></div></div>'+
+'<div class="opts t" style="margin-top:8px"><div class="opt '+(d.devorQop==='dekor_plast'?'on':'')+'" onclick="pick(\'devorQop\',\'dekor_plast\')"><div class="ot">Dekor plast</div></div><div class="opt '+(d.devorQop==='aziya_plast'?'on':'')+'" onclick="pick(\'devorQop\',\'aziya_plast\')"><div class="ot">Aziya plast</div></div></div>'+
+'<div class="opts t" style="margin-top:8px"><div class="opt '+(d.devorQop==='vagonka'?'on':'')+'" onclick="pick(\'devorQop\',\'vagonka\')"><div class="ot">Vagonka</div></div><div class="opt"></div></div>'+
+'<div class="f" style="margin-top:12px"><label class="fl">Qoplash foizi (%)</label><input class="inp" type="number" id="i_devorPct" value="'+d.devorPct+'"></div>';
+}
+if(id==="shift_qop"){
+return '<div class="opts t"><div class="opt '+(d.shiftQop==='gips'?'on':'')+'" onclick="pick(\'shiftQop\',\'gips\')"><div class="ot">Gipsokarton</div></div><div class="opt '+(d.shiftQop==='boyoq'?'on':'')+'" onclick="pick(\'shiftQop\',\'boyoq\')"><div class="ot">Bo\'yoq</div></div></div>'+
+'<div class="f" style="margin-top:12px"><label class="fl">Qoplash foizi (%)</label><input class="inp" type="number" id="i_shiftQopPct" value="'+d.shiftQopPct+'"></div>';
+}
+if(id==="elektr"){
+return '<div class="r2"><div class="f"><label class="fl">Rozetka</label><input class="inp" type="number" id="i_rozetkaQ" value="'+d.rozetkaQ+'"></div><div class="f"><label class="fl">Vikluchatel</label><input class="inp" type="number" id="i_viklQ" value="'+d.viklQ+'"></div></div>'+
+'<div class="f"><label class="fl">Chiroqlar</label><input class="inp" type="number" id="i_chiroqQ" value="'+d.chiroqQ+'"></div>'+
+'<div class="auto-hint">Xonalar: <b>'+d.rooms+'</b> · Tavsiya: '+(d.rooms*4)+' rozetka</div>';
+}
+if(id==="sant"){
+return '<div class="r2"><div class="f"><label class="fl">Unitaz</label><input class="inp" type="number" id="i_unitazQ" value="'+d.unitazQ+'"></div><div class="f"><label class="fl">Rakovina</label><input class="inp" type="number" id="i_rakovinaQ" value="'+d.rakovinaQ+'"></div></div>'+
+'<div class="r2"><div class="f"><label class="fl">Vanna</label><input class="inp" type="number" id="i_vannaQ" value="'+d.vannaQ+'"></div><div class="f"><label class="fl">Dush kabina</label><input class="inp" type="number" id="i_dushQ" value="'+d.dushQ+'"></div></div>';
+}
+if(id==="isitish"){
+var h='<div class="f"><label class="fl">Isitish turi</label><div class="opts t"><div class="opt '+(d.isitishT==='pechka'?'on':'')+'" onclick="pick(\'isitishT\',\'pechka\')"><div class="oi">🔥</div><div class="ot">Pechka</div></div><div class="opt '+(d.isitishT==='qozon'?'on':'')+'" onclick="pick(\'isitishT\',\'qozon\')"><div class="oi">♨️</div><div class="ot">Qozon</div></div></div></div>';
+if(d.isitishT==='pechka'){h+='<div class="f"><label class="fl">Pechka soni</label><input class="inp" type="number" id="i_pechkaQ" value="'+d.pechkaQ+'"></div>';}
+if(d.isitishT==='qozon'){
+h+='<div class="f"><label class="fl">Qozon turi</label><div class="opts t"><div class="opt '+(d.qozonT==='otin'?'on':'')+'" onclick="pick(\'qozonT\',\'otin\')"><div class="ot">O\'tin</div></div><div class="opt '+(d.qozonT==='gaz'?'on':'')+'" onclick="pick(\'qozonT\',\'gaz\')"><div class="ot">Gaz</div></div></div><div class="opts t" style="margin-top:6px"><div class="opt '+(d.qozonT==='el'?'on':'')+'" onclick="pick(\'qozonT\',\'el\')"><div class="ot">Elektr</div></div><div class="opt '+(d.qozonT==='univ'?'on':'')+'" onclick="pick(\'qozonT\',\'univ\')"><div class="ot">Universal</div></div></div></div>'+
+'<div class="f"><label class="fl">Radiatorlar soni</label><input class="inp" type="number" id="i_radiatorQ" value="'+d.radiatorQ+'"></div>';
+}
+h+='<div class="f"><label class="fl">Issiq pol?</label><div class="opts t"><div class="opt '+(d.issiqPol==='ha'?'on':'')+'" onclick="pick(\'issiqPol\',\'ha\')"><div class="ot">Ha</div></div><div class="opt '+(d.issiqPol==='yoq'?'on':'')+'" onclick="pick(\'issiqPol\',\'yoq\')"><div class="ot">Yo\'q</div></div></div></div>';
+return h;
+}
+if(id==="suv"){return '<div class="f"><label class="fl">Boiler soni</label><input class="inp" type="number" id="i_boylerQ" value="'+d.boylerQ+'"></div>';}
+if(id==="oshxona"){return '<div class="opts t"><div class="opt '+(d.oshxonaT==='std'?'on':'')+'" onclick="pick(\'oshxonaT\',\'std\')"><div class="ot">Standart</div><div class="od">3-8M</div></div><div class="opt '+(d.oshxonaT==='lux'?'on':'')+'" onclick="pick(\'oshxonaT\',\'lux\')"><div class="ot">Lyuks</div><div class="od">8-20M</div></div></div>';}
+if(id==="hammom_j"){
+return '<div class="f"><label class="fl">Hammom devor qoplama</label><div class="opts t"><div class="opt '+(d.hammomQop==='kafel'?'on':'')+'" onclick="pick(\'hammomQop\',\'kafel\')"><div class="ot">Kafel</div></div><div class="opt '+(d.hammomQop==='dekor_plast'?'on':'')+'" onclick="pick(\'hammomQop\',\'dekor_plast\')"><div class="ot">Dekor plast</div></div></div><div class="opts t" style="margin-top:6px"><div class="opt '+(d.hammomQop==='aziya_plast'?'on':'')+'" onclick="pick(\'hammomQop\',\'aziya_plast\')"><div class="ot">Aziya plast</div></div><div class="opt '+(d.hammomQop==='vagonka'?'on':'')+'" onclick="pick(\'hammomQop\',\'vagonka\')"><div class="ot">Vagonka</div></div></div></div>'+
+'<div class="info">Sanuzel to\'plami va qoplama kiritiladi</div>';
+}
+if(id==="qoshimcha"){
+return '<div class="f"><label class="fl">Konditsioner turi</label><select class="sel" id="i_kondT"><option value="kond9" '+(d.kondT==='kond9'?'selected':'')+'>9000 BTU</option><option value="kond12" '+(d.kondT==='kond12'?'selected':'')+'>12000 BTU</option><option value="kond18" '+(d.kondT==='kond18'?'selected':'')+'>18000 BTU</option></select></div>'+
+'<div class="f"><label class="fl">Konditsioner soni</label><input class="inp" type="number" id="i_kondQ" value="'+d.kondQ+'"></div>'+
+'<div class="f"><label class="fl">Kamin?</label><div class="opts t"><div class="opt '+(d.kamin==='ha'?'on':'')+'" onclick="pick(\'kamin\',\'ha\')"><div class="ot">Ha</div></div><div class="opt '+(d.kamin==='yoq'?'on':'')+'" onclick="pick(\'kamin\',\'yoq\')"><div class="ot">Yo\'q</div></div></div></div>'+
+'<div class="f"><label class="fl">Signalizatsiya?</label><div class="opts t"><div class="opt '+(d.alarm==='ha'?'on':'')+'" onclick="pick(\'alarm\',\'ha\')"><div class="ot">Ha</div></div><div class="opt '+(d.alarm==='yoq'?'on':'')+'" onclick="pick(\'alarm\',\'yoq\')"><div class="ot">Yo\'q</div></div></div></div>'+
+'<div class="f"><label class="fl">Video kameralar</label><input class="inp" type="number" id="i_videoQ" value="'+d.videoQ+'"></div>';
+}
+return '<div class="info">Sozlamalar</div>';
+}
+
+/* ═══ HANDLERS ═══ */
+function onAreaChange(v){S.d.area=parseFloat(v)||0;if(!S.d.pPerim)S.d.pPerim=calcPerim();autoFromArea();saveL();}
+function onFloorsChange(v){S.d.floors=parseInt(v)||1;saveL();}
+function onRoomsChange(v){
+S.d.rooms=parseInt(v)||0;
+S.d.eshikIQ=0;S.d.rozetkaQ=0;S.d.viklQ=0;S.d.chiroqQ=0;S.d.radiatorQ=0;S.d.pechkaQ=0;
+autoFromRooms();saveL();
+}
+function pick(k,v){collect();S.d[k]=v;saveL();render();}
+function toggleMaydon(k){collect();S.d.maydonItems[k]=!S.d.maydonItems[k];saveL();render();}
+function pickMaydon(k,v){collect();S.d.maydonItems[k]=v;saveL();render();}
+
+/* ═══ COLLECT ═══ */
+function collect(){
+var d=S.d;
+function g(id){var e=document.getElementById(id);return e?e.value:undefined;}
+function n(id,fb){var v=parseFloat(g(id));return isNaN(v)?fb:v;}
+function i(id,fb){var v=parseInt(g(id));return isNaN(v)?fb:v;}
+var sec=getSelectedSections()[S.step];
+if(!sec)return;
+var id=sec.id;
+if(id==="loyiha"){d.area=n('i_area',d.area);d.floors=i('i_floors',d.floors);d.wallH=n('i_wallH',d.wallH);d.rooms=i('i_rooms',d.rooms);autoFromArea();autoFromRooms();autoFromPerim();}
+else if(id==="maydon"){d.tractorH=n('i_tractorH',d.tractorH);}
+else if(id==="poydevor"){var pp=n('i_pPerim',0);if(pp>0)d.pPerim=pp;d.pW=n('i_pW',d.pW);d.pH=n('i_pH',d.pH);d.pSlabT=n('i_pSlabT',d.pSlabT);}
+else if(id==="tsokol"){d.tsokolH=n('i_tsokolH',d.tsokolH);}
+else if(id==="devor"){d.wExterior=g('i_wExterior')||d.wExterior;d.wInterior=g('i_wInterior')||d.wInterior;d.wPereg=g('i_wPereg')||d.wPereg;d.innerPct=i('i_innerPct',d.innerPct);d.paxsaW=n('i_paxsaW',d.paxsaW);}
+else if(id==="karkas"){d.apW=n('i_apW',d.apW);d.apH=n('i_apH',d.apH);d.apL=n('i_apL',d.apL);d.perem=i('i_perem',d.perem);d.kol=i('i_kol',d.kol);}
+else if(id==="shift"){d.shiftT=n('i_shiftT',d.shiftT);}
+else if(id==="vassalash"){d.vassType=g('i_vassType')||d.vassType;d.strapila_soni=i('i_strapila_soni',d.strapila_soni);d.reka_soni=i('i_reka_soni',d.reka_soni);d.rekaOri=g('i_rekaOri')||d.rekaOri;}
+else if(id==="lombz"){d.lombzPct=i('i_lombzPct',d.lombzPct);d.boyra_m2=n('i_boyra_m2',d.boyra_m2);d.qamish_bog=i('i_qamish_bog',d.qamish_bog);d.somon_pres=i('i_somon_pres',d.somon_pres);d.tuproq_m3=n('i_tuproq_m3',d.tuproq_m3);}
+else if(id==="tom"){d.cover=g('i_cover')||d.cover;d.mourlat_pm=n('i_mourlat_pm',d.mourlat_pm);d.strapila_tom=i('i_strapila_tom',d.strapila_tom);d.reka_tom_pm=n('i_reka_tom_pm',d.reka_tom_pm);}
+else if(id==="tornov"){d.tornov_pm=n('i_tornov_pm',d.tornov_pm);d.konyok=n('i_konyok',d.konyok);}
+else if(id==="deraza"){d.derazaQ=i('i_derazaQ',d.derazaQ);d.eshikIQ=i('i_eshikIQ',d.eshikIQ);d.eshikTQ=i('i_eshikTQ',d.eshikTQ);}
+else if(id==="fasad"){d.fasadPct=i('i_fasadPct',d.fasadPct);}
+else if(id==="landshaft"){d.yltkaPct=i('i_yltkaPct',d.yltkaPct);}
+else if(id==="suvoq"){d.suvoqPct=i('i_suvoqPct',d.suvoqPct);}
+else if(id==="pol"){d.polPct=i('i_polPct',d.polPct);}
+else if(id==="devor_qop"){d.devorPct=i('i_devorPct',d.devorPct);}
+else if(id==="shift_qop"){d.shiftQopPct=i('i_shiftQopPct',d.shiftQopPct);}
+else if(id==="elektr"){d.rozetkaQ=i('i_rozetkaQ',d.rozetkaQ);d.viklQ=i('i_viklQ',d.viklQ);d.chiroqQ=i('i_chiroqQ',d.chiroqQ);}
+else if(id==="sant"){d.unitazQ=i('i_unitazQ',d.unitazQ);d.rakovinaQ=i('i_rakovinaQ',d.rakovinaQ);d.vannaQ=i('i_vannaQ',d.vannaQ);d.dushQ=i('i_dushQ',d.dushQ);}
+else if(id==="isitish"){d.pechkaQ=i('i_pechkaQ',d.pechkaQ);d.radiatorQ=i('i_radiatorQ',d.radiatorQ);}
+else if(id==="suv"){d.boylerQ=i('i_boylerQ',d.boylerQ);}
+else if(id==="qoshimcha"){d.kondT=g('i_kondT')||d.kondT;d.kondQ=i('i_kondQ',d.kondQ);d.videoQ=i('i_videoQ',d.videoQ);}
+saveL();
+}/* ═══ HISOBLASH ═══ */
+function calculate(){
+collect();autoFromArea();autoFromRooms();autoFromPerim();
+var d=S.d;
+var M=[],LB=[],matA=0,matB=0,labA=0,labB=0;
+function addM(k,q,gi,gn){if(q<=0)return;var p=P[k];if(!p)return;var a=q*p.a,b=q*p.b;matA+=a;matB+=b;M.push({n:p.n,qty:q,u:p.u,sumA:a,sumB:b,group:gn,gi:gi});}
+function addL(k,q,gi,gn){if(q<=0)return;var l=L[k];if(!l)return;var a=q*l.a,b=q*l.b;labA+=a;labB+=b;LB.push({n:l.n,qty:q,u:l.u,sumA:a,sumB:b,group:gn,gi:gi});}
+
+var totalArea=d.area*d.floors;
+var perim=d.pPerim||calcPerim();
+var wallS=perim*(d.floors*d.wallH)*1.85;
+var roofArea=d.area*(d.roofType==='hip'?1.6:1.4)*d.floors;
+
+/* 1. MAYDON */
+if(S.activeSections.maydon){
+var m=d.maydonItems;
+if(m.qazish){var qV=totalArea*0.3;addM(m.qazishType==='traktor'?'qazish_traktor':'qazish_qolda',qV,'🚜','Maydon');addL('qazish_i',qV,'🚜','Maydon');}
+if(m.tekislash){addM(m.tekislashType==='traktor'?'tekislash_traktor':'tekislash_qolda',totalArea,'📏','Maydon');addL('tekislash_i',totalArea,'📏','Maydon');}
+if(m.qumtosh){var qumV=totalArea*0.15;addM(m.qumtoshType==='traktor'?'qumtosh_traktor':'qumtosh_qolda',qumV,'🏖','Maydon');}
+if(m.sheben){var shV=totalArea*0.2;addM(m.shebenType==='traktor'?'sheben_traktor':'sheben_qolda',shV,'🪨','Maydon');}
+if(m.mustahkamlash){addM('mustahkamlash',totalArea,'🔧','Maydon');}
+if(d.tractorH>0){addM('traktor_soat',d.tractorH,'🚜','Maydon');}
+}
+
+/* 2. POYDEVOR */
+if(S.activeSections.poydevor){
+var bv=(d.pType==='lenta'?perim*d.pW*d.pH:d.area*d.pSlabT)*1.02;
+addM('beton',bv,'🔷','Poydevor');addM('tsement',bv*6,'🔷','Poydevor');
+addM('qumtosh',bv*0.5,'🔷','Poydevor');addM('sheben',bv*0.85,'🔷','Poydevor');
+addM('armatura12',bv*0.08,'🔷','Poydevor');addM('reka',bv*0.02,'🔷','Poydevor');
+addM('opalubka',d.pType==='lenta'?perim*2*d.pH:d.area*0.5,'🔷','Poydevor');
+addM('gidro',d.pType==='lenta'?perim*d.pW*1.2:d.area,'🔷','Poydevor');
+addL('beton_q',bv,'🔷','Poydevor');addL('arm_bog',bv*0.08,'🔷','Poydevor');
+addL('opalubka_i',d.pType==='lenta'?perim*2*d.pH:d.area*0.5,'🔷','Poydevor');
+}
+
+/* 3. TSOKOL */
+if(S.activeSections.tsokol && d.tsokol==='ha'){
+var tsV=perim*0.4*d.tsokolH;
+addM('beton',tsV,'⬛','Tsokol');addM('tsement',tsV*6,'⬛','Tsokol');
+addM('qumtosh',tsV*0.5,'⬛','Tsokol');addM('sheben',tsV*0.85,'⬛','Tsokol');
+addM('armatura12',tsV*0.08,'⬛','Tsokol');
+if(d.tsokolIzol==='ha'){addM('penoplast',perim*d.tsokolH,'⬛','Tsokol');addM('gidro',perim*d.tsokolH,'⬛','Tsokol');}
+addL('beton_q',tsV,'⬛','Tsokol');
+}
+
+/* 4. DEVOR */
+if(S.activeSections.devor){
+var woS=perim*(d.floors*d.wallH)*0.85;
+var wMapEx={gazo600_38:{k:'gazo600_38',pm2:8.33,lb:'gazo_t'},gazo600_25:{k:'gazo600_25',pm2:10,lb:'gazo_t'},gisht_std_38:{k:'gisht_std_38',pm2:400,lb:'gisht_t'},gisht_std_25:{k:'gisht_std_25',pm2:260,lb:'gisht_t'},gisht_pol_38:{k:'gisht_pol_38',pm2:300,lb:'gisht_t'},gisht_pol_25:{k:'gisht_pol_25',pm2:230,lb:'gisht_t'},gisht_evro:{k:'gisht_evro',pm2:350,lb:'gisht_t'},xom_std_38:{k:'xom_std_38',pm2:400,lb:'gisht_t'},xom_std_25:{k:'xom_std_25',pm2:260,lb:'gisht_t'},xom_pol_38:{k:'xom_pol_38',pm2:300,lb:'gisht_t'},xom_pol_25:{k:'xom_pol_25',pm2:230,lb:'gisht_t'},shlak_38:{k:'shlak_38',pm2:13,lb:'shlak_t'},shlak_25:{k:'shlak_25',pm2:20,lb:'shlak_t'},paxsa:{k:'paxsa',pm2:0.3,lb:'paxsa_q'}};
+var we=wMapEx[d.wExterior];
+if(we){var wqEx=d.wExterior==='paxsa'?woS*d.paxsaW:woS*we.pm2;addM(we.k,wqEx,'🧱','Devor-Tashqi');addL(we.lb,wqEx,'🧱','Devor-Tashqi');}
+var wiS=woS*(d.innerPct/100)*0.7;
+var wMapIn={gazo600_25:{k:'gazo600_25',pm2:10,lb:'gazo_t'},gisht_std_25:{k:'gisht_std_25',pm2:260,lb:'gisht_t'},gisht_pol_25:{k:'gisht_pol_25',pm2:230,lb:'gisht_t'},xom_std_25:{k:'xom_std_25',pm2:260,lb:'gisht_t'},xom_pol_25:{k:'xom_pol_25',pm2:230,lb:'gisht_t'},shlak_25:{k:'shlak_25',pm2:20,lb:'shlak_t'},paxsa:{k:'paxsa',pm2:0.3,lb:'paxsa_q'}};
+var wii=wMapIn[d.wInterior];
+if(wii&&wiS>0){var wqIn=d.wInterior==='paxsa'?wiS*d.paxsaW:wiS*wii.pm2;addM(wii.k,wqIn,'🧱','Devor-Ichki');addL(wii.lb,wqIn,'🧱','Devor-Ichki');}
+var wpS=woS*(d.innerPct/100)*0.3;
+if(wpS>0){addM(d.wPereg,Math.round(wpS*20),'🧱','Peregorodka');addL('pereg_t',Math.round(wpS*20),'🧱','Peregorodka');}
+var wtS=woS+wiS+wpS;
+if(d.wExterior.indexOf('gazo')===0||d.wInterior.indexOf('gazo')===0)addM('klei',wtS*4,'🧱','Devor');
+else if(d.wExterior.indexOf('gisht')===0||d.wExterior.indexOf('xom')===0){addM('tsement',wtS*0.5,'🧱','Devor');addM('qumtosh',wtS*0.05,'🧱','Devor');}
+addM('setka',wtS*1.2,'🧱','Devor');
+}
+
+/* 5. KARKAS */
+if(S.activeSections.karkas){
+var kv=0;
+if(d.arm==='ha')kv+=d.apW*d.apH*(d.apL||perim);
+if(d.perem>0)kv+=0.3*0.3*1.5*d.perem;
+if(d.kol>0)kv+=0.3*0.3*3*d.kol;
+if(kv>0){addM('beton_k',kv,'🏗','Karkas');addM('armat_k',kv*0.08,'🏗','Karkas');addM('tsement',kv*6,'🏗','Karkas');addL('karkas_q',kv,'🏗','Karkas');addL('arm_bog',kv*0.08,'🏗','Karkas');}
+}
+
+/* 6. SHIFT */
+if(S.activeSections.shift && d.floors>1){
+var shS=d.area*(d.floors-1)*1.02;
+if(d.shift==='plita'){addM('plita_p',shS,'🔲','Shift');addL('shift_q',shS,'🔲','Shift');}
+else{addM('reka',shS*0.05,'🔲','Shift');addM('strapila',shS*0.03,'🔲','Shift');}
+if(d.shiftIzol==='ha')addM('penoplast',shS,'🔲','Shift');
+}
+
+/* 7. VASSALASH */
+if(S.activeSections.vassalash){
+var vassDona=d.strapila_soni||55;
+var vassVol=vassDona*3*0.03;
+addM(d.vassType,vassVol,'🪵','Vassalash');
+addM('strapila_4m',vassDona,'🪵','Vassalash');
+addL('vassalash_i',vassDona*12,'🪵','Vassalash');
+addL('dastar_i',vassDona*12,'🪵','Vassalash');
+addM('reka_5x5_6m',d.reka_soni||100,'🪵','Vassalash');
+}
+
+/* 8. LO'MBOZ */
+if(S.activeSections.lombz){
+var lPct=(d.lombzPct||100)/100;
+if(d.lombzT==='boyra'){
+addM('boyra',(d.boyra_m2||0)*lPct,'🌾','Lombz');
+addM('somon_pres',(d.somon_pres||0)*lPct,'🌾','Lombz');
+addM('tuproq_m3',(d.tuproq_m3||0)*lPct,'🌾','Lombz');
+addL('lombz_i',(d.boyra_m2||0)*lPct,'🌾','Lombz');
+addL('somon_loy_i',(d.boyra_m2||0)*lPct,'🌾','Lombz');
+} else {
+addM('qamish_bog',(d.qamish_bog||0)*lPct,'🌾','Lombz');
+addM('somon_pres',(d.somon_pres||0)*lPct,'🌾','Lombz');
+addM('tuproq_m3',(d.tuproq_m3||0)*lPct,'🌾','Lombz');
+addL('qamish_i',totalArea*lPct,'🌾','Lombz');
+addL('somon_loy_i',totalArea*lPct,'🌾','Lombz');
+}
+addM('lombz',totalArea*0.05*lPct,'🌾','Lombz');
+}
+
+/* 9. TOM */
+if(S.activeSections.tom){
+addM('mourlat_5x15',d.mourlat_pm||perim,'🏠','Tom');
+addM('strapila_6m',d.strapila_tom||40,'🏠','Tom');
+if(d.cover==='shifer'||d.cover==='ondulin'){
+addM('reka_5x5_6m',Math.round((d.reka_tom_pm||700)/6),'🏠','Tom');
+} else {
+addM('reka_3x10_6m',Math.round((d.reka_tom_pm||700)/6),'🏠','Tom');
+}
+if(d.cover==='shifer')addM('shifer',Math.ceil(roofArea/1.7),'🏠','Tom');
+else if(d.cover==='metal')addM('metal',roofArea*1.1,'🏠','Tom');
+else if(d.cover==='ondulin')addM('ondulin',roofArea*1.1,'🏠','Tom');
+else addM('profnastil',roofArea*1.1,'🏠','Tom');
+addM('tom_mix',Math.ceil(roofArea*8),'🏠','Tom');
+addL('strapila_i',roofArea,'🏠','Tom');
+addL('tom_q',roofArea,'🏠','Tom');
+}
+
+/* 10. TORNOV */
+if(S.activeSections.tornov){
+var tpm=d.tornov_pm||perim;
+if(d.tornov==='yupqa')addM('tornov_y',tpm,'🔺','Tornov');
+else if(d.tornov==='oddiy')addM('tornov_o',tpm,'🔺','Tornov');
+if(d.konyok>0)addM('konyok',d.konyok,'🔺','Tornov');
+addL('tornov_i',tpm,'🔺','Tornov');
+if(d.konyok>0)addL('konyok_q',d.konyok,'🔺','Tornov');
+}
+
+/* 11. DERAZA/ESHIK */
+if(S.activeSections.deraza){
+if(d.derazaQ>0){var derK=d.derazaT==='3k'?'deraza_3k':(d.derazaT==='bor'?'deraza_bor':'deraza_std');addM(derK,d.derazaQ,'🪟','Deraza');addL('deraza_o',d.derazaQ,'🪟','Deraza');}
+if(d.eshikIQ>0){addM('eshik_i',d.eshikIQ,'🚪','Eshik');addL('eshik_o',d.eshikIQ,'🚪','Eshik');}
+if(d.eshikTQ>0){var eshK=d.eshikTT==='temir'?'eshik_temir':'eshik_t';addM(eshK,d.eshikTQ,'🚪','Eshik');addL('eshik_o',d.eshikTQ,'🚪','Eshik');}
+}
+
+/* 12. FASAD */
+if(S.activeSections.fasad && d.fasadPct>0){
+var fS=perim*(d.floors*d.wallH)*(d.fasadPct/100);
+if(d.fasadT==='shtukaturka'){addM('fasad_sht',fS,'🏛','Fasad');addM('fasad_boy',fS*0.3,'🏛','Fasad');addL('shtukat_i',fS,'🏛','Fasad');}
+else if(d.fasadT==='dekor_tosh'){addM('dekor_tosh',fS,'🏛','Fasad');addL('fasad_i',fS,'🏛','Fasad');}
+else if(d.fasadT==='fasad_panel'){addM('fasad_panel',fS,'🏛','Fasad');addL('fasad_i',fS,'🏛','Fasad');}
+if(d.fasadIzol==='ha'){addM('penoplast',fS,'🏛','Fasad');addM('setka_f',fS,'🏛','Fasad');}
+}
+
+/* 13. LANDSHAFT */
+if(S.activeSections.landshaft){
+var hoS=totalArea*0.5;
+addM('yltka',hoS*(d.yltkaPct/100),'🌳','Landshaft');
+addM('bordyur',perim*2,'🌳','Landshaft');
+addM(d.darvozaT==='a'?'darvoza_a':'darvoza_k',1,'🌳','Landshaft');
+addM('kochat',10,'🌳','Landshaft');addM('gulzor',20,'🌳','Landshaft');
+addL('yltka_i',hoS*(d.yltkaPct/100),'🌳','Landshaft');
+addL('darvoza_o',1,'🌳','Landshaft');
+addL('landshaft_i',hoS*0.5,'🌳','Landshaft');
+}
+
+/* 14. SUVОQ */
+if(S.activeSections.suvoq && d.suvoqPct>0){
+var wS=wallS*2*(d.suvoqPct/100);
+addM('suvoq',wS,'🎨','Suvoq');addM('shpak',wS*0.5,'🎨','Suvoq');
+addM('grunt',wS*0.15,'🎨','Suvoq');
+addL('suvoq_i',wS,'🎨','Suvoq');addL('shpak_i',wS,'🎨','Suvoq');
+}
+
+/* 15. POL */
+if(S.activeSections.pol && d.polPct>0){
+var pS=totalArea*1.02*(d.polPct/100);
+addM(d.polType,pS,'🪵','Pol');
+addM('plintus',totalArea*0.9*(d.polPct/100),'🪵','Pol');
+addL('pol_q',pS,'🪵','Pol');
+}
+
+/* 16. DEVOR QOPLAMA */
+if(S.activeSections.devor_qop && d.devorPct>0){
+var dS=wallS*(d.devorPct/100);
+addM(d.devorQop,dS,'🖼','Devor qoplama');
+addM('grunt',dS*0.1,'🖼','Devor qoplama');
+addL('devor_qop_i',dS,'🖼','Devor qoplama');
+}
+
+/* 17. SHIFT QOPLAMA */
+if(S.activeSections.shift_qop && d.shiftQopPct>0){
+var sqS=totalArea*1.02*(d.shiftQopPct/100);
+if(d.shiftQop==='gips'){addM('gips',Math.ceil(sqS/3),'⬜','Shift qoplama');addM('profil',Math.ceil(sqS*1.5),'⬜','Shift qoplama');}
+else addM('boyoq',sqS*0.3,'⬜','Shift qoplama');
+addL('shift_qop_i',sqS,'⬜','Shift qoplama');
+}
+
+/* 18. ELEKTR */
+if(S.activeSections.elektr){
+var km=totalArea*1.2;
+addM('kabel25',km,'⚡','Elektr');addM('kabel15',km*0.7,'⚡','Elektr');
+addM('rozetka',d.rozetkaQ,'⚡','Elektr');addM('vikl',d.viklQ,'⚡','Elektr');
+addM('chiroq',d.chiroqQ,'⚡','Elektr');
+addM('avtomat',Math.max(6,Math.round(totalArea/20)),'⚡','Elektr');
+addM('shit',1,'⚡','Elektr');addM('gofra',km*0.8,'⚡','Elektr');
+addL('elektr_i',totalArea,'⚡','Elektr');
+}
+
+/* 19. SANTEXNIKA */
+if(S.activeSections.sant){
+var pm=totalArea*0.4;
+addM('ppr',pm,'🚿','Santexnika');addM('kanal',pm*0.6,'🚿','Santexnika');
+addM('unitaz',d.unitazQ,'🚿','Santexnika');addM('rakovina',d.rakovinaQ,'🚿','Santexnika');
+addM('vanna',d.vannaQ,'🚿','Santexnika');addM('dush',d.dushQ,'🚿','Santexnika');
+addM('smes',d.unitazQ+d.rakovinaQ+d.vannaQ+d.dushQ,'🚿','Santexnika');
+addL('sant_i',totalArea,'🚿','Santexnika');
+}
+
+/* 20. ISITISH */
+if(S.activeSections.isitish){
+if(d.isitishT==='pechka'){
+if(d.pechkaQ>0){addM('pechka',d.pechkaQ,'🔥','Isitish');addL('pechka_i',d.pechkaQ,'🔥','Isitish');}
+} else {
+var qk=d.qozonT==='otin'?'qozon_otin':(d.qozonT==='el'?'qozon_el':(d.qozonT==='univ'?'qozon_univ':'qozon_gaz'));
+addM(qk,1,'🔥','Isitish');
+addM('radiator',d.radiatorQ,'🔥','Isitish');
+addM('isitish_tr',totalArea*0.6,'🔥','Isitish');
+addL('isit_i',totalArea,'🔥','Isitish');
+}
+if(d.issiqPol==='ha')addM('issiq_pol',totalArea*0.5,'🔥','Isitish');
+}
+
+/* 21. SUV */
+if(S.activeSections.suv){
+addM('boyler',d.boylerQ,'💧','Suv');
+addM('ppr',totalArea*0.2,'💧','Suv');
+addL('suv_i',totalArea,'💧','Suv');
+}
+
+/* 22. OSHXONA */
+if(S.activeSections.oshxona)addM(d.oshxonaT==='lux'?'oshxona_lux':'oshxona_std',1,'🍳','Oshxona');
+
+/* 23. HAMMOM */
+if(S.activeSections.hammom_j){
+addM('sanuzel',1,'🛁','Hammom');
+var hamS=30;
+addM(d.hammomQop,hamS,'🛁','Hammom');
+addL('kafel_q',hamS,'🛁','Hammom');
+}
+
+/* 24. QO'SHIMCHA */
+if(S.activeSections.qoshimcha){
+addM(d.kondT,d.kondQ,'❄️','Qoshimcha');
+if(d.kamin==='ha')addM('kamin',1,'❄️','Qoshimcha');
+if(d.alarm==='ha')addM('alarm',1,'❄️','Qoshimcha');
+if(d.videoQ>0)addM('video',d.videoQ,'❄️','Qoshimcha');
+}
+
+/* BRIGADA USTAMA */
+if(d.work!=='self'){
+var pct=d.work==='sup'?0.40:0.30;
+var ba=matA*pct,bb=matB*pct;
+labA+=ba;labB+=bb;
+LB.push({n:'Brigada ustama ('+(pct*100)+'%)',qty:1,u:'xizmat',sumA:ba,sumB:bb,group:'Ustama',gi:'👷'});
+}
+
+S.res={mats:M,labors:LB,matA:matA,matB:matB,labA:labA,labB:labB,totA:matA+labA,totB:matB+labB,perim:perim,totalArea:totalArea,wallS:wallS,roofArea:roofArea};
+S.stage=2;render();toast('✅ Hisob tayyor!','o');
+}
+
+/* ═══ NATIJA ═══ */
+function vResult(){
+var r=S.res,d=S.d;
+if(!r)return '<div class="info">Xato</div>';
+var groups={};
+r.mats.forEach(function(m){var g=m.group||'Boshqa';if(!groups[g])groups[g]={sum:0,items:[],gi:m.gi};groups[g].sum+=m.sumA;groups[g].items.push(m);});
+var gh='';
+Object.keys(groups).forEach(function(k){
+gh+='<div class="sec"><div class="sch"><div class="sct">'+groups[k].gi+' '+k+'</div><div class="scc">'+fmt(groups[k].sum)+'</div></div><div class="scb">';
+groups[k].items.forEach(function(m){gh+='<div class="mr"><div class="mn">'+esc(m.n)+'</div><div class="mq">'+nf(m.qty)+' '+esc(m.u)+'</div><div class="mp">'+fmt(m.sumA)+'</div></div>';});
+gh+='</div></div>';
+});
+var lh='';
+if(r.labors.length){lh=r.labors.map(function(l){return '<div class="mr"><div class="mn">'+esc(l.n)+'</div><div class="mq">'+nf(l.qty)+' '+esc(l.u)+'</div><div class="mp">'+fmt(l.sumA)+'</div></div>';}).join('');}
+return '<div class="sh"><span class="sn">✓ NATIJA</span><div class="st">Hisob tayyor!</div><div class="sd">'+d.floors+' qavat · '+d.area+' m² · '+d.rooms+' xona · Jami '+r.totalArea+' m²</div></div>'+
+'<div class="hero"><div class="hl">UMUMIY XARAJAT</div><div class="hv">'+fmt(r.totA)+'</div><div class="hr">Min — Max: '+fmt(r.totA)+' — '+fmt(r.totB)+'</div><div class="hs">1 m² uchun: '+fmt(r.totA/r.totalArea)+'</div></div>'+
+'<div class="sec"><div class="sch"><div class="sct">📊 Xulosa</div></div><div class="scb"><div class="mr"><div class="mn">Materiallar</div><div class="mp">'+fmt(r.matA)+'</div></div><div class="mr"><div class="mn">Ish haqi</div><div class="mp">'+fmt(r.labA)+'</div></div><div class="mr tot"><div class="mn">JAMI</div><div class="mp">'+fmt(r.totA)+'</div></div></div></div>'+
+gh+
+(lh?'<div class="sec"><div class="sch"><div class="sct">👷 Ish haqi</div><div class="scc">'+r.labors.length+'</div></div><div class="scb">'+lh+'</div></div>':'')+
+'<div class="btns one"><button class="btn bp" onclick="addAll()">🛒 Savatga</button></div>'+
+'<div class="btns"><button class="btn bg" onclick="window.print()">📄 PDF</button><button class="btn bg" onclick="exportCSV()">📊 Excel</button></div>'+
+'<div class="sec" style="margin-top:12px"><div class="sch"><div class="sct">📤 Ulashish</div><div class="scc">Barcha ilovalar</div></div><div class="scb" style="padding:12px">'+
+'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+
+'<button class="btn" style="background:#0088cc;color:#fff" onclick="shareTelegram()">✈️ Telegram</button>'+
+'<button class="btn" style="background:#25D366;color:#fff" onclick="shareWA()">💬 WhatsApp</button>'+
+'<button class="btn" style="background:#7360F2;color:#fff" onclick="shareViber()">📞 Viber</button>'+
+'<button class="btn" style="background:#3B82F6;color:#fff" onclick="shareSMS()">💌 SMS</button>'+
+'<button class="btn" style="background:#EA4335;color:#fff" onclick="shareEmail()">📧 Email</button>'+
+'<button class="btn" style="background:#1877F2;color:#fff" onclick="shareFacebook()">📘 Facebook</button>'+
+'<button class="btn" style="background:linear-gradient(45deg,#F09433,#E6683C,#DC2743,#CC2366,#BC1888);color:#fff" onclick="shareInstagram()">📷 Instagram</button>'+
+'<button class="btn bg" onclick="copyShare()">📋 Nusxa olish</button>'+
+'</div></div></div>'+
+'<div class="sec"><div class="sch"><div class="sct">👷 Loyiha ustalari</div><div class="scc">Qumqo\'rg\'on</div></div><div class="scb" style="padding:12px">'+
+'<div class="info">Loyihangiz uchun <b>10 ta usta</b>. To\'g\'ridan-to\'g\'ri qo\'ng\'iroq qiling.</div>'+
+renderMastersList()+
+'</div></div>'+
+'<div class="btns one" style="margin-top:8px"><button class="btn ba" onclick="sendMaster()">👷 Ustaga yuborish</button></div>'+
+'<div class="btns one" style="margin-top:8px"><button class="btn bg" onclick="reset()">🔄 Yangi hisob</button></div>';
+}
+
+/* ═══ USTALAR ═══ */
+function renderMastersList(){
+var masters=[
+{n:"Anvar Nurmatov",spec:"Quruvchi",exp:"12 yil",phone:"+998915850487",rate:4.9,ic:"AN"},
+{n:"Akmal Nurmatov",spec:"Suvoqchi",exp:"8 yil",phone:"+998915850488",rate:4.8,ic:"AK"},
+{n:"Qodirali Safarov",spec:"Elektrik",exp:"15 yil",phone:"+998915850489",rate:5.0,ic:"QS"},
+{n:"Ulugbek Toraxonov",spec:"Santexnik",exp:"10 yil",phone:"+998915850490",rate:4.5,ic:"UT"},
+{n:"Oybek Mamatrayimov",spec:"Tomchi",exp:"14 yil",phone:"+998915850491",rate:4.9,ic:"OM"},
+{n:"Safarali Xolboyev",spec:"Payvandchi",exp:"9 yil",phone:"+998915850492",rate:4.6,ic:"SX"},
+{n:"Orol Mengliyev",spec:"Kafelchi",exp:"11 yil",phone:"+998915850493",rate:4.8,ic:"OR"},
+{n:"Azamat Nurmatov",spec:"Malyar",exp:"6 yil",phone:"+998915850494",rate:4.4,ic:"AZ"},
+{n:"Bahrom Ergashev",spec:"Duradgor",exp:"13 yil",phone:"+998915850495",rate:4.9,ic:"BE"},
+{n:"Nazar Qurbonov",spec:"Brigada ustasi",exp:"10 yil",phone:"+998915850487",rate:5.0,ic:"NQ"}
+];
+var h='';
+masters.forEach(function(m){
+h+='<div style="display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--bd)">';
+h+='<div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#10B981,#34D399);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:13px;flex-shrink:0">'+m.ic+'</div>';
+h+='<div style="flex:1;min-width:0">';
+h+='<div style="font-size:13px;font-weight:700">'+esc(m.n)+'</div>';
+h+='<div style="font-size:11px;color:var(--tx2);margin-top:2px">'+m.spec+' · '+m.exp+' · ⭐ '+m.rate+'</div>';
+h+='</div>';
+h+='<a href="tel:'+m.phone+'" style="text-decoration:none"><button class="btn bp" style="padding:9px 14px;min-height:auto;font-size:12px;border-radius:8px">📞 Qo\'ng\'iroq</button></a>';
+h+='</div>';
+});
+return h;
+}
+
+/* ═══ MESSENJERLAR ═══ */
+function buildText(){
+if(!S.res)return '';
+var r=S.res,d=S.d;
+var s='RAYIS BOZORI — Qurilish hisobi\n\n';
+s+='📍 '+d.floors+' qavat · '+d.area+' m² · '+d.rooms+' xona\n';
+s+='📐 Umumiy: '+r.totalArea+' m²\n\n';
+s+='💰 UMUMIY: '+fmt(r.totA)+'\n';
+s+='📊 Oraliq: '+fmt(r.totA)+' — '+fmt(r.totB)+'\n\n';
+s+='📦 Materiallar: '+fmt(r.matA)+'\n';
+s+='👷 Ish haqi: '+fmt(r.labA)+'\n\n';
+s+='📞 RAYIS BOZORI: +998 91 585 04 87';
+return s;
+}
+function shareTelegram(){
+var s=buildText();
+window.open('https://t.me/share/url?url='+encodeURIComponent('https://rayis-bozori.uz')+'&text='+encodeURIComponent(s),'_blank');
+}
+function shareWA(){
+var s=buildText();
+window.open('https://wa.me/?text='+encodeURIComponent(s),'_blank');
+}
+function shareViber(){
+var s=buildText();
+window.open('viber://forward?text='+encodeURIComponent(s),'_blank');
+}
+function shareSMS(){
+var s=buildText();
+window.location.href='sms:?body='+encodeURIComponent(s);
+}
+function shareEmail(){
+var s=buildText();
+window.location.href='mailto:?subject='+encodeURIComponent('RAYIS Qurilish hisobi')+'&body='+encodeURIComponent(s);
+}
+function shareFacebook(){
+var u=encodeURIComponent('https://rayis-bozori.uz');
+window.open('https://www.facebook.com/sharer/sharer.php?u='+u,'_blank');
+}
+function shareInstagram(){
+var s=buildText();
+if(navigator.clipboard){
+navigator.clipboard.writeText(s).then(function(){
+toast('📋 Matn nusxalandi — Instagramga qo\'ying','o');
+setTimeout(function(){window.open('https://instagram.com','_blank');},800);
+});
+} else {
+copyShare();
+setTimeout(function(){window.open('https://instagram.com','_blank');},800);
+}
+}
+function copyShare(){
+var s=buildText();
+if(navigator.clipboard){
+navigator.clipboard.writeText(s).then(function(){toast('✅ Nusxalandi','o');});
+} else {
+var ta=document.createElement('textarea');
+ta.value=s;
+document.body.appendChild(ta);
+ta.select();
+try{document.execCommand('copy');toast('✅ Nusxalandi','o');}catch(e){toast('Xato','e');}
+document.body.removeChild(ta);
+}
+}
+
+/* ═══ FIREBASE / SAVAT ═══ */
+async function addAll(){
+if(!S.res)return;
+try{
+var ref=DB.ref('rayis-bozori-v1');
+var snap=await ref.once('value');
+var d=snap.val()||{};
+var products=Array.isArray(d.rayis_products_v7)?d.rayis_products_v7.slice():[];
+var cart=Array.isArray(d.rayis_cart_v7)?d.rayis_cart_v7.slice():[];
+var added=0;
+S.res.mats.forEach(function(m){
+var pid='calc_'+Date.now()+'_'+Math.random().toString(36).slice(2,6);
+products.push({id:pid,sellerId:'s1',cat:'qurilish',n:m.n,price:m.sumA/Math.max(1,m.qty),unit:m.u,stock:9999,e:'📦',fromCalc:true,createdAt:new Date().toISOString()});
+cart.push({cartKey:pid+'__',id:pid,qty:Math.ceil(m.qty)||1});
+added++;
+});
+await ref.update({rayis_products_v7:products,rayis_cart_v7:cart});
+toast('✅ '+added+' ta material savatga','o');
+}catch(e){console.error(e);toast('Xato: '+e.message,'e');}
+}
+
+function exportCSV(){
+if(!S.res)return;
+var rows=[['Guruh','Nomi','Miqdor','Birlik','Summa']];
+S.res.mats.forEach(function(m){rows.push([m.group,m.n,nf(m.qty),m.u,Math.round(m.sumA)]);});
+rows.push([]);
+S.res.labors.forEach(function(l){rows.push(['Ish',l.n,nf(l.qty),l.u,Math.round(l.sumA)]);});
+rows.push([]);
+rows.push(['','MATERIAL','','',Math.round(S.res.matA)]);
+rows.push(['','ISHLAR','','',Math.round(S.res.labA)]);
+rows.push(['','JAMI','','',Math.round(S.res.totA)]);
+var csv='\uFEFF'+rows.map(function(r){return r.map(function(c){return '"'+String(c).replace(/"/g,'""')+'"';}).join(',');}).join('\n');
+var blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+var url=URL.createObjectURL(blob);
+var a=document.createElement('a');a.href=url;a.download='rayis-calc-'+Date.now()+'.csv';a.click();
+URL.revokeObjectURL(url);
+toast('📊 Excel yuklandi','o');
+}
+function sendMaster(){
+if(!S.res)return;
+var h='<div class="mh"><div class="mt">👷 Ustaga yuborish</div><button class="mx" onclick="closeMd()">✕</button></div>';
+h+='<div class="f"><label class="fl">Ismingiz *</label><input class="inp" id="mn"></div>';
+h+='<div class="f"><label class="fl">Telefon *</label><input class="inp" id="mp" placeholder="+998 91 585 04 87"></div>';
+h+='<div class="f"><label class="fl">Manzil</label><input class="inp" id="ma"></div>';
+h+='<div class="f"><label class="fl">Izoh</label><input class="inp" id="mnt"></div>';
+h+='<div class="btns one"><button class="btn ba" onclick="submitMaster()">📤 Yuborish</button></div>';
+document.getElementById('mbox').innerHTML=h;openMd();
+}
+function submitMaster(){
+var n=(document.getElementById('mn').value||'').trim();
+var p=(document.getElementById('mp').value||'').trim();
+var a=(document.getElementById('ma').value||'').trim();
+if(n.length<2)return toast('Ism kiriting','e');
+if(p.length<7)return toast('Telefon kiriting','e');
+var wo={id:'WR-'+Date.now().toString().slice(-6),type:'construction',title:'Uy qurish: '+S.d.area+' m² × '+S.d.floors,clientName:n,clientPhone:p,address:a,budget:S.res.totA,status:'Yangi',createdAt:Date.now()};
+if(DB)DB.ref('work_orders/'+wo.id).set(wo).then(function(){closeMd();toast('✅ Yuborildi','o');}).catch(function(){toast('Xato','e');});
+else toast('Firebase yo\'q','e');
+}
+function reset(){if(!confirm('Yangi hisob?'))return;S.stage=0;S.res=null;S.step=0;render();}
+function goBack(){
+if(S.stage===2){S.stage=1;S.step=getSelectedSections().length-1;render();return;}
+if(S.stage===1){S.stage=0;render();return;}
+if(confirm('Chiqish?'))window.location.href='index.html';
+}
+function openSave(){
+var h='<div class="mh"><div class="mt">📁 Loyihalar</div><button class="mx" onclick="closeMd()">✕</button></div>';
+var saved=[];
+try{saved=JSON.parse(localStorage.getItem('rayis_calc_projects')||'[]');}catch(e){}
+h+='<div class="f"><label class="fl">Loyiha nomi</label><input class="inp" id="pName" value="Loyiha — '+new Date().toLocaleDateString('uz-UZ')+'"></div>';
+h+='<div class="btns one"><button class="btn bp" onclick="saveProj()">💾 Saqlash</button></div>';
+if(saved.length){
+h+='<div class="sec" style="margin-top:14px"><div class="sch"><div class="sct">Saqlangan</div><div class="scc">'+saved.length+'</div></div><div class="scb">';
+saved.forEach(function(p,i){
+h+='<div class="mr"><div class="mn">'+esc(p.name)+'<br><span style="font-size:10px;color:var(--tx3)">'+new Date(p.savedAt).toLocaleDateString('uz-UZ')+'</span></div><div><button class="btn bg bsm" onclick="loadProj('+i+')">📂</button> <button class="btn bg bsm" onclick="delProj('+i+')">🗑</button></div></div>';
+});
+h+='</div></div>';
+}
+document.getElementById('mbox').innerHTML=h;openMd();
+}
+function saveProj(){
+var n=(document.getElementById('pName').value||'').trim();
+if(n.length<2)return toast('Nom kiriting','e');
+var arr=[];
+try{arr=JSON.parse(localStorage.getItem('rayis_calc_projects')||'[]');}catch(e){}
+arr.unshift({name:n,d:JSON.parse(JSON.stringify(S.d)),activeSections:Object.assign({},S.activeSections),savedAt:Date.now()});
+if(arr.length>20)arr=arr.slice(0,20);
+try{localStorage.setItem('rayis_calc_projects',JSON.stringify(arr));}catch(e){}
+toast('✅ Saqlandi','o');closeMd();
+}
+function loadProj(i){
+var arr=[];
+try{arr=JSON.parse(localStorage.getItem('rayis_calc_projects')||'[]');}catch(e){}
+if(!arr[i])return;
+S.d=Object.assign(S.d,arr[i].d);
+S.activeSections=Object.assign({},arr[i].activeSections);
+S.stage=0;S.res=null;S.step=0;
+saveL();closeMd();render();toast('✅ Yuklandi','o');
+}
+function delProj(i){
+if(!confirm('O\'chirilsinmi?'))return;
+var arr=[];
+try{arr=JSON.parse(localStorage.getItem('rayis_calc_projects')||'[]');}catch(e){}
+arr.splice(i,1);
+try{localStorage.setItem('rayis_calc_projects',JSON.stringify(arr));}catch(e){}
+openSave();
+}
+
+/* ═══ INIT ═══ */
+(function(){
+var th=localStorage.getItem('rayis_calc_theme')||'dark';
+document.body.dataset.t=th;
+document.getElementById('thBtn').textContent=th==='dark'?'☀️':'🌙';
+loadL();
+render();
+console.log('✅ RAYIS Kalkulyator v10 ishga tushdi');
+})();
 </script>
 </body>
 </html>
