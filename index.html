@@ -3,216 +3,245 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#22C55E">
+<meta name="theme-color" content="#005BFF">
 <title>RAYIS — Hammasi bir joyda</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%2322C55E'/><path d='M50 22 L68 38 L32 38 Z' fill='%230B1119'/><text x='50' y='75' font-size='52' font-weight='900' fill='%230B1119' text-anchor='middle' font-family='Arial'>R</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23005BFF'/><text x='50' y='72' font-size='62' font-weight='900' fill='white' text-anchor='middle' font-family='Arial'>R</text></svg>">
 <style>
 :root{
-  --bg:#0B1119;--sf:#151C26;--sf2:#1E2733;--bd:#2A3441;
-  --tx:#F1F5F9;--tx2:#94A3B8;--tx3:#64748B;
-  --pr:#22C55E;--pr2:#16A34A;--prD:#15803D;--prL:#86EFAC;
-  --ac:#3B82F6;--or:#F59E0B;--er:#EF4444;
-  --sh:0 1px 3px rgba(0,0,0,.3);
-}
-[data-t="light"]{
-  --bg:#F5F7FA;--sf:#FFFFFF;--sf2:#F1F5F9;--bd:#E2E8F0;
-  --tx:#0F172A;--tx2:#475569;--tx3:#94A3B8;
-  --sh:0 1px 3px rgba(0,0,0,.08);
+  --blue:#005BFF;--blue-d:#0047CC;--blue-l:#E6EFFF;
+  --bg:#F5F7FA;--sf:#FFFFFF;--sf2:#F0F3F7;
+  --bd:#E5E9F0;--tx:#0F1419;--tx2:#586174;--tx3:#8B94A6;
+  --red:#FF3B30;--green:#00A854;--orange:#FF9500;
+  --sh:0 1px 2px rgba(15,20,25,.04),0 2px 8px rgba(15,20,25,.04);
+  --sh2:0 4px 16px rgba(15,20,25,.08);
+  --r:16px;--r-s:12px;--r-l:20px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{overscroll-behavior-y:none}
+html{-webkit-text-size-adjust:100%}
 body{
-  font-family:-apple-system,"Segoe UI",system-ui,sans-serif;
+  font-family:'Inter',-apple-system,'Segoe UI',sans-serif;
   background:var(--bg);color:var(--tx);font-size:14px;line-height:1.4;
-  min-height:100vh;padding-bottom:78px;
+  min-height:100vh;padding-bottom:76px;
+  overscroll-behavior-y:none;-webkit-font-smoothing:antialiased;
 }
 img{max-width:100%;display:block}
-button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;touch-action:manipulation}
 input{font-family:inherit}
 .app{max-width:640px;margin:0 auto}
 
+/* ============ HEADER ============ */
 .hdr{
   position:sticky;top:0;z-index:50;
   background:var(--sf);border-bottom:1px solid var(--bd);
-  padding:8px 12px 10px;
+  padding:10px 12px 12px;
 }
-.hdr-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.logo{
-  display:flex;align-items:center;gap:8px;flex-shrink:0;
-  text-decoration:none;color:var(--tx);
-}
-.logo-ic{width:36px;height:36px;flex-shrink:0}
-.logo-tx{font-size:17px;font-weight:900;letter-spacing:.5px;color:var(--pr)}
-.logo-sub{font-size:8px;color:var(--tx3);letter-spacing:1.5px;font-weight:600;margin-top:-2px}
-.hdr-acts{display:flex;gap:4px;margin-left:auto}
+.hdr-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.logo{display:flex;align-items:center;gap:8px;flex-shrink:0;text-decoration:none;color:var(--tx)}
+.logo-ic{width:36px;height:36px;flex-shrink:0;border-radius:10px}
+.logo-tx{font-size:16px;font-weight:900;letter-spacing:.3px;color:var(--blue)}
+.logo-sub{font-size:9px;color:var(--tx3);letter-spacing:1.2px;font-weight:700;margin-top:-2px}
+.hdr-acts{display:flex;gap:6px;margin-left:auto}
 .hbtn{
-  width:38px;height:38px;border-radius:10px;
+  width:40px;height:40px;border-radius:12px;
   display:flex;align-items:center;justify-content:center;
   font-size:18px;color:var(--tx);position:relative;
-  background:var(--sf2);border:1px solid var(--bd);
+  background:var(--sf2);transition:transform .15s;
 }
 .hbtn:active{transform:scale(.92)}
 .hbtn .badge{
   position:absolute;top:-3px;right:-3px;
   min-width:18px;height:18px;padding:0 5px;
-  background:var(--er);color:#fff;font-size:10px;font-weight:800;
+  background:var(--red);color:#fff;font-size:10px;font-weight:800;
   border-radius:100px;display:flex;align-items:center;justify-content:center;
   border:2px solid var(--sf);
 }
 .search{
   display:flex;align-items:center;gap:8px;
-  background:var(--sf2);border:1.5px solid var(--bd);
-  border-radius:12px;padding:9px 12px;
+  background:var(--sf2);border:1.5px solid transparent;
+  border-radius:12px;padding:0 12px;height:44px;
+  transition:border .15s;
 }
+.search:focus-within{border-color:var(--blue);background:#fff}
 .search input{
   flex:1;background:none;border:none;outline:none;
   color:var(--tx);font-size:14px;font-weight:500;
+  height:100%;
 }
 .search input::placeholder{color:var(--tx3)}
-.search .si{font-size:16px;color:var(--tx3)}
+.search .si{font-size:17px;color:var(--tx3)}
 
+/* ============ LOC ============ */
 .loc{
   display:flex;align-items:center;gap:6px;
-  padding:6px 12px;font-size:12px;color:var(--tx2);
+  padding:8px 14px;font-size:12px;color:var(--tx2);
   background:var(--sf);border-bottom:1px solid var(--bd);
 }
-.loc b{color:var(--pr);font-weight:700}
-.loc button{color:var(--pr);font-weight:600;font-size:12px;text-decoration:underline}
+.loc b{color:var(--blue);font-weight:700}
+.loc button{color:var(--blue);font-weight:700;font-size:12px;text-decoration:underline;margin-left:auto}
 
+/* ============ CHIPS ============ */
 .chips{
   display:flex;gap:8px;overflow-x:auto;
-  padding:10px 12px;scrollbar-width:none;
+  padding:12px 12px;scrollbar-width:none;
   background:var(--sf);border-bottom:1px solid var(--bd);
-  position:sticky;top:106px;z-index:40;
+  position:sticky;top:108px;z-index:40;
 }
 .chips::-webkit-scrollbar{display:none}
 .chip{
-  flex-shrink:0;padding:7px 14px;border-radius:100px;
-  background:var(--sf2);border:1.5px solid var(--bd);
-  font-size:12.5px;font-weight:600;white-space:nowrap;
+  flex-shrink:0;padding:8px 14px;border-radius:100px;
+  background:var(--sf2);border:1.5px solid transparent;
+  font-size:13px;font-weight:600;white-space:nowrap;
   color:var(--tx);transition:.15s;
 }
-.chip.on{background:var(--pr);border-color:var(--pr);color:#fff}
+.chip.on{background:var(--blue);color:#fff}
 .chip:active{transform:scale(.95)}
 
-.banner-wrap{padding:12px 12px 0}
+/* ============ BANNER ============ */
+.banner-wrap{padding:14px 12px 0}
 .banner{
-  border-radius:18px;padding:20px;
-  background:linear-gradient(135deg,#22C55E 0%,#15803D 100%);
+  border-radius:var(--r-l);padding:22px;
+  background:linear-gradient(135deg,#005BFF 0%,#0047CC 100%);
   color:#fff;position:relative;overflow:hidden;
-  box-shadow:0 8px 24px rgba(34,197,94,.3);
+  box-shadow:0 8px 24px rgba(0,91,255,.25);
 }
 .banner::before{
-  content:'';position:absolute;top:-30px;right:-30px;
-  width:140px;height:140px;border-radius:50%;
-  background:rgba(255,255,255,.1);
+  content:'';position:absolute;top:-40px;right:-40px;
+  width:160px;height:160px;border-radius:50%;
+  background:rgba(255,255,255,.12);
 }
-.banner h2{font-size:19px;font-weight:900;margin-bottom:4px;position:relative}
-.banner p{font-size:12.5px;opacity:.95;margin-bottom:12px;position:relative}
+.banner::after{
+  content:'';position:absolute;bottom:-30px;right:20px;
+  width:100px;height:100px;border-radius:50%;
+  background:rgba(255,255,255,.06);
+}
+.banner h2{font-size:20px;font-weight:900;margin-bottom:6px;position:relative;letter-spacing:-.3px}
+.banner p{font-size:13px;opacity:.92;margin-bottom:14px;position:relative;line-height:1.4}
 .banner button{
-  background:#fff;color:var(--pr);padding:9px 18px;
-  border-radius:100px;font-weight:800;font-size:12.5px;
-  position:relative;
+  background:#fff;color:var(--blue);padding:10px 18px;
+  border-radius:10px;font-weight:800;font-size:13px;
+  position:relative;transition:transform .15s;
 }
+.banner button:active{transform:scale(.96)}
 
+/* ============ SECTION ============ */
 .sec-h{
   display:flex;align-items:center;justify-content:space-between;
-  padding:18px 12px 10px;
+  padding:20px 14px 12px;
 }
-.sec-h h3{font-size:16px;font-weight:800;display:flex;align-items:center;gap:6px}
-.sec-h a{font-size:12px;color:var(--pr);font-weight:700;text-decoration:none}
+.sec-h h3{font-size:17px;font-weight:800;display:flex;align-items:center;gap:6px;letter-spacing:-.2px}
+.sec-h a{font-size:13px;color:var(--blue);font-weight:700;text-decoration:none}
 
+/* ============ CATEGORIES ============ */
 .cat-grid{
   display:grid;grid-template-columns:repeat(4,1fr);
-  gap:8px;padding:0 12px;
+  gap:10px;padding:0 12px;
 }
 .cat{
-  background:var(--sf);border:1px solid var(--bd);
-  border-radius:14px;padding:12px 6px;text-align:center;
+  background:var(--sf);border-radius:var(--r);
+  padding:14px 6px;text-align:center;
   transition:.15s;cursor:pointer;
+  box-shadow:var(--sh);
 }
-.cat:active{transform:scale(.95)}
+.cat:active{transform:scale(.95);background:var(--blue-l)}
 .cat-ic{
-  width:44px;height:44px;margin:0 auto 6px;
-  border-radius:12px;background:var(--sf2);
+  width:46px;height:46px;margin:0 auto 8px;
+  border-radius:12px;background:var(--blue-l);
   display:flex;align-items:center;justify-content:center;
   font-size:22px;
 }
-.cat-tx{font-size:10.5px;font-weight:700;line-height:1.2;color:var(--tx)}
+.cat-tx{font-size:11px;font-weight:700;line-height:1.2;color:var(--tx)}
 
+/* ============ PRODUCTS ============ */
 .grid{
   display:grid;grid-template-columns:1fr 1fr;
-  gap:10px;padding:0 12px;
+  gap:12px;padding:0 12px;
 }
 .prod{
-  background:var(--sf);border:1px solid var(--bd);
-  border-radius:14px;overflow:hidden;position:relative;
+  background:var(--sf);border-radius:var(--r);
+  overflow:hidden;position:relative;
   display:flex;flex-direction:column;
+  box-shadow:var(--sh);transition:transform .15s;
 }
+.prod:active{transform:scale(.98)}
 .prod-img{
   aspect-ratio:1;background:var(--sf2);
   display:flex;align-items:center;justify-content:center;
-  font-size:52px;position:relative;
+  font-size:56px;position:relative;
 }
 .prod-disc{
   position:absolute;top:8px;left:8px;
-  background:var(--er);color:#fff;
-  font-size:10.5px;font-weight:900;
-  padding:3px 7px;border-radius:6px;
+  background:var(--red);color:#fff;
+  font-size:11px;font-weight:900;
+  padding:3px 8px;border-radius:6px;
+  letter-spacing:-.3px;
 }
 .prod-fav{
   position:absolute;top:8px;right:8px;
-  width:30px;height:30px;border-radius:50%;
-  background:rgba(255,255,255,.9);color:var(--tx);
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(255,255,255,.95);color:var(--tx);
   display:flex;align-items:center;justify-content:center;
-  font-size:15px;backdrop-filter:blur(4px);
+  font-size:15px;backdrop-filter:blur(6px);
+  box-shadow:0 2px 6px rgba(0,0,0,.06);
+  transition:transform .15s;
 }
-.prod-fav.on{color:var(--er)}
-.prod-body{padding:8px 10px 10px;flex:1;display:flex;flex-direction:column}
-.prod-price{display:flex;align-items:baseline;gap:5px;flex-wrap:wrap}
-.prod-new{font-size:15px;font-weight:900;color:var(--tx)}
-.prod-old{font-size:11px;color:var(--tx3);text-decoration:line-through}
+.prod-fav:active{transform:scale(.88)}
+.prod-fav.on{color:var(--red)}
+.prod-body{padding:10px 12px 12px;flex:1;display:flex;flex-direction:column}
+.prod-price{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;margin-bottom:2px}
+.prod-new{font-size:16px;font-weight:900;color:var(--tx);letter-spacing:-.3px}
+.prod-old{font-size:11.5px;color:var(--tx3);text-decoration:line-through}
 .prod-name{
-  font-size:12px;color:var(--tx);line-height:1.3;
-  margin:5px 0;flex:1;
+  font-size:12.5px;color:var(--tx);line-height:1.35;
+  margin:6px 0;flex:1;font-weight:500;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
   overflow:hidden;
 }
 .prod-rate{
-  display:flex;align-items:center;gap:3px;
-  font-size:10.5px;color:var(--tx2);margin-bottom:6px;
+  display:flex;align-items:center;gap:4px;
+  font-size:11px;color:var(--tx2);margin-bottom:8px;
+  font-weight:600;
 }
-.prod-rate .star{color:var(--or)}
+.prod-rate .star{color:var(--orange);font-size:12px}
 .prod-add{
-  width:100%;padding:8px;border-radius:9px;
-  background:var(--pr);color:#fff;
-  font-size:12px;font-weight:800;
+  width:100%;padding:9px;border-radius:10px;
+  background:var(--blue);color:#fff;
+  font-size:12.5px;font-weight:800;
   display:flex;align-items:center;justify-content:center;gap:4px;
+  transition:transform .15s;
 }
 .prod-add:active{transform:scale(.96)}
-.prod-add.on{background:var(--sf2);color:var(--pr);border:1.5px solid var(--pr)}
+.prod-add.on{background:var(--blue-l);color:var(--blue)}
 
+/* ============ MASTERS ============ */
 .master{
   display:flex;gap:12px;padding:14px;
-  background:var(--sf);border:1px solid var(--bd);
-  border-radius:14px;margin:0 12px 10px;
+  background:var(--sf);border-radius:var(--r);
+  margin:0 12px 10px;box-shadow:var(--sh);
 }
 .master-av{
   width:56px;height:56px;border-radius:50%;
-  background:linear-gradient(135deg,var(--pr),var(--pr2));
+  background:linear-gradient(135deg,var(--blue),var(--blue-d));
   display:flex;align-items:center;justify-content:center;
   font-size:20px;font-weight:900;color:#fff;flex-shrink:0;
+  letter-spacing:-.5px;
 }
 .master-inf{flex:1;min-width:0}
-.master-n{font-size:14px;font-weight:800}
-.master-s{font-size:11.5px;color:var(--tx2);margin:2px 0 4px}
-.master-r{font-size:11px;color:var(--or);font-weight:700}
+.master-n{font-size:14.5px;font-weight:800;letter-spacing:-.2px}
+.master-s{font-size:12px;color:var(--tx2);margin:3px 0 5px}
+.master-r{font-size:11.5px;color:var(--tx2);font-weight:600;display:flex;align-items:center;gap:4px}
+.master-r .star{color:var(--orange)}
 .master-btn{
-  align-self:center;padding:8px 14px;
-  background:var(--pr);color:#fff;border-radius:9px;
-  font-size:12px;font-weight:800;flex-shrink:0;
+  align-self:center;padding:10px 16px;
+  background:var(--blue);color:#fff;border-radius:10px;
+  font-size:13px;font-weight:800;flex-shrink:0;
+  transition:transform .15s;
 }
+.master-btn:active{transform:scale(.95)}
 
+/* ============ NAV ============ */
 .nav{
   position:fixed;bottom:0;left:0;right:0;z-index:60;
   background:var(--sf);border-top:1px solid var(--bd);
@@ -221,99 +250,117 @@ input{font-family:inherit}
 }
 .nv{
   flex:1;display:flex;flex-direction:column;
-  align-items:center;gap:2px;padding:4px;
-  color:var(--tx3);font-size:10px;font-weight:600;
-  position:relative;
+  align-items:center;gap:3px;padding:5px;
+  color:var(--tx3);font-size:10.5px;font-weight:600;
+  position:relative;transition:color .15s;
 }
 .nv-ic{font-size:20px;line-height:1}
-.nv.on{color:var(--pr)}
+.nv.on{color:var(--blue)}
 .nv .badge{
-  position:absolute;top:0;right:calc(50% - 18px);
+  position:absolute;top:2px;right:calc(50% - 18px);
   min-width:16px;height:16px;padding:0 4px;
-  background:var(--er);color:#fff;font-size:9.5px;font-weight:800;
+  background:var(--red);color:#fff;font-size:9.5px;font-weight:800;
   border-radius:100px;display:flex;align-items:center;justify-content:center;
 }
 
+/* ============ DRAWER ============ */
 .dr{
   position:fixed;inset:0;z-index:100;
-  background:rgba(0,0,0,.55);display:none;
+  background:rgba(15,20,25,.55);display:none;
   align-items:flex-end;justify-content:center;
+  animation:fadeIn .15s;
 }
 .dr.on{display:flex}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .dr-box{
   background:var(--sf);width:100%;max-width:640px;
   max-height:88vh;overflow-y:auto;
-  border-radius:22px 22px 0 0;padding:16px;
-  animation:up .25s ease-out;
+  border-radius:22px 22px 0 0;padding:18px;
+  animation:up .25s cubic-bezier(.2,.8,.2,1);
+  padding-bottom:max(18px,env(safe-area-inset-bottom));
 }
 @keyframes up{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
-.dr-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-.dr-h h3{font-size:17px;font-weight:900}
+.dr-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.dr-h h3{font-size:18px;font-weight:900;letter-spacing:-.3px}
 .dr-x{
-  width:34px;height:34px;border-radius:50%;
+  width:36px;height:36px;border-radius:50%;
   background:var(--sf2);font-size:16px;
   display:flex;align-items:center;justify-content:center;
+  transition:transform .15s;
 }
+.dr-x:active{transform:scale(.9)}
 
+/* ============ CART ITEM ============ */
 .ci{
-  display:flex;gap:10px;padding:10px 0;
+  display:flex;gap:12px;padding:12px 0;
   border-bottom:1px solid var(--bd);
 }
 .ci-img{
-  width:64px;height:64px;border-radius:10px;
+  width:68px;height:68px;border-radius:12px;
   background:var(--sf2);display:flex;align-items:center;justify-content:center;
-  font-size:30px;flex-shrink:0;
+  font-size:32px;flex-shrink:0;
 }
 .ci-inf{flex:1;min-width:0}
-.ci-n{font-size:12.5px;font-weight:700;line-height:1.3;margin-bottom:4px}
-.ci-p{font-size:14px;font-weight:900;color:var(--pr);margin-bottom:6px}
+.ci-n{font-size:13px;font-weight:700;line-height:1.3;margin-bottom:5px}
+.ci-p{font-size:15px;font-weight:900;color:var(--blue);margin-bottom:8px}
 .ci-q{display:flex;align-items:center;gap:8px}
 .qb{
-  width:28px;height:28px;border-radius:8px;
-  background:var(--sf2);border:1px solid var(--bd);
+  width:30px;height:30px;border-radius:9px;
+  background:var(--sf2);
   font-size:16px;font-weight:800;
   display:flex;align-items:center;justify-content:center;
+  transition:transform .15s;
 }
 .qb:active{transform:scale(.9)}
 .qv{font-size:14px;font-weight:800;min-width:24px;text-align:center}
 
+/* ============ TOTAL ============ */
 .total{
-  background:var(--sf2);border-radius:12px;
-  padding:14px;margin-top:14px;
+  background:var(--sf2);border-radius:var(--r);
+  padding:16px;margin-top:16px;
 }
-.total-row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px}
-.total-row.big{font-size:16px;font-weight:900;color:var(--pr);margin-top:8px;padding-top:8px;border-top:2px solid var(--bd)}
+.total-row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;color:var(--tx2)}
+.total-row b{color:var(--tx);font-weight:700}
+.total-row.big{font-size:17px;font-weight:900;color:var(--tx);margin-top:10px;padding-top:10px;border-top:2px solid var(--bd)}
+.total-row.big span:last-child{color:var(--blue)}
 .btn-go{
-  width:100%;padding:14px;border-radius:12px;
-  background:var(--pr);color:#fff;font-size:15px;font-weight:900;
-  margin-top:12px;
+  width:100%;padding:15px;border-radius:12px;
+  background:var(--blue);color:#fff;font-size:15px;font-weight:900;
+  margin-top:14px;transition:transform .15s;
 }
 .btn-go:active{transform:scale(.98)}
 
+/* ============ TOAST ============ */
 .tst{
   position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(80px);
-  background:var(--tx);color:var(--bg);
-  padding:10px 20px;border-radius:100px;
+  background:var(--tx);color:#fff;
+  padding:12px 22px;border-radius:100px;
   font-size:13px;font-weight:700;z-index:300;
   opacity:0;transition:.3s;pointer-events:none;
   max-width:90%;text-align:center;
+  box-shadow:var(--sh2);
 }
 .tst.on{opacity:1;transform:translateX(-50%) translateY(0)}
-.tst.o{background:var(--pr);color:#fff}
-.tst.e{background:var(--er);color:#fff}
+.tst.o{background:var(--green);color:#fff}
+.tst.e{background:var(--red);color:#fff}
+
+@media(max-width:360px){
+  .grid{gap:8px;padding:0 8px}
+  .cat-grid{gap:6px;padding:0 8px}
+  .prod-new{font-size:15px}
+}
 </style>
 </head>
-<body data-t="light">
+<body>
 <div class="app">
 
+  <!-- HEADER -->
   <div class="hdr">
     <div class="hdr-top">
       <a href="index.html" class="logo">
         <svg class="logo-ic" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="50" r="48" fill="#22C55E"/>
-          <circle cx="50" cy="50" r="42" fill="none" stroke="#0B1119" stroke-width="1.5" opacity=".3"/>
-          <path d="M50 20 L70 38 L30 38 Z" fill="#0B1119"/>
-          <text x="50" y="76" font-size="52" font-weight="900" fill="#0B1119" text-anchor="middle" font-family="Arial,sans-serif">R</text>
+          <rect width="100" height="100" rx="22" fill="#005BFF"/>
+          <text x="50" y="72" font-size="62" font-weight="900" fill="#fff" text-anchor="middle" font-family="Arial,sans-serif">R</text>
         </svg>
         <div>
           <div class="logo-tx">RAYIS</div>
@@ -333,13 +380,16 @@ input{font-family:inherit}
     </div>
   </div>
 
+  <!-- LOCATION -->
   <div class="loc">
     📍 Yetkazib berish: <b id="locName">Qumqo'rg'on tumani</b>
     <button onclick="changeLoc()">O'zgartirish</button>
   </div>
 
+  <!-- CHIPS -->
   <div class="chips" id="chips"></div>
 
+  <!-- BANNER -->
   <div class="banner-wrap">
     <div class="banner">
       <h2>Qurilish mavsumi boshlandi! 🏗</h2>
@@ -348,18 +398,21 @@ input{font-family:inherit}
     </div>
   </div>
 
+  <!-- CATEGORIES -->
   <div class="sec-h">
     <h3>🗂 Kategoriyalar</h3>
     <a href="katalog.html">Barchasi</a>
   </div>
   <div class="cat-grid" id="catGrid"></div>
 
+  <!-- PRODUCTS -->
   <div class="sec-h" id="catalogAnchor">
     <h3>🔥 Ommabop mahsulotlar</h3>
     <a href="katalog.html">Barchasi</a>
   </div>
   <div class="grid" id="productGrid"></div>
 
+  <!-- MASTERS -->
   <div class="sec-h">
     <h3>👷 Yaqin atrofdagi ustalar</h3>
     <a href="#" onclick="toast('Ustalar bo\'limi tez orada','o');return false">Barchasi</a>
@@ -368,11 +421,15 @@ input{font-family:inherit}
 
 </div>
 
+<!-- NAV -->
 <div class="nav">
   <button class="nv on" onclick="goNav('home')"><span class="nv-ic">🏠</span>Asosiy</button>
   <button class="nv" onclick="goNav('catalog')"><span class="nv-ic">🗂</span>Katalog</button>
   <button class="nv" onclick="goNav('calc')"><span class="nv-ic">🧮</span>Kalkulyator</button>
-  <button class="nv" onclick="openCart()"><span class="nv-ic">🛒</span>Savat<span class="badge" id="navBadge" style="display:none">0</span></button>
+  <button class="nv" onclick="openCart()">
+    <span class="nv-ic">🛒</span>Savat
+    <span class="badge" id="navBadge" style="display:none">0</span>
+  </button>
   <button class="nv" onclick="goNav('profile')"><span class="nv-ic">👤</span>Profil</button>
 </div>
 
@@ -382,23 +439,10 @@ input{font-family:inherit}
 
 <div class="tst" id="tst"></div>
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
 <script>
-/* ═══ FIREBASE — asosiy loyiha ═══ */
-var FBC={
-  apiKey:"AIzaSyAX_jMlvSTo64seJr1nuAZQdN95_fHI1RI",
-  authDomain:"rayis-bozori.firebaseapp.com",
-  databaseURL:"https://rayis-bozori-default-rtdb.firebaseio.com",
-  projectId:"rayis-bozori",
-  storageBucket:"rayis-bozori.firebasestorage.app",
-  messagingSenderId:"2519056122",
-  appId:"1:2519056122:web:ceca980c17a349df0b9343"
-};
-var DB=null;
-try{if(!firebase.apps.length)firebase.initializeApp(FBC);DB=firebase.database();}catch(e){console.warn('FB:',e);}
-
+/* ============================================
+   RAYIS v2.0 — Ozon uslubi
+   ============================================ */
 function getUID(){
   var u=localStorage.getItem('rayis_uid');
   if(!u){u='u_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);localStorage.setItem('rayis_uid',u);}
@@ -418,29 +462,29 @@ var CATS=[
   {id:'eshik', n:'Eshik/Deraza',  ic:'🚪'},
   {id:'metal', n:'Metall',        ic:'⚙️'},
   {id:'yogoch',n:"Yog'och",       ic:'🪵'},
-  {id:'hovli', n:'Hovli/Bog\'',   ic:'🌳'},
+  {id:'hovli', n:"Hovli/Bog'",    ic:'🌳'},
   {id:'xizmat',n:'Xizmatlar',     ic:'🚛'}
 ];
 
 var PRODUCTS=[
-  {id:'p001',cat:'quril',e:'🧱',n:'Sement M400 (50 kg)',price:45000,old:52000,unit:'qop',rate:4.8,reviews:342,seller:'Qumqo\'rg\'on Qurilish'},
+  {id:'p001',cat:'quril',e:'🧱',n:'Sement M400 (50 kg)',price:45000,old:52000,unit:'qop',rate:4.8,reviews:342,seller:"Qumqo'rg'on Qurilish"},
   {id:'p002',cat:'quril',e:'🏖',n:'Qum (yuvilgan, m³)',price:250000,old:280000,unit:'m³',rate:4.7,reviews:128,seller:'Surxon Qum'},
   {id:'p003',cat:'quril',e:'🪨',n:"Shag'al 5-20 mm (m³)",price:220000,old:250000,unit:'m³',rate:4.6,reviews:96,seller:'Surxon Karyer'},
   {id:'p004',cat:'quril',e:'🧱',n:'Gazoblok 25 sm (600×250×250)',price:18000,old:22000,unit:'dona',rate:4.9,reviews:512,seller:'Termiz Gazoblok'},
-  {id:'p005',cat:'quril',e:'🧱',n:'Pishgan g\'isht std 25 sm',price:700,old:850,unit:'dona',rate:4.7,reviews:280,seller:'Qumqo\'rg\'on G\'isht'},
-  {id:'p006',cat:'quril',e:'⬛',n:'Shlakoblok 25 sm',price:6000,old:7500,unit:'dona',rate:4.5,reviews:64,seller:'Bekzod Yo\'l Qurilish'},
+  {id:'p005',cat:'quril',e:'🧱',n:"Pishgan g'isht std 25 sm",price:700,old:850,unit:'dona',rate:4.7,reviews:280,seller:"Qumqo'rg'on G'isht"},
+  {id:'p006',cat:'quril',e:'⬛',n:'Shlakoblok 25 sm',price:6000,old:7500,unit:'dona',rate:4.5,reviews:64,seller:"Bekzod Yo'l Qurilish"},
   {id:'p007',cat:'quril',e:'⚙️',n:'Armatura 12 mm A500C',price:8800000,old:9200000,unit:'tonna',rate:4.8,reviews:52,seller:'Termiz Metall'},
   {id:'p008',cat:'quril',e:'⚙️',n:'Armatura 10 mm A500C',price:8500000,old:8900000,unit:'tonna',rate:4.7,reviews:38,seller:'Termiz Metall'},
   {id:'p009',cat:'quril',e:'⬛',n:'Beton M200 (m³)',price:340000,old:380000,unit:'m³',rate:4.6,reviews:74,seller:'Surxon Beton'},
   {id:'p010',cat:'quril',e:'⬛',n:'Beton M300 (m³)',price:390000,old:430000,unit:'m³',rate:4.8,reviews:58,seller:'Surxon Beton'},
   {id:'p011',cat:'quril',e:'🧱',n:'Klei (bloklar uchun, 25 kg)',price:35000,old:42000,unit:'qop',rate:4.7,reviews:142,seller:'Termiz Qurilish'},
-  {id:'p012',cat:'quril',e:'🔧',n:'Armatura to\'r 100×100',price:4000,old:5000,unit:'m²',rate:4.5,reviews:36,seller:'Termiz Metall'},
+  {id:'p012',cat:'quril',e:'🔧',n:"Armatura to'r 100×100",price:4000,old:5000,unit:'m²',rate:4.5,reviews:36,seller:'Termiz Metall'},
   {id:'p013',cat:'asbob',e:'🔨',n:'Perforator Bosch GBH 2-26',price:1850000,old:2200000,unit:'dona',rate:4.9,reviews:214,seller:'RAYIS Tools'},
   {id:'p014',cat:'asbob',e:'🔧',n:'Drel akkumulyatorli 18V',price:950000,old:1200000,unit:'dona',rate:4.7,reviews:168,seller:'RAYIS Tools'},
-  {id:'p015',cat:'asbob',e:'🔨',n:'Bolg\'a 500 g',price:45000,old:55000,unit:'dona',rate:4.6,reviews:88,seller:'Qumqo\'rg\'on Do\'kon'},
-  {id:'p016',cat:'asbob',e:'🔧',n:'Ruletka 5 m',price:25000,old:32000,unit:'dona',rate:4.5,reviews:126,seller:'Qumqo\'rg\'on Do\'kon'},
+  {id:'p015',cat:'asbob',e:'🔨',n:"Bolg'a 500 g",price:45000,old:55000,unit:'dona',rate:4.6,reviews:88,seller:"Qumqo'rg'on Do'kon"},
+  {id:'p016',cat:'asbob',e:'🔧',n:'Ruletka 5 m',price:25000,old:32000,unit:'dona',rate:4.5,reviews:126,seller:"Qumqo'rg'on Do'kon"},
   {id:'p017',cat:'asbob',e:'🪚',n:'Elektr arra 1800W',price:780000,old:950000,unit:'dona',rate:4.7,reviews:94,seller:'RAYIS Tools'},
-  {id:'p018',cat:'asbob',e:'🔨',n:'Bolg\'a-arralov (beton)',price:2400000,old:2800000,unit:'dona',rate:4.8,reviews:56,seller:'RAYIS Tools'},
+  {id:'p018',cat:'asbob',e:'🔨',n:"Bolg'a-arralov (beton)",price:2400000,old:2800000,unit:'dona',rate:4.8,reviews:56,seller:'RAYIS Tools'},
   {id:'p019',cat:'elektr',e:'⚡',n:'Kabel VVG 3×2.5 (m)',price:12000,old:14000,unit:'m',rate:4.8,reviews:184,seller:'Surxon Elektr'},
   {id:'p020',cat:'elektr',e:'⚡',n:'Kabel VVG 3×1.5 (m)',price:8000,old:9500,unit:'m',rate:4.7,reviews:162,seller:'Surxon Elektr'},
   {id:'p021',cat:'elektr',e:'🔌',n:'Rozetka (yashirin)',price:28000,old:35000,unit:'dona',rate:4.6,reviews:98,seller:'Surxon Elektr'},
@@ -453,19 +497,19 @@ var PRODUCTS=[
   {id:'p028',cat:'sant',e:'🛁',n:'Vanna (170×70)',price:2200000,old:2800000,unit:'dona',rate:4.5,reviews:42,seller:'Surxon Santexnika'},
   {id:'p029',cat:'sant',e:'🚿',n:'Dush kabina',price:1800000,old:2300000,unit:'dona',rate:4.7,reviews:56,seller:'Surxon Santexnika'},
   {id:'p030',cat:'isit',e:'🔥',n:'Qozon gaz (24 kW)',price:4500000,old:5200000,unit:'dona',rate:4.8,reviews:64,seller:'Surxon Isitish'},
-  {id:'p031',cat:'isit',e:'🔥',n:'Qozon o\'tin/ko\'mir',price:3200000,old:3800000,unit:'dona',rate:4.7,reviews:88,seller:'Surxon Isitish'},
+  {id:'p031',cat:'isit',e:'🔥',n:"Qozon o'tin/ko'mir",price:3200000,old:3800000,unit:'dona',rate:4.7,reviews:88,seller:'Surxon Isitish'},
   {id:'p032',cat:'isit',e:'🔥',n:'Radiator 500×100',price:650000,old:780000,unit:'dona',rate:4.6,reviews:142,seller:'Surxon Isitish'},
   {id:'p033',cat:'isit',e:'🔥',n:'Issiq pol kabeli (m²)',price:180000,old:220000,unit:'m²',rate:4.7,reviews:38,seller:'Surxon Isitish'},
-  {id:'p034',cat:'boyoq',e:'🎨',n:'Ichki bo\'yoq (15 l)',price:380000,old:450000,unit:'dona',rate:4.8,reviews:164,seller:'Surxon Bo\'yoq'},
-  {id:'p035',cat:'boyoq',e:'🎨',n:'Fasad bo\'yoq (15 l)',price:520000,old:620000,unit:'dona',rate:4.7,reviews:96,seller:'Surxon Bo\'yoq'},
-  {id:'p036',cat:'boyoq',e:'🎨',n:'Shpaklyovka (25 kg)',price:85000,old:100000,unit:'qop',rate:4.6,reviews:112,seller:'Surxon Bo\'yoq'},
-  {id:'p037',cat:'boyoq',e:'🎨',n:'Grunt (10 l)',price:120000,old:150000,unit:'dona',rate:4.7,reviews:78,seller:'Surxon Bo\'yoq'},
-  {id:'p038',cat:'boyoq',e:'🎨',n:'Gulqog\'oz (rulon)',price:150000,old:200000,unit:'rulon',rate:4.5,reviews:186,seller:'Surxon Bo\'yoq'},
-  {id:'p039',cat:'tom',e:'🏠',n:'Shifer 8 to\'lqin',price:80000,old:95000,unit:'list',rate:4.7,reviews:224,seller:'Surxon Tom'},
+  {id:'p034',cat:'boyoq',e:'🎨',n:"Ichki bo'yoq (15 l)",price:380000,old:450000,unit:'dona',rate:4.8,reviews:164,seller:"Surxon Bo'yoq"},
+  {id:'p035',cat:'boyoq',e:'🎨',n:"Fasad bo'yoq (15 l)",price:520000,old:620000,unit:'dona',rate:4.7,reviews:96,seller:"Surxon Bo'yoq"},
+  {id:'p036',cat:'boyoq',e:'🎨',n:'Shpaklyovka (25 kg)',price:85000,old:100000,unit:'qop',rate:4.6,reviews:112,seller:"Surxon Bo'yoq"},
+  {id:'p037',cat:'boyoq',e:'🎨',n:'Grunt (10 l)',price:120000,old:150000,unit:'dona',rate:4.7,reviews:78,seller:"Surxon Bo'yoq"},
+  {id:'p038',cat:'boyoq',e:'🎨',n:"Gulqog'oz (rulon)",price:150000,old:200000,unit:'rulon',rate:4.5,reviews:186,seller:"Surxon Bo'yoq"},
+  {id:'p039',cat:'tom',e:'🏠',n:"Shifer 8 to'lqin",price:80000,old:95000,unit:'list',rate:4.7,reviews:224,seller:'Surxon Tom'},
   {id:'p040',cat:'tom',e:'🏠',n:'Metallocherepitsa (m²)',price:90000,old:110000,unit:'m²',rate:4.8,reviews:168,seller:'Surxon Tom'},
   {id:'p041',cat:'tom',e:'🏠',n:'Ondulin (m²)',price:100000,old:120000,unit:'m²',rate:4.6,reviews:96,seller:'Surxon Tom'},
   {id:'p042',cat:'tom',e:'🏠',n:'Profnastil (m²)',price:68000,old:78000,unit:'m²',rate:4.7,reviews:142,seller:'Surxon Tom'},
-  {id:'p043',cat:'tom',e:'🪵',n:'Mourlat 5×15 (pm)',price:50000,old:60000,unit:'pm',rate:4.6,reviews:56,seller:'Surxon Yog\'och'},
+  {id:'p043',cat:'tom',e:'🪵',n:'Mourlat 5×15 (pm)',price:50000,old:60000,unit:'pm',rate:4.6,reviews:56,seller:"Surxon Yog'och"},
   {id:'p044',cat:'eshik',e:'🚪',n:'Ichki eshik (std)',price:950000,old:1200000,unit:'dona',rate:4.7,reviews:112,seller:'Surxon Eshik'},
   {id:'p045',cat:'eshik',e:'🚪',n:'Temir eshik (kirish)',price:4500000,old:5500000,unit:'dona',rate:4.8,reviews:64,seller:'Surxon Eshik'},
   {id:'p046',cat:'eshik',e:'🪟',n:'Plastik deraza 1.5×1.5',price:1650000,old:1900000,unit:'dona',rate:4.7,reviews:142,seller:'Surxon Deraza'},
@@ -473,14 +517,14 @@ var PRODUCTS=[
   {id:'p048',cat:'metal',e:'⚙️',n:'Profil truba 40×40 (6 m)',price:185000,old:220000,unit:'dona',rate:4.7,reviews:78,seller:'Termiz Metall'},
   {id:'p049',cat:'metal',e:'⚙️',n:'Burchak 50×50 (6 m)',price:165000,old:195000,unit:'dona',rate:4.6,reviews:64,seller:'Termiz Metall'},
   {id:'p050',cat:'metal',e:'⚙️',n:'Payvand elektrod 3 mm (5 kg)',price:65000,old:78000,unit:'paket',rate:4.7,reviews:118,seller:'Termiz Metall'},
-  {id:'p051',cat:'yogoch',e:'🪵',n:'Reka 5×5 (6 m)',price:40000,old:48000,unit:'dona',rate:4.6,reviews:142,seller:'Surxon Yog\'och'},
-  {id:'p052',cat:'yogoch',e:'🪵',n:'Yog\'och 3×10 (6 m)',price:100000,old:120000,unit:'dona',rate:4.7,reviews:86,seller:'Surxon Yog\'och'},
-  {id:'p053',cat:'yogoch',e:'🪵',n:'Faner 10 mm (1525×1525)',price:180000,old:220000,unit:'list',rate:4.5,reviews:52,seller:'Surxon Yog\'och'},
-  {id:'p054',cat:'yogoch',e:'🪵',n:'Strapila 4 m (dona)',price:100000,old:120000,unit:'dona',rate:4.6,reviews:64,seller:'Surxon Yog\'och'},
-  {id:'p055',cat:'hovli',e:'🌳',n:'Daraxt ko\'chati (mevali)',price:50000,old:65000,unit:'dona',rate:4.7,reviews:168,seller:'Surxon Bog\''},
-  {id:'p056',cat:'hovli',e:'🌳',n:'Yo\'lka plitkasi (m²)',price:95000,old:120000,unit:'m²',rate:4.6,reviews:142,seller:'Surxon Hovli'},
+  {id:'p051',cat:'yogoch',e:'🪵',n:'Reka 5×5 (6 m)',price:40000,old:48000,unit:'dona',rate:4.6,reviews:142,seller:"Surxon Yog'och"},
+  {id:'p052',cat:'yogoch',e:'🪵',n:"Yog'och 3×10 (6 m)",price:100000,old:120000,unit:'dona',rate:4.7,reviews:86,seller:"Surxon Yog'och"},
+  {id:'p053',cat:'yogoch',e:'🪵',n:'Faner 10 mm (1525×1525)',price:180000,old:220000,unit:'list',rate:4.5,reviews:52,seller:"Surxon Yog'och"},
+  {id:'p054',cat:'yogoch',e:'🪵',n:'Strapila 4 m (dona)',price:100000,old:120000,unit:'dona',rate:4.6,reviews:64,seller:"Surxon Yog'och"},
+  {id:'p055',cat:'hovli',e:'🌳',n:"Daraxt ko'chati (mevali)",price:50000,old:65000,unit:'dona',rate:4.7,reviews:168,seller:"Surxon Bog'"},
+  {id:'p056',cat:'hovli',e:'🌳',n:"Yo'lka plitkasi (m²)",price:95000,old:120000,unit:'m²',rate:4.6,reviews:142,seller:'Surxon Hovli'},
   {id:'p057',cat:'hovli',e:'🌳',n:'Bordyur (pm)',price:55000,old:68000,unit:'pm',rate:4.5,reviews:64,seller:'Surxon Hovli'},
-  {id:'p058',cat:'xizmat',e:'🚛',n:'Yuk tashish (Qumqo\'rg\'on)',price:250000,old:300000,unit:'reys',rate:4.8,reviews:86,seller:'Surxon Logistika'},
+  {id:'p058',cat:'xizmat',e:'🚛',n:"Yuk tashish (Qumqo'rg'on)",price:250000,old:300000,unit:'reys',rate:4.8,reviews:86,seller:'Surxon Logistika'},
   {id:'p059',cat:'xizmat',e:'🚜',n:'Ekskavator (soat)',price:350000,old:400000,unit:'soat',rate:4.7,reviews:52,seller:'Surxon Texnika'},
   {id:'p060',cat:'xizmat',e:'🚜',n:'Traktor (soat)',price:280000,old:320000,unit:'soat',rate:4.6,reviews:64,seller:'Surxon Texnika'}
 ];
@@ -494,7 +538,7 @@ var MASTERS=[
   {id:'m6',n:'Safarali Xolboyev',spec:'Payvandchi',exp:'9 yil',rate:4.6,phone:'+998915850492',init:'SX'}
 ];
 
-var ST={cat:'all',search:'',cart:{},fav:{},loc:'Qumqo\'rg\'on tumani'};
+var ST={cat:'all',search:'',cart:{},fav:{},loc:"Qumqo'rg'on tumani"};
 
 function loadLocal(){
   try{
@@ -511,7 +555,6 @@ function saveFav(){localStorage.setItem('rayis_fav_'+UID,JSON.stringify(ST.fav))
 function saveLoc(){localStorage.setItem('rayis_loc',ST.loc);}
 
 function fmt(n){return Math.round(Number(n)||0).toLocaleString('ru-RU').replace(/,/g,' ')+" so'm";}
-function fmtN(n){return Math.round(Number(n)||0).toLocaleString('ru-RU').replace(/,/g,' ');}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function toast(m,tp){var e=document.getElementById('tst');e.textContent=m;e.className='tst on'+(tp==='e'?' e':tp==='o'?' o':'');clearTimeout(e._t);e._t=setTimeout(function(){e.className='tst'+(tp==='e'?' e':' o');},2000);}
 
@@ -574,7 +617,7 @@ function renderMasters(){
     h+='<div class="master-inf">';
     h+='<div class="master-n">'+esc(m.n)+'</div>';
     h+='<div class="master-s">'+esc(m.spec)+' · '+m.exp+'</div>';
-    h+='<div class="master-r">★ '+m.rate+' · '+m.phone+'</div>';
+    h+='<div class="master-r"><span class="star">★</span> '+m.rate+' · '+m.phone+'</div>';
     h+='</div>';
     h+='<a href="tel:'+m.phone+'" style="text-decoration:none"><button class="master-btn">📞</button></a>';
     h+='</div>';
@@ -602,11 +645,11 @@ function onSearch(v){ST.search=v.trim();renderProducts();}
 function scrollToCatalog(){document.getElementById('catalogAnchor').scrollIntoView({behavior:'smooth',block:'start'});}
 function changeLoc(){
   var h='<div class="dr-h"><h3>📍 Yetkazib berish manzili</h3><button class="dr-x" onclick="closeDr()">✕</button></div>';
-  var locs=['Qumqo\'rg\'on tumani','Termiz shahri','Denov tumani','Sherobod tumani','Jarqo\'rg\'on tumani','Boysun tumani','Sariosiyo tumani','Uzun tumani','Angor tumani','Qiziriq tumani','Muzrabot tumani','Oltinsoy tumani','Bandixon tumani','Sho\'rchi tumani'];
+  var locs=["Qumqo'rg'on tumani",'Termiz shahri','Denov tumani','Sherobod tumani',"Jarqo'rg'on tumani",'Boysun tumani','Sariosiyo tumani','Uzun tumani','Angor tumani','Qiziriq tumani','Muzrabot tumani','Oltinsoy tumani','Bandixon tumani',"Sho'rchi tumani"];
   h+='<div style="display:flex;flex-direction:column;gap:6px">';
   locs.forEach(function(l){
     var on=ST.loc===l;
-    h+='<button style="text-align:left;padding:12px 14px;background:'+(on?'var(--pr)':'var(--sf2)')+';color:'+(on?'#fff':'var(--tx)')+';border-radius:10px;font-size:13.5px;font-weight:600;border:1px solid var(--bd)" onclick="pickLoc(\''+l.replace(/'/g,"\\'")+'\')">'+(on?'✓ ':'')+l+'</button>';
+    h+='<button style="text-align:left;padding:14px 16px;background:'+(on?'var(--blue)':'var(--sf2)')+';color:'+(on?'#fff':'var(--tx)')+';border-radius:12px;font-size:14px;font-weight:600" onclick="pickLoc(\''+l.replace(/'/g,"\\'")+'\')">'+(on?'✓ ':'')+l+'</button>';
   });
   h+='</div>';
   document.getElementById('drBox').innerHTML=h;
@@ -654,7 +697,7 @@ function openCart(){
   var ids=Object.keys(ST.cart);
   var h='<div class="dr-h"><h3>🛒 Savat</h3><button class="dr-x" onclick="closeDr()">✕</button></div>';
   if(!ids.length){
-    h+='<div style="text-align:center;padding:40px 20px"><div style="font-size:56px;margin-bottom:10px">🛒</div><div style="font-weight:800;font-size:16px">Savat bo\'sh</div><div style="font-size:12.5px;color:var(--tx2);margin-top:6px">Mahsulot qo\'shing</div><button class="btn-go" onclick="closeDr()" style="max-width:200px;margin:16px auto 0">Katalogga</button></div>';
+    h+='<div style="text-align:center;padding:40px 20px"><div style="font-size:56px;margin-bottom:10px">🛒</div><div style="font-weight:800;font-size:16px">Savat bo\'sh</div><div style="font-size:13px;color:var(--tx2);margin-top:6px">Mahsulot qo\'shing</div><button class="btn-go" onclick="closeDr()" style="max-width:200px;margin:16px auto 0">Katalogga</button></div>';
   } else {
     var subtotal=0;
     ids.forEach(function(pid){
@@ -672,13 +715,13 @@ function openCart(){
       h+='<button class="qb" onclick="decCart(\''+pid+'\')">−</button>';
       h+='<span class="qv">'+q+'</span>';
       h+='<button class="qb" onclick="addCart(\''+pid+'\')">+</button>';
-      h+='<button class="qb" style="margin-left:auto;color:var(--er)" onclick="removeCart(\''+pid+'\')">🗑</button>';
+      h+='<button class="qb" style="margin-left:auto;color:var(--red)" onclick="removeCart(\''+pid+'\')">🗑</button>';
       h+='</div></div></div>';
     });
     var delivery=subtotal>2000000?0:50000;
     h+='<div class="total">';
-    h+='<div class="total-row"><span>Mahsulotlar ('+ids.length+')</span><span>'+fmt(subtotal)+'</span></div>';
-    h+='<div class="total-row"><span>Yetkazib berish</span><span>'+(delivery?fmt(delivery):'Bepul')+'</span></div>';
+    h+='<div class="total-row"><span>Mahsulotlar ('+ids.length+')</span><b>'+fmt(subtotal)+'</b></div>';
+    h+='<div class="total-row"><span>Yetkazib berish</span><b>'+(delivery?fmt(delivery):'Bepul')+'</b></div>';
     h+='<div class="total-row big"><span>JAMI</span><span>'+fmt(subtotal+delivery)+'</span></div>';
     h+='</div>';
     h+='<button class="btn-go" onclick="checkout()">✅ Buyurtma berish</button>';
@@ -702,7 +745,7 @@ function openFav(){
       h+='<div class="ci-n">'+esc(p.n)+'</div>';
       h+='<div class="ci-p">'+fmt(p.price)+'</div>';
       h+='</div>';
-      h+='<button class="prod-add" style="width:auto;padding:8px 14px;align-self:center" onclick="addCart(\''+pid+'\')">🛒</button>';
+      h+='<button class="prod-add" style="width:auto;padding:9px 16px;align-self:center" onclick="addCart(\''+pid+'\')">🛒</button>';
       h+='</div>';
     });
   }
@@ -715,12 +758,12 @@ function closeDr(){document.getElementById('dr').classList.remove('on');}
 function checkout(){
   var h='<div class="dr-h"><h3>📦 Buyurtma berish</h3><button class="dr-x" onclick="closeDr()">✕</button></div>';
   h+='<div style="display:flex;flex-direction:column;gap:10px">';
-  h+='<input class="inp" id="ckName" placeholder="Ism-familiya" style="padding:14px;background:var(--sf2);border:1.5px solid var(--bd);border-radius:10px;color:var(--tx);font-size:14px;font-weight:600;outline:none">';
-  h+='<input class="inp" id="ckPhone" placeholder="+998 90 123 45 67" style="padding:14px;background:var(--sf2);border:1.5px solid var(--bd);border-radius:10px;color:var(--tx);font-size:14px;font-weight:600;outline:none">';
-  h+='<input class="inp" id="ckAddr" placeholder="Manzil (ko\'cha, uy)" style="padding:14px;background:var(--sf2);border:1.5px solid var(--bd);border-radius:10px;color:var(--tx);font-size:14px;font-weight:600;outline:none">';
-  h+='<textarea id="ckNote" placeholder="Izoh (ixtiyoriy)" rows="2" style="padding:14px;background:var(--sf2);border:1.5px solid var(--bd);border-radius:10px;color:var(--tx);font-size:14px;font-family:inherit;outline:none;resize:none"></textarea>';
+  h+='<input id="ckName" placeholder="Ism-familiya" style="padding:14px;background:var(--sf2);border:1.5px solid transparent;border-radius:12px;color:var(--tx);font-size:14px;font-weight:600;outline:none">';
+  h+='<input id="ckPhone" placeholder="+998 90 123 45 67" style="padding:14px;background:var(--sf2);border:1.5px solid transparent;border-radius:12px;color:var(--tx);font-size:14px;font-weight:600;outline:none">';
+  h+='<input id="ckAddr" placeholder="Manzil (ko\'cha, uy)" style="padding:14px;background:var(--sf2);border:1.5px solid transparent;border-radius:12px;color:var(--tx);font-size:14px;font-weight:600;outline:none">';
+  h+='<textarea id="ckNote" placeholder="Izoh (ixtiyoriy)" rows="2" style="padding:14px;background:var(--sf2);border:1.5px solid transparent;border-radius:12px;color:var(--tx);font-size:14px;font-family:inherit;outline:none;resize:none"></textarea>';
   h+='</div>';
-  h+='<div style="margin-top:14px;padding:12px;background:var(--sf2);border-radius:10px;font-size:12px;color:var(--tx2);line-height:1.5">💵 <b>To\'lov:</b> Yetkazib berganda naqd yoki karta orqali</div>';
+  h+='<div style="margin-top:14px;padding:14px;background:var(--blue-l);border-radius:12px;font-size:12.5px;color:var(--blue-d);line-height:1.5">💵 <b>To\'lov:</b> Yetkazib berganda naqd yoki karta orqali</div>';
   h+='<button class="btn-go" onclick="submitOrder()">✅ Tasdiqlash</button>';
   document.getElementById('drBox').innerHTML=h;
 }
@@ -755,17 +798,13 @@ function submitOrder(){
     subtotal:subtotal,
     delivery:delivery,
     total:subtotal+delivery,
-    status:'new',
+    status:'yangi',
     createdAt:Date.now()
   };
   
   var orders=JSON.parse(localStorage.getItem('rayis_orders_'+UID)||'[]');
   orders.unshift(order);
   localStorage.setItem('rayis_orders_'+UID,JSON.stringify(orders));
-  
-  if(DB){
-    DB.ref('orders/'+order.id).set(order).catch(function(e){console.warn(e);});
-  }
   
   ST.cart={};
   saveCart();
@@ -777,8 +816,8 @@ function submitOrder(){
     h+='<div style="text-align:center;padding:20px">';
     h+='<div style="font-size:64px;margin-bottom:10px">🎉</div>';
     h+='<div style="font-size:18px;font-weight:900;margin-bottom:6px">Rahmat, '+esc(n.split(' ')[0])+'!</div>';
-    h+='<div style="font-size:13px;color:var(--tx2);margin-bottom:14px">Buyurtma raqami: <b style="color:var(--pr)">#'+order.id+'</b></div>';
-    h+='<div style="padding:14px;background:var(--sf2);border-radius:12px;text-align:left;font-size:12.5px;line-height:1.7">';
+    h+='<div style="font-size:13px;color:var(--tx2);margin-bottom:14px">Buyurtma raqami: <b style="color:var(--blue)">#'+order.id+'</b></div>';
+    h+='<div style="padding:14px;background:var(--sf2);border-radius:12px;text-align:left;font-size:12.5px;line-height:1.8">';
     h+='📍 '+esc(order.address)+'<br>';
     h+='💰 '+fmt(order.total)+'<br>';
     h+='📞 Operator tez orada qo\'ng\'iroq qiladi';
@@ -796,7 +835,6 @@ function goNav(k){
   else if(k==='calc')window.location.href='qurilish.html';
   else if(k==='profile')window.location.href='profil.html';
 }
-
 function openProduct(pid){window.location.href='mahsulot.html?id='+pid;}
 
 (function init(){
@@ -807,7 +845,7 @@ function openProduct(pid){window.location.href='mahsulot.html?id='+pid;}
   renderProducts();
   renderMasters();
   updateBadges();
-  console.log('✅ RAYIS v1.0 — ishga tushdi');
+  console.log('✅ RAYIS v2.0 — Ozon uslubi ishga tushdi');
 })();
 </script>
 </body>
