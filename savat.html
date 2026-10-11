@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#22C55E">
+<title>Savat — RAYIS</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%2322C55E'/><path d='M50 22 L68 38 L32 38 Z' fill='%230B1119'/><text x='50' y='75' font-size='52' font-weight='900' fill='%230B1119' text-anchor='middle' font-family='Arial'>R</text></svg>">
+<style>
+:root{
+  --bg:#F5F7FA;--sf:#FFFFFF;--sf2:#F1F5F9;--sf3:#E8EEF5;--bd:#E2E8F0;
+  --tx:#0F172A;--tx2:#475569;--tx3:#94A3B8;
+  --pr:#22C55E;--pr2:#16A34A;--prD:#15803D;--prL:#DCFCE7;
+  --or:#F59E0B;--er:#EF4444;--ac:#3B82F6;
+  --sh:0 1px 3px rgba(0,0,0,.08);
+  --sh2:0 4px 16px rgba(0,0,0,.12);
+  --safe-b:env(safe-area-inset-bottom,0px);
+  --safe-t:env(safe-area-inset-top,0px);
+}
+[data-t="dark"]{
+  --bg:#0B1119;--sf:#151C26;--sf2:#1E2733;--sf3:#252F3D;--bd:#2A3441;
+  --tx:#F1F5F9;--tx2:#94A3B8;--tx3:#64748B;
+  --prL:#064E3B;
+  --sh:0 1px 3px rgba(0,0,0,.3);
+  --sh2:0 4px 16px rgba(0,0,0,.4);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:-apple-system,"Segoe UI",system-ui,sans-serif;
+  background:var(--bg);color:var(--tx);font-size:14px;line-height:1.5;
+  min-height:100vh;
+  padding-bottom:calc(140px + var(--safe-b));
+  overscroll-behavior-y:none;
+  -webkit-overflow-scrolling:touch;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;touch-action:manipulation}
+input,textarea,select{font-family:inherit;font-size:16px}
+.app{max-width:640px;margin:0 auto}
+
+.hdr{
+  position:sticky;top:0;z-index:50;
+  background:var(--sf);border-bottom:1px solid var(--bd);
+  padding:calc(8px + var(--safe-t)) 8px 8px;
+  display:flex;align-items:center;gap:8px;
+}
+.hdr-btn{
+  width:42px;height:42px;flex-shrink:0;
+  border-radius:12px;background:var(--sf2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;font-weight:800;color:var(--tx);
+  border:1px solid var(--bd);
+}
+.hdr-btn:active{transform:scale(.9)}
+.hdr-title{flex:1;min-width:0;padding:0 4px}
+.hdr-title b{font-size:16px;font-weight:800;display:block}
+.hdr-title span{font-size:11px;color:var(--tx2)}
+.hdr-edit{
+  font-size:12px;font-weight:800;color:var(--pr);
+  padding:8px 12px;border-radius:10px;
+}
+.hdr-edit:active{background:var(--prL)}
+
+.empty{
+  text-align:center;padding:80px 20px;
+}
+.empty-ic{font-size:80px;margin-bottom:16px}
+.empty-t{font-size:18px;font-weight:900;margin-bottom:8px}
+.empty-s{font-size:13px;color:var(--tx2);margin-bottom:24px;line-height:1.5}
+.empty-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 28px;background:var(--pr);color:#fff;
+  border-radius:12px;font-size:14px;font-weight:800;
+  margin-bottom:8px;
+}
+.empty-btn:active{transform:scale(.97)}
+
+.sec{margin:10px 12px}
+.sec-h{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2px 10px;
+}
+.sec-h h3{font-size:15px;font-weight:900}
+.sec-h .count{
+  font-size:12px;color:var(--tx2);font-weight:600;
+  background:var(--sf2);padding:3px 10px;border-radius:100px;
+}
+
+.shop-group{
+  background:var(--sf);border:1px solid var(--bd);
+  border-radius:16px;margin-bottom:10px;overflow:hidden;
+}
+.shop-h{
+  padding:12px 14px;border-bottom:1px solid var(--bd);
+  background:var(--sf2);
+  display:flex;align-items:center;gap:10px;
+}
+.shop-check{
+  width:22px;height:22px;flex-shrink:0;
+  accent-color:var(--pr);cursor:pointer;
+}
+.shop-inf{flex:1;min-width:0}
+.shop-n{font-size:13px;font-weight:800;display:flex;align-items:center;gap:6px}
+.shop-s{font-size:11px;color:var(--tx2);margin-top:2px}
+.shop-badge{
+  font-size:9.5px;background:var(--prL);color:var(--prD);
+  padding:2px 6px;border-radius:5px;font-weight:800;
+}
+[data-t="dark"] .shop-badge{color:var(--prL)}
+
+.ci{
+  display:flex;gap:10px;padding:12px 14px;
+  border-bottom:1px solid var(--bd);
+  position:relative;
+}
+.ci:last-child{border-bottom:none}
+.ci-check{
+  width:22px;height:22px;flex-shrink:0;
+  accent-color:var(--pr);cursor:pointer;
+  align-self:flex-start;margin-top:4px;
+}
+.ci-img{
+  width:80px;height:80px;flex-shrink:0;
+  border-radius:12px;background:var(--sf2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:38px;position:relative;
+  cursor:pointer;
+}
+.ci-disc{
+  position:absolute;top:4px;left:4px;
+  background:var(--er);color:#fff;font-size:9.5px;
+  font-weight:900;padding:2px 5px;border-radius:5px;
+}
+.ci-body{flex:1;min-width:0;display:flex;flex-direction:column}
+.ci-n{
+  font-size:13px;font-weight:700;line-height:1.3;
+  margin-bottom:4px;cursor:pointer;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.ci-meta{font-size:10.5px;color:var(--tx3);margin-bottom:6px}
+.ci-price{display:flex;align-items:baseline;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.ci-new{font-size:15px;font-weight:900;color:var(--tx)}
+.ci-old{font-size:11px;color:var(--tx3);text-decoration:line-through}
+.ci-row{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;margin-top:auto;
+}
+.ci-qty{display:flex;align-items:center;gap:2px;background:var(--sf2);border-radius:10px;padding:3px;border:1px solid var(--bd)}
+.qb{
+  width:32px;height:32px;border-radius:8px;
+  background:var(--sf);border:none;
+  font-size:18px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--tx);
+}
+.qb:active{transform:scale(.9)}
+.qb:disabled{opacity:.35}
+.qv{min-width:36px;text-align:center;font-size:14px;font-weight:800}
+.ci-rm{
+  padding:6px 10px;border-radius:8px;
+  font-size:11.5px;color:var(--er);font-weight:700;
+  display:flex;align-items:center;gap:4px;
+}
+.ci-rm:active{background:rgba(239,68,68,.1)}
+
+.warn{
+  margin-top:6px;padding:6px 10px;
+  background:rgba(245,158,11,.1);color:var(--or);
+  border-radius:8px;font-size:11px;font-weight:700;
+  display:flex;align-items:center;gap:5px;
+}
+
+.promo-box{
+  background:var(--sf);border:1px solid var(--bd);
+  border-radius:14px;padding:12px 14px;
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:10px;
+}
+.promo-ic{font-size:22px;flex-shrink:0}
+.promo-body{flex:1;min-width:0}
+.promo-t{font-size:13px;font-weight:800}
+.promo-s{font-size:11px;color:var(--tx2);margin-top:2px}
+.promo-btn{
+  padding:9px 16px;border-radius:10px;
+  background:var(--prL);color:var(--prD);
+  font-size:12px;font-weight:800;
+  flex-shrink:0;
+}
+[data-t="dark"] .promo-btn{color:var(--prL)}
+.promo-btn:active{transform:scale(.95)}
+.promo-applied{
+  background:var(--prL);border-color:var(--pr);
+}
+[data-t="dark"] .promo-applied{background:var(--prL)}
+
+.dlv-opt{
+  background:var(--sf);border:1.5px solid var(--bd);
+  border-radius:14px;padding:14px;margin-bottom:10px;
+  display:flex;align-items:flex-start;gap:12px;
+  cursor:pointer;transition:.15s;
+}
+.dlv-opt.on{border-color:var(--pr);background:var(--prL)}
+[data-t="dark"] .dlv-opt.on{background:var(--prL)}
+.dlv-radio{
+  width:22px;height:22px;flex-shrink:0;
+  border:2px solid var(--bd);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  margin-top:2px;
+}
+.dlv-opt.on .dlv-radio{border-color:var(--pr);background:var(--pr)}
+.dlv-opt.on .dlv-radio::after{
+  content:'';width:8px;height:8px;border-radius:50%;background:#fff;
+}
+.dlv-body{flex:1;min-width:0}
+.dlv-t{font-size:13.5px;font-weight:800;display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.dlv-s{font-size:11.5px;color:var(--tx2);line-height:1.4}
+.dlv-price{font-size:12.5px;font-weight:800;color:var(--pr);margin-top:4px}
+.dlv-price.paid{color:var(--tx)}
+
+.pay-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
+}
+.pay-opt{
+  background:var(--sf);border:1.5px solid var(--bd);
+  border-radius:12px;padding:12px;
+  display:flex;align-items:center;gap:8px;
+  cursor:pointer;transition:.15s;
+}
+.pay-opt.on{border-color:var(--pr);background:var(--prL)}
+[data-t="dark"] .pay-opt.on{background:var(--prL)}
+.pay-ic{font-size:22px;flex-shrink:0}
+.pay-t{font-size:12px;font-weight:800;line-height:1.2}
+.pay-s{font-size:10px;color:var(--tx2);margin-top:2px}
+
+.addr-box{
+  background:var(--sf);border:1px solid var(--bd);
+  border-radius:14px;padding:14px;
+}
+.addr-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:12px}
+.addr-ic{
+  width:38px;height:38px;flex-shrink:0;
+  border-radius:10px;background:var(--prL);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;
+}
+[data-t="dark"] .addr-ic{background:var(--prL)}
+.addr-body{flex:1;min-width:0}
+.addr-t{font-size:13px;font-weight:800;margin-bottom:2px}
+.addr-s{font-size:12px;color:var(--tx2);line-height:1.4}
+.addr-btn{
+  padding:9px 14px;border-radius:10px;
+  background:var(--sf2);border:1px solid var(--bd);
+  font-size:12px;font-weight:800;
+  flex-shrink:0;
+}
+.addr-btn:active{transform:scale(.95)}
+
+.sticky{
+  position:fixed;bottom:0;left:0;right:0;z-index:60;
+  background:var(--sf);border-top:1px solid var(--bd);
+  padding:12px 14px calc(12px + var(--safe-b));
+  max-width:640px;margin:0 auto;
+  box-shadow:0 -4px 20px rgba(0,0,0,.08);
+}
+.sum-row{
+  display:flex;justify-content:space-between;
+  font-size:12.5px;color:var(--tx2);margin-bottom:5px;
+}
+.sum-row.disc{color:var(--pr);font-weight:700}
+.sum-row.big{
+  font-size:17px;font-weight:900;color:var(--tx);
+  margin-top:8px;padding-top:8px;
+  border-top:2px solid var(--bd);
+}
+.sum-row.big span:last-child{color:var(--pr)}
+.sum-cb{
+  display:flex;align-items:center;gap:6px;
+  background:var(--prL);color:var(--prD);
+  padding:8px 12px;border-radius:10px;
+  font-size:12px;font-weight:800;margin-top:8px;
+}
+[data-t="dark"] .sum-cb{color:var(--prL)}
+.order-btn{
+  width:100%;padding:16px;border-radius:14px;
+  background:var(--pr);color:#fff;
+  font-size:16px;font-weight:900;
+  margin-top:12px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  min-height:54px;
+}
+.order-btn:active{transform:scale(.98)}
+.order-btn:disabled{opacity:.5}
+
+.sel-all{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;background:var(--sf);
+  border:1px solid var(--bd);border-radius:12px;
+  margin-bottom:10px;
+}
+.sel-all input{width:22px;height:22px;accent-color:var(--pr);cursor:pointer}
+.sel-all-lbl{flex:1;font-size:13px;font-weight:700}
+.sel-all-btn{
+  font-size:12px;color:var(--er);font-weight:700;
+  padding:6px 10px;border-radius:8px;
+}
+
+.md{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,.55);
+  display:none;align-items:flex-end;justify-content:center;
+  animation:fadeIn .15s;
+}
+.md.on{display:flex}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.md-box{
+  background:var(--sf);width:100%;max-width:640px;
+  max-height:92vh;overflow-y:auto;
+  border-radius:22px 22px 0 0;
+  padding:18px 16px calc(18px + var(--safe-b));
+  animation:up .25s cubic-bezier(.2,.8,.2,1);
+  -webkit-overflow-scrolling:touch;
+}
+@keyframes up{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.md-h{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:16px;position:sticky;top:-18px;
+  background:var(--sf);padding:8px 0;z-index:1;
+}
+.md-h h3{font-size:18px;font-weight:900}
+.md-x{
+  width:38px;height:38px;border-radius:50%;
+  background:var(--sf2);font-size:18px;
+  display:flex;align-items:center;justify-content:center;
+}
+.md-x:active{transform:scale(.9)}
+
+.f{margin-bottom:12px}
+.fl{
+  display:block;font-size:12.5px;font-weight:700;
+  color:var(--tx2);margin-bottom:6px;
+}
+.fl b{color:var(--er)}
+.inp,.txa,.sel{
+  width:100%;padding:14px;
+  background:var(--sf2);border:1.5px solid var(--bd);
+  border-radius:12px;color:var(--tx);
+  font-size:15px;font-weight:600;outline:none;
+  font-family:inherit;
+}
+.inp:focus,.txa:focus,.sel:focus{border-color:var(--pr)}
+.txa{resize:vertical;min-height:80px;line-height:1.5;font-weight:500}
+
+.success{
+  text-align:center;padding:30px 20px;
+}
+.success-ic{
+  font-size:80px;margin-bottom:16px;
+  animation:pop .5s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.2)}100%{transform:scale(1)}}
+.success-t{font-size:22px;font-weight:900;margin-bottom:8px}
+.success-s{font-size:13px;color:var(--tx2);margin-bottom:20px;line-height:1.5}
+.success-code{
+  display:inline-block;padding:8px 16px;
+  background:var(--prL);color:var(--prD);
+  border-radius:10px;font-weight:900;font-size:14px;
+  margin-bottom:16px;
+  font-family:monospace;letter-spacing:1px;
+}
+[data-t="dark"] .success-code{color:var(--prL)}
+.success-info{
+  background:var(--sf2);border-radius:14px;
+  padding:14px;text-align:left;
+  font-size:12.5px;line-height:1.7;
+  margin-bottom:20px;
+}
+.success-info b{color:var(--tx)}
+.success-btns{display:flex;flex-direction:column;gap:8px}
+
+.tst{
+  position:fixed;bottom:calc(160px + var(--safe-b));
+  left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--tx);color:var(--bg);
+  padding:11px 20px;border-radius:100px;
+  font-size:13px;font-weight:700;z-index:400;
+  opacity:0;transition:.3s;pointer-events:none;
+  max-width:90%;text-align:center;
+  box-shadow:var(--sh2);
+}
+.tst.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.tst.o{background:var(--pr);color:#fff}
+.tst.e{background:var(--er);color:#fff}
+
+.hscroll{
+  display:flex;gap:10px;overflow-x:auto;
+  padding:0 12px 16px;scrollbar-width:none;
+}
+.hscroll::-webkit-scrollbar{display:none}
+.pcard{
+  flex:0 0 140px;
+  background:var(--sf);border:1px solid var(--bd);
+  border-radius:14px;overflow:hidden;
+}
+.pcard-img{
+  aspect-ratio:1;background:var(--sf2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:48px;
+}
+.pcard-body{padding:8px}
+.pcard-p{font-size:13px;font-weight:900}
+.pcard-n{
+  font-size:11px;line-height:1.3;margin-top:4px;
+  color:var(--tx2);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;
+}
+</style>
+</head>
+<body data-t="light">
+<div class="app">
+
+  <div class="hdr">
+    <button class="hdr-btn" onclick="goBack()" aria-label="Orqaga">←</button>
+    <div class="hdr-title">
+      <b>Savat</b>
+      <span id="hdrSub">Yuklanmoqda...</span>
+    </div>
+    <button class="hdr-edit" onclick="clearAll()" id="clearBtn" style="display:none">🗑 Tozalash</button>
+  </div>
+
+  <div id="main"></div>
+
+  <div id="recommended"></div>
+
+</div>
+
+<div class="sticky" id="sticky" style="display:none">
+  <div class="sum-row"><span>Mahsulotlar (<span id="sumCount">0</span>)</span><span id="sumItems">0 so'm</span></div>
+  <div class="sum-row disc" id="sumDiscRow" style="display:none"><span>Chegirma</span><span id="sumDisc">0 so'm</span></div>
+  <div class="sum-row" id="sumDlvRow" style="display:none"><span>Yetkazib berish</span><span id="sumDlv">0 so'm</span></div>
+  <div class="sum-row big"><span>JAMI</span><span id="sumTotal">0 so'm</span></div>
+  <div class="sum-cb" id="sumCbRow" style="display:none">💎 Keshbek: <span id="sumCb">0 so'm</span></div>
+  <button class="order-btn" id="orderBtn" onclick="openCheckout()" disabled>
+    ✅ Buyurtma berish
+  </button>
+</div>
+
+<div class="md" id="md" onclick="if(event.target.id==='md')closeMd()">
+  <div class="md-box" id="mdBox"></div>
+</div>
+
+<div class="tst" id="tst"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script>
+/* ═══ FIREBASE — asosiy loyiha ═══ */
+var FBC={
+  apiKey:"AIzaSyAX_jMlvSTo64seJr1nuAZQdN95_fHI1RI",
+  authDomain:"rayis-bozori.firebaseapp.com",
+  databaseURL:"https://rayis-bozori-default-rtdb.firebaseio.com",
+  projectId:"rayis-bozori",
+  storageBucket:"rayis-bozori.firebasestorage.app",
+  messagingSenderId:"2519056122",
+  appId:"1:2519056122:web:ceca980c17a349df0b9343"
+};
+var DB=null;
+try{if(!firebase.apps.length)firebase.initializeApp(FBC);DB=firebase.database();}catch(e){console.warn('FB:',e);}
+
+function getUID(){
+  var u=localStorage.getItem('rayis_uid');
+  if(!u){u='u_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);localStorage.setItem('rayis_uid',u);}
+  return u;
+}
+var UID=getUID();
+
+var PRODUCTS=[
+{id:'p001',cat:'quril',e:'🧱',n:'Sement M400 (50 kg)',price:45000,old:52000,unit:'qop',rate:4.8,reviews:342,seller:'Qumqo\'rg\'on Qurilish',stock:5200,cashback:2},
+{id:'p002',cat:'quril',e:'🏖',n:'Qum (yuvilgan, m³)',price:250000,old:280000,unit:'m³',rate:4.7,reviews:128,seller:'Surxon Qum',stock:800,cashback:1},
+{id:'p003',cat:'quril',e:'🪨',n:"Shag'al 5-20 mm (m³)",price:220000,old:250000,unit:'m³',rate:4.6,reviews:96,seller:'Surxon Karyer',stock:600,cashback:1},
+{id:'p004',cat:'quril',e:'🧱',n:'Gazoblok 25 sm (600×250×250)',price:18000,old:22000,unit:'dona',rate:4.9,reviews:512,seller:'Termiz Gazoblok',stock:12000,cashback:3},
+{id:'p005',cat:'quril',e:'🧱',n:'Pishgan g\'isht std 25 sm',price:700,old:850,unit:'dona',rate:4.7,reviews:280,seller:'Qumqo\'rg\'on G\'isht',stock:50000,cashback:1},
+{id:'p006',cat:'quril',e:'⬛',n:'Shlakoblok 25 sm',price:6000,old:7500,unit:'dona',rate:4.5,reviews:64,seller:'Bekzod Yo\'l Qurilish',stock:8000,cashback:2},
+{id:'p007',cat:'quril',e:'⚙️',n:'Armatura 12 mm A500C',price:8800000,old:9200000,unit:'tonna',rate:4.8,reviews:52,seller:'Termiz Metall',stock:45,cashback:1},
+{id:'p008',cat:'quril',e:'⚙️',n:'Armatura 10 mm A500C',price:8500000,old:8900000,unit:'tonna',rate:4.7,reviews:38,seller:'Termiz Metall',stock:60,cashback:1},
+{id:'p009',cat:'quril',e:'⬛',n:'Beton M200 (m³)',price:340000,old:380000,unit:'m³',rate:4.6,reviews:74,seller:'Surxon Beton',stock:200,cashback:1},
+{id:'p010',cat:'quril',e:'⬛',n:'Beton M300 (m³)',price:390000,old:430000,unit:'m³',rate:4.8,reviews:58,seller:'Surxon Beton',stock:180,cashback:1},
+{id:'p011',cat:'quril',e:'🧱',n:'Klei (bloklar uchun, 25 kg)',price:35000,old:42000,unit:'qop',rate:4.7,reviews:142,seller:'Termiz Qurilish',stock:800,cashback:2},
+{id:'p012',cat:'quril',e:'🔧',n:'Armatura to\'r 100×100',price:4000,old:5000,unit:'m²',rate:4.5,reviews:36,seller:'Termiz Metall',stock:500,cashback:1},
+{id:'p013',cat:'asbob',e:'🔨',n:'Perforator Bosch GBH 2-26',price:1850000,old:2200000,unit:'dona',rate:4.9,reviews:214,seller:'RAYIS Tools',stock:24,cashback:5},
+{id:'p014',cat:'asbob',e:'🔧',n:'Drel akkumulyatorli 18V',price:950000,old:1200000,unit:'dona',rate:4.7,reviews:168,seller:'RAYIS Tools',stock:36,cashback:4},
+{id:'p015',cat:'asbob',e:'🔨',n:'Bolg\'a 500 g',price:45000,old:55000,unit:'dona',rate:4.6,reviews:88,seller:'Qumqo\'rg\'on Do\'kon',stock:120,cashback:1},
+{id:'p016',cat:'asbob',e:'🔧',n:'Ruletka 5 m',price:25000,old:32000,unit:'dona',rate:4.5,reviews:126,seller:'Qumqo\'rg\'on Do\'kon',stock:200,cashback:1},
+{id:'p017',cat:'asbob',e:'🪚',n:'Elektr arra 1800W',price:780000,old:950000,unit:'dona',rate:4.7,reviews:94,seller:'RAYIS Tools',stock:18,cashback:4},
+{id:'p018',cat:'asbob',e:'🔨',n:'Bolg\'a-arralov (beton)',price:2400000,old:2800000,unit:'dona',rate:4.8,reviews:56,seller:'RAYIS Tools',stock:12,cashback:5},
+{id:'p019',cat:'elektr',e:'⚡',n:'Kabel VVG 3×2.5 (m)',price:12000,old:14000,unit:'m',rate:4.8,reviews:184,seller:'Surxon Elektr',stock:5000,cashback:2},
+{id:'p020',cat:'elektr',e:'⚡',n:'Kabel VVG 3×1.5 (m)',price:8000,old:9500,unit:'m',rate:4.7,reviews:162,seller:'Surxon Elektr',stock:6000,cashback:2},
+{id:'p021',cat:'elektr',e:'🔌',n:'Rozetka (yashirin)',price:28000,old:35000,unit:'dona',rate:4.6,reviews:98,seller:'Surxon Elektr',stock:500,cashback:2},
+{id:'p022',cat:'elektr',e:'💡',n:'LED chiroq 12W',price:25000,old:32000,unit:'dona',rate:4.7,reviews:220,seller:'Surxon Elektr',stock:800,cashback:3},
+{id:'p023',cat:'elektr',e:'🔌',n:'Avtomat 16A',price:45000,old:55000,unit:'dona',rate:4.8,reviews:72,seller:'Surxon Elektr',stock:300,cashback:2},
+{id:'p024',cat:'elektr',e:'🔌',n:'Elektr shit 12 modul',price:450000,old:550000,unit:'dona',rate:4.7,reviews:44,seller:'Surxon Elektr',stock:45,cashback:2},
+{id:'p025',cat:'sant',e:'🚿',n:'PPR truba 25 mm (m)',price:25000,old:30000,unit:'m',rate:4.7,reviews:112,seller:'Surxon Santexnika',stock:1000,cashback:2},
+{id:'p026',cat:'sant',e:'🚽',n:'Unitaz (komplekt)',price:1200000,old:1500000,unit:'dona',rate:4.6,reviews:86,seller:'Surxon Santexnika',stock:28,cashback:3},
+{id:'p027',cat:'sant',e:'🚿',n:'Smesitel (vanna)',price:280000,old:380000,unit:'dona',rate:4.7,reviews:118,seller:'Surxon Santexnika',stock:60,cashback:3},
+{id:'p028',cat:'sant',e:'🛁',n:'Vanna (170×70)',price:2200000,old:2800000,unit:'dona',rate:4.5,reviews:42,seller:'Surxon Santexnika',stock:14,cashback:3},
+{id:'p029',cat:'sant',e:'🚿',n:'Dush kabina',price:1800000,old:2300000,unit:'dona',rate:4.7,reviews:56,seller:'Surxon Santexnika',stock:10,cashback:3},
+{id:'p030',cat:'isit',e:'🔥',n:'Qozon gaz (24 kW)',price:4500000,old:5200000,unit:'dona',rate:4.8,reviews:64,seller:'Surxon Isitish',stock:18,cashback:3},
+{id:'p031',cat:'isit',e:'🔥',n:'Qozon o\'tin/ko\'mir',price:3200000,old:3800000,unit:'dona',rate:4.7,reviews:88,seller:'Surxon Isitish',stock:22,cashback:3},
+{id:'p032',cat:'isit',e:'🔥',n:'Radiator 500×100',price:650000,old:780000,unit:'dona',rate:4.6,reviews:142,seller:'Surxon Isitish',stock:80,cashback:3},
+{id:'p033',cat:'isit',e:'🔥',n:'Issiq pol kabeli (m²)',price:180000,old:220000,unit:'m²',rate:4.7,reviews:38,seller:'Surxon Isitish',stock:200,cashback:3},
+{id:'p034',cat:'boyoq',e:'🎨',n:'Ichki bo\'yoq (15 l)',price:380000,old:450000,unit:'dona',rate:4.8,reviews:164,seller:'Surxon Bo\'yoq',stock:120,cashback:3},
+{id:'p035',cat:'boyoq',e:'🎨',n:'Fasad bo\'yoq (15 l)',price:520000,old:620000,unit:'dona',rate:4.7,reviews:96,seller:'Surxon Bo\'yoq',stock:80,cashback:3},
+{id:'p036',cat:'boyoq',e:'🎨',n:'Shpaklyovka (25 kg)',price:85000,old:100000,unit:'qop',rate:4.6,reviews:112,seller:'Surxon Bo\'yoq',stock:400,cashback:2},
+{id:'p037',cat:'boyoq',e:'🎨',n:'Grunt (10 l)',price:120000,old:150000,unit:'dona',rate:4.7,reviews:78,seller:'Surxon Bo\'yoq',stock:200,cashback:2},
+{id:'p038',cat:'boyoq',e:'🎨',n:'Gulqog\'oz (rulon)',price:150000,old:200000,unit:'rulon',rate:4.5,reviews:186,seller:'Surxon Bo\'yoq',stock:300,cashback:2},
+{id:'p039',cat:'tom',e:'🏠',n:'Shifer 8 to\'lqin',price:80000,old:95000,unit:'list',rate:4.7,reviews:224,seller:'Surxon Tom',stock:1200,cashback:2},
+{id:'p040',cat:'tom',e:'🏠',n:'Metallocherepitsa (m²)',price:90000,old:110000,unit:'m²',rate:4.8,reviews:168,seller:'Surxon Tom',stock:2000,cashback:3},
+{id:'p041',cat:'tom',e:'🏠',n:'Ondulin (m²)',price:100000,old:120000,unit:'m²',rate:4.6,reviews:96,seller:'Surxon Tom',stock:800,cashback:3},
+{id:'p042',cat:'tom',e:'🏠',n:'Profnastil (m²)',price:68000,old:78000,unit:'m²',rate:4.7,reviews:142,seller:'Surxon Tom',stock:1500,cashback:3},
+{id:'p043',cat:'tom',e:'🪵',n:'Mourlat 5×15 (pm)',price:50000,old:60000,unit:'pm',rate:4.6,reviews:56,seller:'Surxon Yog\'och',stock:600,cashback:2},
+{id:'p044',cat:'eshik',e:'🚪',n:'Ichki eshik (std)',price:950000,old:1200000,unit:'dona',rate:4.7,reviews:112,seller:'Surxon Eshik',stock:60,cashback:3},
+{id:'p045',cat:'eshik',e:'🚪',n:'Temir eshik (kirish)',price:4500000,old:5500000,unit:'dona',rate:4.8,reviews:64,seller:'Surxon Eshik',stock:18,cashback:3},
+{id:'p046',cat:'eshik',e:'🪟',n:'Plastik deraza 1.5×1.5',price:1650000,old:1900000,unit:'dona',rate:4.7,reviews:142,seller:'Surxon Deraza',stock:45,cashback:3},
+{id:'p047',cat:'eshik',e:'🪟',n:'Plastik deraza 3-kamera',price:2200000,old:2600000,unit:'dona',rate:4.8,reviews:96,seller:'Surxon Deraza',stock:30,cashback:3},
+{id:'p048',cat:'metal',e:'⚙️',n:'Profil truba 40×40 (6 m)',price:185000,old:220000,unit:'dona',rate:4.7,reviews:78,seller:'Termiz Metall',stock:200,cashback:2},
+{id:'p049',cat:'metal',e:'⚙️',n:'Burchak 50×50 (6 m)',price:165000,old:195000,unit:'dona',rate:4.6,reviews:64,seller:'Termiz Metall',stock:180,cashback:2},
+{id:'p050',cat:'metal',e:'⚙️',n:'Payvand elektrod 3 mm (5 kg)',price:65000,old:78000,unit:'paket',rate:4.7,reviews:118,seller:'Termiz Metall',stock:400,cashback:2},
+{id:'p051',cat:'yogoch',e:'🪵',n:'Reka 5×5 (6 m)',price:40000,old:48000,unit:'dona',rate:4.6,reviews:142,seller:'Surxon Yog\'och',stock:800,cashback:1},
+{id:'p052',cat:'yogoch',e:'🪵',n:'Yog\'och 3×10 (6 m)',price:100000,old:120000,unit:'dona',rate:4.7,reviews:86,seller:'Surxon Yog\'och',stock:400,cashback:2},
+{id:'p053',cat:'yogoch',e:'🪵',n:'Faner 10 mm (1525×1525)',price:180000,old:220000,unit:'list',rate:4.5,reviews:52,seller:'Surxon Yog\'och',stock:150,cashback:2},
+{id:'p054',cat:'yogoch',e:'🪵',n:'Strapila 4 m (dona)',price:100000,old:120000,unit:'dona',rate:4.6,reviews:64,seller:'Surxon Yog\'och',stock:500,cashback:2},
+{id:'p055',cat:'hovli',e:'🌳',n:'Daraxt ko\'chati (mevali)',price:50000,old:65000,unit:'dona',rate:4.7,reviews:168,seller:'Surxon Bog\'',stock:300,cashback:2},
+{id:'p056',cat:'hovli',e:'🌳',n:'Yo\'lka plitkasi (m²)',price:95000,old:120000,unit:'m²',rate:4.6,reviews:142,seller:'Surxon Hovli',stock:1000,cashback:3},
+{id:'p057',cat:'hovli',e:'🌳',n:'Bordyur (pm)',price:55000,old:68000,unit:'pm',rate:4.5,reviews:64,seller:'Surxon Hovli',stock:600,cashback:2},
+{id:'p058',cat:'xizmat',e:'🚛',n:'Yuk tashish (Qumqo\'rg\'on)',price:250000,old:300000,unit:'reys',rate:4.8,reviews:86,seller:'Surxon Logistika',stock:999,cashback:0},
+{id:'p059',cat:'xizmat',e:'🚜',n:'Ekskavator (soat)',price:350000,old:400000,unit:'soat',rate:4.7,reviews:52,seller:'Surxon Texnika',stock:999,cashback:0},
+{id:'p060',cat:'xizmat',e:'🚜',n:'Traktor (soat)',price:280000,old:320000,unit:'soat',rate:4.6,reviews:64,seller:'Surxon Texnika',stock:999,cashback:0}
+];
+
+var PROMOS={
+  'RAYIS10':   {type:'percent',value:10,min:500000,max:1000000,label:'10% chegirma (max 1 mln)'},
+  'YANGI2025': {type:'fixed',value:100000,min:300000,label:'100 000 so\'m chegirma'},
+  'BEPUL':     {type:'delivery',value:0,min:0,label:'Bepul yetkazib berish'},
+  'QURILISH':  {type:'percent',value:5,min:2000000,max:500000,label:'5% chegirma (2 mln+)'},
+  'SUPER15':   {type:'percent',value:15,min:5000000,max:2000000,label:'15% chegirma (5 mln+)'}
+};
+
+var ST={
+  cart:{},
+  selected:{},
+  promo:null,
+  delivery:'courier',
+  payment:'cash',
+  address:null,
+  loc:'Qumqo\'rg\'on tumani'
+};
+
+function loadLocal(){
+  try{
+    var c=localStorage.getItem('rayis_cart_'+UID);
+    if(c)ST.cart=JSON.parse(c);
+    var sel=localStorage.getItem('rayis_cart_sel_'+UID);
+    if(sel){ST.selected=JSON.parse(sel);}
+    else {Object.keys(ST.cart).forEach(function(k){ST.selected[k]=true;});}
+    var p=localStorage.getItem('rayis_promo_'+UID);
+    if(p)ST.promo=JSON.parse(p);
+    var ad=localStorage.getItem('rayis_addr_'+UID);
+    if(ad)ST.address=JSON.parse(ad);
+    var d=localStorage.getItem('rayis_dlv');
+    if(d)ST.delivery=d;
+    var pay=localStorage.getItem('rayis_pay');
+    if(pay)ST.payment=pay;
+    var l=localStorage.getItem('rayis_loc');
+    if(l)ST.loc=l;
+  }catch(e){}
+}
+function saveCart(){
+  localStorage.setItem('rayis_cart_'+UID,JSON.stringify(ST.cart));
+  localStorage.setItem('rayis_cart_sel_'+UID,JSON.stringify(ST.selected));
+}
+function savePromo(){
+  if(ST.promo)localStorage.setItem('rayis_promo_'+UID,JSON.stringify(ST.promo));
+  else localStorage.removeItem('rayis_promo_'+UID);
+}
+function saveAddress(){
+  if(ST.address)localStorage.setItem('rayis_addr_'+UID,JSON.stringify(ST.address));
+}
+function savePrefs(){
+  localStorage.setItem('rayis_dlv',ST.delivery);
+  localStorage.setItem('rayis_pay',ST.payment);
+}
+
+function fmt(n){return Math.round(Number(n)||0).toLocaleString('ru-RU').replace(/,/g,' ')+" so'm";}
+function fmtN(n){return Math.round(Number(n)||0).toLocaleString('ru-RU').replace(/,/g,' ');}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function toast(m,tp){var e=document.getElementById('tst');e.textContent=m;e.className='tst on'+(tp==='e'?' e':tp==='o'?' o':'');clearTimeout(e._t);e._t=setTimeout(function(){e.className='tst'+(tp==='e'?' e':' o');},2200);}
+function closeMd(){document.getElementById('md').classList.remove('on');}
+function openMd(){document.getElementById('md').classList.add('on');}
+
+function calcTotals(){
+  var itemsTotal=0;
+  var itemsOldTotal=0;
+  var count=0;
+  var cashback=0;
+  var byShop={};
+  
+  Object.keys(ST.cart).forEach(function(pid){
+    if(!ST.selected[pid])return;
+    var p=PRODUCTS.find(function(x){return x.id===pid;});
+    if(!p)return;
+    var q=ST.cart[pid];
+    var sum=p.price*q;
+    var oldSum=(p.old||p.price)*q;
+    itemsTotal+=sum;
+    itemsOldTotal+=oldSum;
+    count+=q;
+    cashback+=(p.price*q*(p.cashback||0)/100);
+    if(!byShop[p.seller])byShop[p.seller]={items:0,total:0};
+    byShop[p.seller].items++;
+    byShop[p.seller].total+=sum;
+  });
+  
+  var disc=itemsOldTotal-itemsTotal;
+  var promoDisc=0;
+  if(ST.promo){
+    var pp=PROMOS[ST.promo.code];
+    if(pp && itemsTotal>=pp.min){
+      if(pp.type==='percent'){
+        promoDisc=Math.min(itemsTotal*pp.value/100,pp.max||Infinity);
+      } else if(pp.type==='fixed'){
+        promoDisc=pp.value;
+      }
+    }
+  }
+  
+  var delivery=0;
+  if(ST.delivery==='courier'){
+    delivery=itemsTotal>=2000000?0:50000;
+    if(ST.promo&&ST.promo.code==='BEPUL'&&itemsTotal>=PROMOS['BEPUL'].min)delivery=0;
+  }
+  
+  var total=itemsTotal-promoDisc+delivery;
+  return {
+    itemsTotal:itemsTotal,
+    itemsOldTotal:itemsOldTotal,
+    disc:disc,
+    promoDisc:promoDisc,
+    delivery:delivery,
+    total:Math.max(0,total),
+    count:count,
+    cashback:Math.round(cashback),
+    byShop:byShop
+  };
+}
+
+function render(){
+  var ids=Object.keys(ST.cart).filter(function(pid){
+    return PRODUCTS.find(function(x){return x.id===pid;});
+  });
+  
+  var count=ids.length;
+  var totalQty=0;
+  ids.forEach(function(pid){totalQty+=ST.cart[pid];});
+  document.getElementById('hdrSub').textContent=count+' tur · '+totalQty+' dona';
+  document.getElementById('clearBtn').style.display=count?'block':'none';
+  
+  if(!count){
+    document.getElementById('main').innerHTML=renderEmpty();
+    document.getElementById('sticky').style.display='none';
+    document.getElementById('recommended').innerHTML=renderRecommended();
+    return;
+  }
+  
+  document.getElementById('sticky').style.display='block';
+  var h='';
+  
+  var allSelected=ids.every(function(pid){return ST.selected[pid];});
+  var selCount=ids.filter(function(pid){return ST.selected[pid];}).length;
+  h+='<div class="sec" style="margin-bottom:0">';
+  h+='<div class="sel-all">';
+  h+='<input type="checkbox" '+(allSelected?'checked':'')+' onchange="toggleAll(this.checked)">';
+  h+='<div class="sel-all-lbl">Hammasi ('+ids.length+')</div>';
+  if(selCount>0&&!allSelected)h+='<div style="font-size:11.5px;color:var(--tx2)">'+selCount+' tanlangan</div>';
+  h+='</div>';
+  h+='</div>';
+  
+  if(ST.promo&&PROMOS[ST.promo.code]){
+    var pp=PROMOS[ST.promo.code];
+    h+='<div class="sec">';
+    h+='<div class="promo-box promo-applied">';
+    h+='<div class="promo-ic">🎁</div>';
+    h+='<div class="promo-body">';
+    h+='<div class="promo-t">'+esc(ST.promo.code)+'</div>';
+    h+='<div class="promo-s">'+esc(pp.label)+'</div>';
+    h+='</div>';
+    h+='<button class="promo-btn" onclick="removePromo()">✕ O\'chirish</button>';
+    h+='</div>';
+    h+='</div>';
+  } else {
+    h+='<div class="sec">';
+    h+='<div class="promo-box">';
+    h+='<div class="promo-ic">🎁</div>';
+    h+='<div class="promo-body">';
+    h+='<div class="promo-t">Promo kod</div>';
+    h+='<div class="promo-s">Chegirma olish uchun kiriting</div>';
+    h+='</div>';
+    h+='<button class="promo-btn" onclick="openPromo()">Kiritish</button>';
+    h+='</div>';
+    h+='</div>';
+  }
+  
+  var byShop={};
+  ids.forEach(function(pid){
+    var p=PRODUCTS.find(function(x){return x.id===pid;});
+    if(!byShop[p.seller])byShop[p.seller]=[];
+    byShop[p.seller].push(pid);
+  });
+  
+  Object.keys(byShop).forEach(function(shop){
+    var shopItems=byShop[shop];
+    var shopAllSel=shopItems.every(function(pid){return ST.selected[pid];});
+    h+='<div class="sec">';
+    h+='<div class="shop-group">';
+    h+='<div class="shop-h">';
+    h+='<input type="checkbox" class="shop-check" '+(shopAllSel?'checked':'')+' onchange="toggleShop(\''+esc(shop).replace(/'/g,"\\'")+'\','+!shopAllSel+')">';
+    h+='<div class="shop-inf">';
+    h+='<div class="shop-n">🏪 '+esc(shop)+' <span class="shop-badge">RAYIS</span></div>';
+    h+='<div class="shop-s">'+shopItems.length+' tur mahsulot</div>';
+    h+='</div>';
+    h+='</div>';
+    shopItems.forEach(function(pid){
+      h+=renderCartItem(pid);
+    });
+    h+='</div>';
+    h+='</div>';
+  });
+  
+  h+='<div class="sec">';
+  h+='<div class="sec-h"><h3>🚚 Yetkazib berish</h3></div>';
+  h+='<div class="dlv-opt '+(ST.delivery==='courier'?'on':'')+'" onclick="pickDelivery(\'courier\')">';
+  h+='<div class="dlv-radio"></div>';
+  h+='<div class="dlv-body">';
+  h+='<div class="dlv-t">🚚 Kuryer</div>';
+  h+='<div class="dlv-s">Qumqo\'rg\'on tumani bo\'ylab 1 kunda. Surxondaryo bo\'ylab 2-3 kun.</div>';
+  var t=calcTotals();
+  h+='<div class="dlv-price '+(t.delivery?'paid':'')+'">'+(t.delivery?fmt(t.delivery):'Bepul')+'</div>';
+  h+='</div>';
+  h+='</div>';
+  h+='<div class="dlv-opt '+(ST.delivery==='pickup'?'on':'')+'" onclick="pickDelivery(\'pickup\')">';
+  h+='<div class="dlv-radio"></div>';
+  h+='<div class="dlv-body">';
+  h+='<div class="dlv-t">📦 Olib ketish</div>';
+  h+='<div class="dlv-s">Qumqo\'rg\'on markazidagi ombordan o\'zingiz olasiz</div>';
+  h+='<div class="dlv-price">Bepul</div>';
+  h+='</div>';
+  h+='</div>';
+  h+='</div>';
+  
+  h+='<div class="sec">';
+  h+='<div class="sec-h"><h3>💳 To\'lov usuli</h3></div>';
+  h+='<div class="pay-grid">';
+  h+=payOpt('cash','💵','Naqd pul','Yetkazib berganda');
+  h+=payOpt('card','💳','Plastik karta','Yetkazib berganda');
+  h+=payOpt('payme','🟢','Payme','Onlayn to\'lov');
+  h+=payOpt('click','🔵','Click','Onlayn to\'lov');
+  h+='</div>';
+  h+='</div>';
+  
+  if(ST.delivery==='courier'){
+    h+='<div class="sec">';
+    h+='<div class="sec-h"><h3>📍 Manzil</h3></div>';
+    if(ST.address){
+      h+='<div class="addr-box">';
+      h+='<div class="addr-row">';
+      h+='<div class="addr-ic">📍</div>';
+      h+='<div class="addr-body">';
+      h+='<div class="addr-t">'+esc(ST.address.name)+'</div>';
+      h+='<div class="addr-s">'+esc(ST.address.phone)+'<br>'+esc(ST.address.address)+'</div>';
+      h+='</div>';
+      h+='<button class="addr-btn" onclick="openAddress()">✏️</button>';
+      h+='</div>';
+      h+='</div>';
+    } else {
+      h+='<div class="addr-box">';
+      h+='<div class="addr-row">';
+      h+='<div class="addr-ic">📍</div>';
+      h+='<div class="addr-body">';
+      h+='<div class="addr-t">Manzil kiritilmagan</div>';
+      h+='<div class="addr-s">Buyurtma berish uchun manzilni kiriting</div>';
+      h+='</div>';
+      h+='<button class="addr-btn" onclick="openAddress()">Kiritish</button>';
+      h+='</div>';
+      h+='</div>';
+    }
+    h+='</div>';
+  }
+  
+  h+='<div style="height:20px"></div>';
+  document.getElementById('main').innerHTML=h;
+  document.getElementById('recommended').innerHTML=renderRecommended();
+  updateSticky();
+}
+
+function renderEmpty(){
+  return '<div class="empty">'+
+    '<div class="empty-ic">🛒</div>'+
+    '<div class="empty-t">Savat bo\'sh</div>'+
+    '<div class="empty-s">Hozircha mahsulot qo\'shmagansiz.<br>Katalogdan boshlang yoki kalkulyatordan foydalaning.</div>'+
+    '<button class="empty-btn" onclick="goCatalog()">🗂 Katalogga o\'tish</button>'+
+    '<div style="margin-top:14px"><button class="empty-btn" style="background:var(--sf2);color:var(--tx);border:1px solid var(--bd)" onclick="goCalc()">🧮 Kalkulyator</button></div>'+
+    '</div>';
+}
+
+function renderCartItem(pid){
+  var p=PRODUCTS.find(function(x){return x.id===pid;});
+  if(!p)return '';
+  var q=ST.cart[pid];
+  var sum=p.price*q;
+  var disc=p.old>p.price?Math.round((1-p.price/p.old)*100):0;
+  var isSel=ST.selected[pid];
+  var overStock=q>p.stock;
+  
+  var h='<div class="ci">';
+  h+='<input type="checkbox" class="ci-check" '+(isSel?'checked':'')+' onchange="toggleItem(\''+pid+'\',this.checked)">';
+  h+='<div class="ci-img" onclick="openProduct(\''+pid+'\')">';
+  if(disc>0)h+='<div class="ci-disc">-'+disc+'%</div>';
+  h+=p.e;
+  h+='</div>';
+  h+='<div class="ci-body">';
+  h+='<div class="ci-n" onclick="openProduct(\''+pid+'\')">'+esc(p.n)+'</div>';
+  h+='<div class="ci-meta">🏪 '+esc(p.seller)+' · ★ '+p.rate+'</div>';
+  h+='<div class="ci-price">';
+  h+='<span class="ci-new">'+fmt(sum)+'</span>';
+  if(p.old>p.price)h+='<span class="ci-old">'+fmt(p.old*q)+'</span>';
+  h+='</div>';
+  if(overStock)h+='<div class="warn">⚠️ Omborda faqat '+p.stock+' '+esc(p.unit)+' qoldi</div>';
+  h+='<div class="ci-row">';
+  h+='<div class="ci-qty">';
+  h+='<button class="qb" onclick="chQty(\''+pid+'\',-1)" '+(q<=1?'disabled':'')+'>−</button>';
+  h+='<div class="qv">'+q+'</div>';
+  h+='<button class="qb" onclick="chQty(\''+pid+'\',1)" '+(q>=Math.min(p.stock,99)?'disabled':'')+'>+</button>';
+  h+='</div>';
+  h+='<button class="ci-rm" onclick="rmItem(\''+pid+'\')">🗑 O\'chirish</button>';
+  h+='</div>';
+  h+='</div>';
+  h+='</div>';
+  return h;
+}
+
+function payOpt(id,ic,t,s){
+  return '<div class="pay-opt '+(ST.payment===id?'on':'')+'" onclick="pickPayment(\''+id+'\')">'+
+    '<div class="pay-ic">'+ic+'</div>'+
+    '<div><div class="pay-t">'+t+'</div><div class="pay-s">'+s+'</div></div>'+
+    '</div>';
+}
+
+function updateSticky(){
+  var t=calcTotals();
+  document.getElementById('sumCount').textContent=t.count;
+  document.getElementById('sumItems').textContent=fmt(t.itemsTotal);
+  if(t.disc>0||t.promoDisc>0){
+    document.getElementById('sumDiscRow').style.display='flex';
+    document.getElementById('sumDisc').textContent='−'+fmt(t.disc+t.promoDisc);
+  } else {
+    document.getElementById('sumDiscRow').style.display='none';
+  }
+  if(t.delivery>0){
+    document.getElementById('sumDlvRow').style.display='flex';
+    document.getElementById('sumDlv').textContent=fmt(t.delivery);
+  } else {
+    document.getElementById('sumDlvRow').style.display='none';
+  }
+  document.getElementById('sumTotal').textContent=fmt(t.total);
+  if(t.cashback>0){
+    document.getElementById('sumCbRow').style.display='flex';
+    document.getElementById('sumCb').textContent=fmt(t.cashback);
+  } else {
+    document.getElementById('sumCbRow').style.display='none';
+  }
+  var btn=document.getElementById('orderBtn');
+  var selCount=Object.keys(ST.selected).filter(function(k){return ST.selected[k]&&ST.cart[k];}).length;
+  btn.disabled=selCount===0;
+  if(selCount>0)btn.textContent='✅ Buyurtma berish ('+selCount+')';
+  else btn.textContent='Mahsulot tanlang';
+}
+
+function chQty(pid,d){
+  var p=PRODUCTS.find(function(x){return x.id===pid;});
+  if(!p)return;
+  var q=ST.cart[pid]||0;
+  q=Math.max(1,Math.min(Math.min(p.stock,99),q+d));
+  ST.cart[pid]=q;
+  saveCart();
+  render();
+}
+function rmItem(pid){
+  delete ST.cart[pid];
+  delete ST.selected[pid];
+  saveCart();
+  render();
+  toast('O\'chirildi','o');
+}
+function toggleItem(pid,v){
+  ST.selected[pid]=v;
+  saveCart();
+  render();
+}
+function toggleShop(shop,v){
+  Object.keys(ST.cart).forEach(function(pid){
+    var p=PRODUCTS.find(function(x){return x.id===pid;});
+    if(p&&p.seller===shop)ST.selected[pid]=v;
+  });
+  saveCart();
+  render();
+}
+function toggleAll(v){
+  Object.keys(ST.cart).forEach(function(pid){ST.selected[pid]=v;});
+  saveCart();
+  render();
+}
+function pickDelivery(id){
+  ST.delivery=id;
+  savePrefs();
+  render();
+}
+function pickPayment(id){
+  ST.payment=id;
+  savePrefs();
+  render();
+}
+function openProduct(pid){window.location.href='mahsulot.html?id='+pid;}
+function goCatalog(){window.location.href='katalog.html';}
+function goCalc(){window.location.href='qurilish.html';}
+
+function clearAll(){
+  if(!confirm('Savatni tozalashni xohlaysizmi?'))return;
+  ST.cart={};
+  ST.selected={};
+  saveCart();
+  render();
+  toast('Savat tozalandi','o');
+}
+
+function openPromo(){
+  var h='<div class="md-h"><h3>🎁 Promo kod</h3><button class="md-x" onclick="closeMd()">✕</button></div>';
+  h+='<div class="f"><label class="fl">Promo kodni kiriting</label><input class="inp" id="pmInput" placeholder="RAYIS10" style="text-transform:uppercase;font-weight:800;letter-spacing:1px"></div>';
+  h+='<div style="background:var(--sf2);border-radius:12px;padding:12px;font-size:12px;color:var(--tx2);line-height:1.7;margin-bottom:14px">';
+  h+='<b style="color:var(--tx)">Mavjud promo kodlar:</b><br>';
+  Object.keys(PROMOS).forEach(function(k){
+    h+='• <b style="color:var(--pr)">'+k+'</b> — '+PROMOS[k].label+'<br>';
+  });
+  h+='</div>';
+  h+='<button class="order-btn" onclick="applyPromo()">✅ Qo\'llash</button>';
+  document.getElementById('mdBox').innerHTML=h;
+  openMd();
+  setTimeout(function(){document.getElementById('pmInput').focus();},300);
+}
+function applyPromo(){
+  var code=document.getElementById('pmInput').value.trim().toUpperCase();
+  if(!code)return toast('Kodni kiriting','e');
+  if(!PROMOS[code])return toast('Bunday promo kod yo\'q','e');
+  var t=calcTotals();
+  if(t.itemsTotal<PROMOS[code].min){
+    return toast('Minimal summa: '+fmt(PROMOS[code].min),'e');
+  }
+  ST.promo={code:code};
+  savePromo();
+  closeMd();
+  render();
+  toast('🎁 Promo kod qo\'llandi!','o');
+}
+function removePromo(){
+  ST.promo=null;
+  savePromo();
+  render();
+  toast('Promo kod o\'chirildi','o');
+}
+
+function openAddress(){
+  var a=ST.address||{name:'',phone:'',address:'',note:''};
+  var h='<div class="md-h"><h3>📍 Manzil</h3><button class="md-x" onclick="closeMd()">✕</button></div>';
+  h+='<div class="f"><label class="fl">Ism-familiya <b>*</b></label><input class="inp" id="adName" value="'+esc(a.name)+'" placeholder="Alisher Navoiy"></div>';
+  h+='<div class="f"><label class="fl">Telefon <b>*</b></label><input class="inp" id="adPhone" type="tel" value="'+esc(a.phone)+'" placeholder="+998 90 123 45 67"></div>';
+  h+='<div class="f"><label class="fl">Viloyat/Tuman</label><select class="sel" id="adRegion">';
+  ['Qumqo\'rg\'on tumani','Termiz shahri','Denov tumani','Sherobod tumani','Jarqo\'rg\'on tumani','Boysun tumani','Sariosiyo tumani','Uzun tumani','Angor tumani','Qiziriq tumani','Muzrabot tumani','Oltinsoy tumani','Bandixon tumani','Sho\'rchi tumani'].forEach(function(l){
+    h+='<option '+(ST.loc===l?'selected':'')+'>'+l+'</option>';
+  });
+  h+='</select></div>';
+  h+='<div class="f"><label class="fl">Manzil (ko\'cha, uy) <b>*</b></label><input class="inp" id="adAddr" value="'+esc(a.address)+'" placeholder="Navoiy ko\'chasi, 15-uy"></div>';
+  h+='<div class="f"><label class="fl">Qo\'shimcha izoh</label><textarea class="txa" id="adNote" placeholder="Masalan: domofon kodi, mo\'ljal...">'+esc(a.note)+'</textarea></div>';
+  h+='<button class="order-btn" onclick="saveAddressForm()">💾 Saqlash</button>';
+  document.getElementById('mdBox').innerHTML=h;
+  openMd();
+}
+function saveAddressForm(){
+  var name=document.getElementById('adName').value.trim();
+  var phone=document.getElementById('adPhone').value.trim();
+  var address=document.getElementById('adAddr').value.trim();
+  var note=document.getElementById('adNote').value.trim();
+  var region=document.getElementById('adRegion').value;
+  if(name.length<2)return toast('Ism kiriting','e');
+  if(phone.length<7)return toast('Telefon kiriting','e');
+  if(address.length<3)return toast('Manzil kiriting','e');
+  ST.address={name:name,phone:phone,address:address,note:note,region:region};
+  ST.loc=region;
+  saveAddress();
+  localStorage.setItem('rayis_loc',region);
+  closeMd();
+  render();
+  toast('✅ Manzil saqlandi','o');
+}
+
+function openCheckout(){
+  var t=calcTotals();
+  if(t.count===0)return toast('Mahsulot tanlanmagan','e');
+  if(ST.delivery==='courier'&&!ST.address){
+    openAddress();
+    return toast('Avval manzilni kiriting','e');
+  }
+  
+  var h='<div class="md-h"><h3>📦 Buyurtmani tasdiqlash</h3><button class="md-x" onclick="closeMd()">✕</button></div>';
+  h+='<div style="background:var(--sf2);border-radius:12px;padding:14px;margin-bottom:14px">';
+  h+='<div style="font-size:12px;color:var(--tx2);margin-bottom:8px">Buyurtma tarkibi:</div>';
+  Object.keys(ST.cart).forEach(function(pid){
+    if(!ST.selected[pid])return;
+    var p=PRODUCTS.find(function(x){return x.id===pid;});
+    if(!p)return;
+    var q=ST.cart[pid];
+    h+='<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px">';
+    h+='<span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+p.e+' '+esc(p.n)+' × '+q+'</span>';
+    h+='<span style="font-weight:800;margin-left:8px">'+fmt(p.price*q)+'</span>';
+    h+='</div>';
+  });
+  h+='</div>';
+  
+  if(ST.delivery==='courier'&&ST.address){
+    h+='<div style="background:var(--sf2);border-radius:12px;padding:14px;margin-bottom:14px;font-size:12.5px;line-height:1.6">';
+    h+='📍 <b>'+esc(ST.address.name)+'</b><br>'+esc(ST.address.phone)+'<br>'+esc(ST.address.address);
+    if(ST.address.note)h+='<br><span style="color:var(--tx2)">'+esc(ST.address.note)+'</span>';
+    h+='</div>';
+  }
+  
+  h+='<div style="background:var(--sf2);border-radius:12px;padding:14px;margin-bottom:14px">';
+  h+='<div class="sum-row"><span>Mahsulotlar</span><span>'+fmt(t.itemsTotal)+'</span></div>';
+  if(t.disc>0)h+='<div class="sum-row disc"><span>Chegirma</span><span>−'+fmt(t.disc)+'</span></div>';
+  if(t.promoDisc>0)h+='<div class="sum-row disc"><span>Promo</span><span>−'+fmt(t.promoDisc)+'</span></div>';
+  if(t.delivery>0)h+='<div class="sum-row"><span>Yetkazib berish</span><span>'+fmt(t.delivery)+'</span></div>';
+  h+='<div class="sum-row big" style="font-size:15px"><span>JAMI</span><span>'+fmt(t.total)+'</span></div>';
+  h+='</div>';
+  
+  var payLabels={cash:'💵 Naqd pul',card:'💳 Plastik karta',payme:'🟢 Payme',click:'🔵 Click'};
+  h+='<div style="font-size:12px;color:var(--tx2);margin-bottom:14px">To\'lov: <b style="color:var(--tx)">'+payLabels[ST.payment]+'</b></div>';
+  
+  h+='<button class="order-btn" onclick="submitOrder()" id="submitBtn">✅ Buyurtmani tasdiqlash</button>';
+  h+='<div style="font-size:11px;color:var(--tx3);text-align:center;margin-top:10px;line-height:1.5">Tasdiqlash bilan siz <b>ommaviy oferta</b> shartlariga rozilik bildirasiz</div>';
+  
+  document.getElementById('mdBox').innerHTML=h;
+  openMd();
+}
+
+function submitOrder(){
+  var btn=document.getElementById('submitBtn');
+  if(btn.disabled)return;
+  btn.disabled=true;
+  btn.textContent='⏳ Yuborilmoqda...';
+  
+  var t=calcTotals();
+  var items=[];
+  Object.keys(ST.cart).forEach(function(pid){
+    if(!ST.selected[pid])return;
+    var p=PRODUCTS.find(function(x){return x.id===pid;});
+    if(!p)return;
+    var q=ST.cart[pid];
+    items.push({
+      id:p.id,n:p.n,e:p.e,price:p.price,old:p.old,qty:q,
+      sum:p.price*q,unit:p.unit,seller:p.seller,cashback:p.cashback
+    });
+  });
+  
+  var order={
+    id:'R-'+Date.now().toString().slice(-8),
+    uid:UID,
+    items:items,
+    itemsCount:t.count,
+    itemsTotal:t.itemsTotal,
+    discount:t.disc,
+    promoCode:ST.promo?ST.promo.code:null,
+    promoDiscount:t.promoDisc,
+    delivery:ST.delivery,
+    deliveryPrice:t.delivery,
+    payment:ST.payment,
+    total:t.total,
+    cashback:t.cashback,
+    address:ST.delivery==='courier'?ST.address:null,
+    loc:ST.loc,
+    status:'new',
+    statusText:'Yangi',
+    createdAt:Date.now(),
+    history:[{status:'new',time:Date.now(),note:'Buyurtma yaratildi'}]
+  };
+  
+  var orders=JSON.parse(localStorage.getItem('rayis_orders_'+UID)||'[]');
+  orders.unshift(order);
+  localStorage.setItem('rayis_orders_'+UID,JSON.stringify(orders));
+  
+  function success(){
+    Object.keys(ST.selected).forEach(function(pid){
+      if(ST.selected[pid]){
+        delete ST.cart[pid];
+        delete ST.selected[pid];
+      }
+    });
+    saveCart();
+    if(ST.promo){ST.promo=null;savePromo();}
+    render();
+    showSuccess(order);
+  }
+  
+  if(DB){
+    DB.ref('orders/'+order.id).set(order)
+      .then(success)
+      .catch(function(e){console.warn('FB error:',e);success();});
+  } else {
+    success();
+  }
+}
+
+function showSuccess(order){
+  var payLabels={cash:'💵 Naqd pul (yetkazib berganda)',card:'💳 Plastik karta (yetkazib berganda)',payme:'🟢 Payme (onlayn)',click:'🔵 Click (onlayn)'};
+  var dlvLabels={courier:'🚚 Kuryer',pickup:'📦 Olib ketish'};
+  
+  var h='<div class="success">';
+  h+='<div class="success-ic">🎉</div>';
+  h+='<div class="success-t">Buyurtma qabul qilindi!</div>';
+  h+='<div class="success-s">Operator tez orada siz bilan bog\'lanadi</div>';
+  h+='<div class="success-code">#'+order.id+'</div>';
+  h+='<div class="success-info">';
+  h+='📦 <b>'+order.itemsCount+' dona</b> mahsulot<br>';
+  h+='💰 <b>'+fmt(order.total)+'</b><br>';
+  h+='🚚 '+dlvLabels[order.delivery]+'<br>';
+  h+='💳 '+payLabels[order.payment]+'<br>';
+  if(order.address)h+='📍 '+esc(order.address.address)+'<br>';
+  h+='💎 Keshbek: <b>'+fmt(order.cashback)+'</b>';
+  h+='</div>';
+  h+='<div style="background:rgba(34,197,94,.1);border-radius:12px;padding:12px;font-size:12px;color:var(--prD);line-height:1.6;margin-bottom:16px;text-align:left">';
+  h+='✅ <b>Keyingi qadam:</b><br>';
+  if(order.payment==='cash'||order.payment==='card')h+='• Operator qo\'ng\'iroq qilib tasdiqlaydi<br>• Mahsulot yetkazilganda to\'lov qilasiz';
+  else h+='• Operator qo\'ng\'iroq qilib tasdiqlaydi<br>• Onlayn to\'lov havolasi yuboriladi';
+  h+='<br>• Buyurtmani <b>Profil</b> bo\'limida kuzatasiz';
+  h+='</div>';
+  h+='<div class="success-btns">';
+  h+='<button class="order-btn" onclick="window.location.href=\'profil.html\'">📦 Buyurtmalarim</button>';
+  h+='<button class="order-btn" style="background:var(--sf2);color:var(--tx);border:1px solid var(--bd)" onclick="window.location.href=\'index.html\'">🏠 Bosh sahifa</button>';
+  h+='</div>';
+  h+='</div>';
+  
+  document.getElementById('mdBox').innerHTML=h;
+  openMd();
+}
+
+function renderRecommended(){
+  var inCart=Object.keys(ST.cart);
+  var recommended=PRODUCTS.filter(function(p){
+    return inCart.indexOf(p.id)<0;
+  }).sort(function(a,b){
+    return (b.rate*b.reviews)-(a.rate*a.reviews);
+  }).slice(0,10);
+  
+  if(!recommended.length)return '';
+  
+  var h='<div class="sec-h" style="padding:16px 12px 10px"><h3>💡 Sizga yoqishi mumkin</h3><a href="katalog.html" style="color:var(--pr);font-size:12px;font-weight:700;text-decoration:none">Barchasi →</a></div>';
+  h+='<div class="hscroll">';
+  recommended.forEach(function(p){
+    var disc=p.old>p.price?Math.round((1-p.price/p.old)*100):0;
+    h+='<div class="pcard" onclick="openProduct(\''+p.id+'\')">';
+    h+='<div class="pcard-img" style="position:relative">';
+    if(disc>0)h+='<div style="position:absolute;top:6px;left:6px;background:var(--er);color:#fff;font-size:10px;font-weight:900;padding:2px 6px;border-radius:5px">-'+disc+'%</div>';
+    h+=p.e;
+    h+='</div>';
+    h+='<div class="pcard-body">';
+    h+='<div class="pcard-p">'+fmt(p.price)+'</div>';
+    h+='<div class="pcard-n">'+esc(p.n)+'</div>';
+    h+='</div>';
+    h+='</div>';
+  });
+  h+='</div>';
+  return h;
+}
+
+function goBack(){
+  if(document.getElementById('md').classList.contains('on')){closeMd();return;}
+  if(window.history.length>2)window.history.back();
+  else window.location.href='katalog.html';
+}
+
+window.addEventListener('popstate',function(){
+  if(document.getElementById('md').classList.contains('on')){
+    closeMd();
+    history.pushState({},'','');
+  }
+});
+
+(function init(){
+  loadLocal();
+  if(Object.keys(ST.cart).length===0 && !localStorage.getItem('rayis_cart_demo_'+UID)){
+    ST.cart={p001:10,p004:50,p013:1};
+    ST.selected={p001:true,p004:true,p013:true};
+    localStorage.setItem('rayis_cart_demo_'+UID,'1');
+    saveCart();
+  }
+  render();
+  history.pushState({page:'cart'},'','');
+  console.log('✅ RAYIS Savat — ishga tushdi');
+})();
+</script>
+</body>
+</html>

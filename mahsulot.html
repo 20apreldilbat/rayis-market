@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#22C55E">
+<title>Mahsulot — RAYIS</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%2322C55E'/><path d='M50 22 L68 38 L32 38 Z' fill='%230B1119'/><text x='50' y='75' font-size='52' font-weight='900' fill='%230B1119' text-anchor='middle' font-family='Arial'>R</text></svg>">
+<style>
+:root{
+  --bg:#F5F7FA;--sf:#FFFFFF;--sf2:#F1F5F9;--sf3:#E8EEF5;--bd:#E2E8F0;
+  --tx:#0F172A;--tx2:#475569;--tx3:#94A3B8;
+  --pr:#22C55E;--pr2:#16A34A;--prD:#15803D;--prL:#DCFCE7;
+  --or:#F59E0B;--er:#EF4444;--ac:#3B82F6;
+  --sh:0 1px 3px rgba(0,0,0,.08);
+  --sh2:0 4px 16px rgba(0,0,0,.1);
+  --safe-b:env(safe-area-inset-bottom,0px);
+  --safe-t:env(safe-area-inset-top,0px);
+}
+[data-t="dark"]{
+  --bg:#0B1119;--sf:#151C26;--sf2:#1E2733;--sf3:#252F3D;--bd:#2A3441;
+  --tx:#F1F5F9;--tx2:#94A3B8;--tx3:#64748B;
+  --prL:#064E3B;
+  --sh:0 1px 3px rgba(0,0,0,.3);
+  --sh2:0 4px 16px rgba(0,0,0,.4);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:-apple-system,"Segoe UI",system-ui,sans-serif;
+  background:var(--bg);color:var(--tx);font-size:14px;line-height:1.5;
+  min-height:100vh;
+  padding-bottom:calc(120px + var(--safe-b));
+  overscroll-behavior-y:none;
+  -webkit-overflow-scrolling:touch;
+}
+img{max-width:100%;display:block}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;touch-action:manipulation}
+input,textarea,select{font-family:inherit;font-size:16px}
+.app{max-width:640px;margin:0 auto;background:var(--bg)}
+
+.hdr{
+  position:sticky;top:0;z-index:50;
+  background:var(--sf);border-bottom:1px solid var(--bd);
+  padding:calc(8px + var(--safe-t)) 8px 8px;
+  display:flex;align-items:center;gap:6px;
+}
+.hdr-btn{
+  width:42px;height:42px;flex-shrink:0;
+  border-radius:12px;background:var(--sf2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;font-weight:800;color:var(--tx);
+  border:1px solid var(--bd);
+  position:relative;
+  transition:.15s;
+}
+.hdr-btn:active{transform:scale(.9);background:var(--bd)}
+.hdr-btn .badge{
+  position:absolute;top:-4px;right:-4px;
+  min-width:18px;height:18px;padding:0 5px;
+  background:var(--er);color:#fff;font-size:10px;font-weight:800;
+  border-radius:100px;display:flex;align-items:center;justify-content:center;
+  border:2px solid var(--sf);
+}
+.hdr-title{
+  flex:1;min-width:0;
+  font-size:14px;font-weight:700;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  padding:0 4px;
+}
+
+.gal{
+  position:relative;background:var(--sf);
+  padding-bottom:10px;
+}
+.gal-track{
+  display:flex;overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.gal-track::-webkit-scrollbar{display:none}
+.gal-slide{
+  flex:0 0 100%;
+  scroll-snap-align:center;
+  aspect-ratio:1;
+  background:var(--sf2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:140px;
+  position:relative;
+  user-select:none;
+}
+.gal-slide .zoomhint{
+  position:absolute;bottom:10px;right:10px;
+  background:rgba(0,0,0,.6);color:#fff;
+  font-size:10px;padding:4px 8px;border-radius:100px;
+  backdrop-filter:blur(4px);
+}
+.gal-disc{
+  position:absolute;top:12px;left:12px;
+  background:var(--er);color:#fff;
+  font-size:13px;font-weight:900;
+  padding:5px 10px;border-radius:8px;
+  box-shadow:0 2px 8px rgba(239,68,68,.4);
+}
+.gal-fav{
+  position:absolute;top:12px;right:12px;
+  width:42px;height:42px;border-radius:50%;
+  background:rgba(255,255,255,.95);color:var(--tx);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;backdrop-filter:blur(6px);
+  box-shadow:var(--sh2);
+}
+.gal-fav.on{color:var(--er)}
+.gal-dots{
+  display:flex;justify-content:center;gap:5px;
+  padding:10px 0 0;
+}
+.gal-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--bd);transition:.2s;
+}
+.gal-dot.on{background:var(--pr);width:18px;border-radius:100px}
+.gal-thumbs{
+  display:flex;gap:6px;padding:8px 12px 0;
+  overflow-x:auto;scrollbar-width:none;
+}
+.gal-thumbs::-webkit-scrollbar{display:none}
+.gal-thumb{
+  flex:0 0 54px;height:54px;border-radius:10px;
+  background:var(--sf2);border:2px solid transparent;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;
+}
+.gal-thumb.on{border-color:var(--pr)}
+
+.card{
+  background:var(--sf);border-radius:16px;
+  padding:14px;margin:10px 12px;
+  border:1px solid var(--bd);
+}
+.card.np{padding:0;overflow:hidden}
+
+.p-price-block{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.p-price{
+  font-size:26px;font-weight:900;
+  color:var(--tx);line-height:1;
+}
+.p-price.disc{color:var(--er)}
+.p-old{
+  font-size:14px;color:var(--tx3);
+  text-decoration:line-through;
+}
+.p-disc-badge{
+  background:var(--er);color:#fff;
+  font-size:11px;font-weight:900;
+  padding:3px 7px;border-radius:6px;
+}
+.p-bonus{
+  display:inline-flex;align-items:center;gap:4px;
+  background:var(--prL);color:var(--prD);
+  font-size:11px;font-weight:800;
+  padding:4px 8px;border-radius:6px;
+  margin-bottom:8px;
+}
+[data-t="dark"] .p-bonus{color:var(--prL)}
+
+.p-name{
+  font-size:16px;font-weight:700;
+  line-height:1.35;margin-bottom:8px;
+}
+.p-meta{
+  display:flex;align-items:center;gap:10px;
+  font-size:12px;color:var(--tx2);margin-bottom:10px;
+  flex-wrap:wrap;
+}
+.p-meta .star{color:var(--or)}
+.p-meta b{color:var(--tx);font-weight:700}
+.p-sku{
+  font-size:11px;color:var(--tx3);margin-top:4px;
+}
+
+.variant{margin-bottom:12px}
+.variant-t{
+  font-size:12px;font-weight:700;color:var(--tx2);
+  margin-bottom:8px;
+}
+.variant-t b{color:var(--tx)}
+.variant-opts{display:flex;flex-wrap:wrap;gap:8px}
+.vo{
+  padding:8px 14px;border-radius:10px;
+  background:var(--sf2);border:1.5px solid var(--bd);
+  font-size:13px;font-weight:600;color:var(--tx);
+  min-height:38px;
+  display:flex;align-items:center;justify-content:center;
+}
+.vo.on{background:var(--prL);border-color:var(--pr);color:var(--prD)}
+[data-t="dark"] .vo.on{color:var(--prL)}
+.vo:active{transform:scale(.95)}
+
+.qty-row{display:flex;align-items:center;gap:12px;margin-top:10px}
+.qty-box{
+  display:flex;align-items:center;gap:4px;
+  background:var(--sf2);border-radius:12px;padding:4px;
+  border:1px solid var(--bd);
+}
+.qty-btn{
+  width:38px;height:38px;border-radius:9px;
+  background:var(--sf);border:1px solid var(--bd);
+  font-size:20px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--tx);
+}
+.qty-btn:active{transform:scale(.9);background:var(--bd)}
+.qty-btn:disabled{opacity:.4}
+.qty-val{
+  min-width:44px;text-align:center;
+  font-size:16px;font-weight:800;
+}
+.qty-stock{
+  font-size:12px;color:var(--tx2);
+}
+.qty-stock b{color:var(--pr);font-weight:800}
+
+.buy-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.btn{
+  padding:14px;border-radius:12px;
+  font-size:14px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  min-height:50px;
+}
+.btn:active{transform:scale(.97)}
+.btn-p{background:var(--pr);color:#fff}
+.btn-p:disabled{opacity:.5}
+.btn-g{background:var(--sf2);color:var(--tx);border:1.5px solid var(--bd)}
+.btn-a{background:linear-gradient(135deg,#F59E0B,#D97706);color:#fff}
+.btn-full{width:100%}
+
+.dlv-row{
+  display:flex;gap:10px;padding:10px 0;
+  border-bottom:1px solid var(--bd);
+  align-items:flex-start;
+}
+.dlv-row:last-child{border-bottom:none}
+.dlv-ic{
+  width:38px;height:38px;flex-shrink:0;
+  border-radius:10px;background:var(--prL);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;
+}
+[data-t="dark"] .dlv-ic{background:var(--prL)}
+.dlv-body{flex:1;min-width:0}
+.dlv-t{font-size:13px;font-weight:700;margin-bottom:2px}
+.dlv-s{font-size:11.5px;color:var(--tx2);line-height:1.4}
+.dlv-s b{color:var(--pr);font-weight:800}
+
+.seller{
+  display:flex;align-items:center;gap:12px;
+}
+.seller-av{
+  width:52px;height:52px;border-radius:14px;
+  background:linear-gradient(135deg,var(--pr),var(--prD));
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:900;font-size:20px;flex-shrink:0;
+}
+.seller-inf{flex:1;min-width:0}
+.seller-n{font-size:14px;font-weight:800;margin-bottom:2px}
+.seller-s{font-size:11.5px;color:var(--tx2)}
+.seller-s .star{color:var(--or)}
+.seller-btn{
+  padding:10px 14px;border-radius:10px;
+  background:var(--sf2);border:1.5px solid var(--bd);
+  font-size:12px;font-weight:800;color:var(--tx);
+  flex-shrink:0;
+}
+.seller-btn:active{transform:scale(.95)}
+
+.tabs{
+  display:flex;background:var(--sf);border-bottom:1px solid var(--bd);
+  position:sticky;top:calc(58px + var(--safe-t));z-index:35;
+  overflow-x:auto;scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex:1;min-width:100px;padding:14px 10px;
+  font-size:13px;font-weight:700;color:var(--tx2);
+  border-bottom:2.5px solid transparent;
+  white-space:nowrap;position:relative;
+}
+.tab.on{color:var(--pr);border-bottom-color:var(--pr)}
+.tab .count{
+  display:inline-block;background:var(--sf2);color:var(--tx2);
+  font-size:10px;font-weight:800;padding:2px 6px;border-radius:100px;
+  margin-left:4px;
+}
+.tab.on .count{background:var(--pr);color:#fff}
+
+.tab-content{padding:14px 12px 20px}
+
+.desc{font-size:13.5px;line-height:1.7;color:var(--tx)}
+.desc p{margin-bottom:10px}
+.desc h4{font-size:14px;font-weight:800;margin:14px 0 8px;color:var(--tx)}
+.desc ul{margin-left:18px;margin-bottom:10px}
+.desc li{margin-bottom:5px}
+.desc b{color:var(--tx)}
+.desc .tag{
+  display:inline-block;background:var(--prL);color:var(--prD);
+  font-size:11px;font-weight:800;padding:3px 8px;border-radius:6px;
+  margin-right:4px;margin-bottom:4px;
+}
+[data-t="dark"] .desc .tag{color:var(--prL)}
+
+.chars{
+  display:flex;flex-direction:column;
+  border-radius:12px;overflow:hidden;
+  background:var(--sf2);
+}
+.char{
+  display:flex;justify-content:space-between;
+  gap:12px;padding:12px 14px;
+  border-bottom:1px solid var(--bd);
+  font-size:13px;
+}
+.char:last-child{border-bottom:none}
+.char-k{color:var(--tx2);flex:1}
+.char-v{font-weight:700;text-align:right;color:var(--tx)}
+.char-group{
+  font-size:11.5px;font-weight:800;color:var(--pr);
+  background:var(--sf);padding:10px 14px 4px;
+  text-transform:uppercase;letter-spacing:.5px;
+}
+
+.rev-summary{
+  display:flex;gap:16px;align-items:center;
+  padding:14px;background:var(--sf);border-radius:14px;
+  margin-bottom:14px;border:1px solid var(--bd);
+}
+.rev-big{
+  text-align:center;flex-shrink:0;
+}
+.rev-big-n{font-size:36px;font-weight:900;color:var(--pr);line-height:1}
+.rev-big-s{font-size:11px;color:var(--tx2);margin-top:4px}
+.rev-bars{flex:1;min-width:0}
+.rev-bar{
+  display:flex;align-items:center;gap:6px;
+  font-size:11px;color:var(--tx2);margin-bottom:3px;
+}
+.rev-bar-l{width:14px;font-weight:700;color:var(--tx)}
+.rev-bar-t{
+  flex:1;height:6px;background:var(--sf2);
+  border-radius:100px;overflow:hidden;
+}
+.rev-bar-f{height:100%;background:var(--or);border-radius:100px}
+.rev-bar-c{width:28px;text-align:right;font-weight:600}
+
+.rev{
+  padding:14px 0;border-bottom:1px solid var(--bd);
+}
+.rev:last-child{border-bottom:none}
+.rev-h{
+  display:flex;align-items:center;gap:10px;margin-bottom:8px;
+}
+.rev-av{
+  width:38px;height:38px;border-radius:50%;
+  background:linear-gradient(135deg,var(--pr),var(--prD));
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:900;font-size:14px;flex-shrink:0;
+}
+.rev-inf{flex:1;min-width:0}
+.rev-n{font-size:13px;font-weight:800}
+.rev-d{font-size:11px;color:var(--tx3);margin-top:2px}
+.rev-stars{color:var(--or);font-size:12px;flex-shrink:0}
+.rev-t{font-size:13.5px;line-height:1.6;margin-bottom:8px}
+.rev-foot{
+  display:flex;gap:14px;font-size:11.5px;color:var(--tx2);
+}
+.rev-foot button{color:var(--tx2);font-weight:700}
+
+.qa{padding:14px 0;border-bottom:1px solid var(--bd)}
+.qa:last-child{border-bottom:none}
+.qa-q{
+  display:flex;gap:10px;align-items:flex-start;
+  margin-bottom:10px;
+}
+.qa-ic{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--ac);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:900;flex-shrink:0;
+}
+.qa-ic.a{background:var(--pr)}
+.qa-body{flex:1;font-size:13.5px;line-height:1.5}
+.qa-who{font-size:11px;color:var(--tx3);margin-top:4px;font-weight:600}
+
+.sim-h{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 12px 10px;
+}
+.sim-h h3{font-size:15px;font-weight:900}
+.sim-h a{font-size:12px;color:var(--pr);font-weight:700;text-decoration:none}
+.hscroll{
+  display:flex;gap:10px;overflow-x:auto;
+  padding:0 12px 16px;scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.hscroll::-webkit-scrollbar{display:none}
+.pcard{
+  flex:0 0 150px;
+  background:var(--sf);border:1px solid var(--bd);
+  border-radius:14px;overflow:hidden;
+  display:flex;flex-direction:column;
+}
+.pcard-img{
+  aspect-ratio:1;background:var(--sf2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:52px;
+}
+.pcard-body{padding:8px;flex:1;display:flex;flex-direction:column}
+.pcard-p{font-size:14px;font-weight:900;margin-bottom:2px}
+.pcard-p.old{font-size:10.5px;color:var(--tx3);text-decoration:line-through;font-weight:500}
+.pcard-n{
+  font-size:11.5px;line-height:1.3;color:var(--tx);
+  margin:4px 0;flex:1;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.pcard-r{font-size:10.5px;color:var(--tx2);margin-bottom:6px}
+.pcard-r .star{color:var(--or)}
+
+.sticky{
+  position:fixed;bottom:0;left:0;right:0;z-index:70;
+  background:var(--sf);border-top:1px solid var(--bd);
+  padding:10px 12px calc(10px + var(--safe-b));
+  max-width:640px;margin:0 auto;
+  box-shadow:0 -4px 20px rgba(0,0,0,.08);
+}
+.sticky-inner{display:flex;gap:10px;align-items:center}
+.sticky-price{flex:1;min-width:0}
+.sticky-p{font-size:18px;font-weight:900;color:var(--tx);line-height:1.1}
+.sticky-s{font-size:10.5px;color:var(--tx2);margin-top:2px}
+.sticky-btn{
+  padding:14px 22px;border-radius:12px;
+  background:var(--pr);color:#fff;
+  font-size:14px;font-weight:900;
+  display:flex;align-items:center;gap:6px;
+  min-height:50px;
+}
+.sticky-btn:active{transform:scale(.97)}
+.sticky-btn.added{background:var(--sf2);color:var(--pr);border:1.5px solid var(--pr)}
+.sticky-fav{
+  width:50px;height:50px;border-radius:12px;
+  background:var(--sf2);border:1.5px solid var(--bd);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;
+}
+.sticky-fav.on{color:var(--er)}
+
+.md{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,.55);
+  display:none;align-items:flex-end;justify-content:center;
+  animation:fadeIn .15s;
+}
+.md.on{display:flex}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.md-box{
+  background:var(--sf);width:100%;max-width:640px;
+  max-height:92vh;overflow-y:auto;
+  border-radius:22px 22px 0 0;
+  padding:18px 16px calc(18px + var(--safe-b));
+  animation:up .25s cubic-bezier(.2,.8,.2,1);
+  -webkit-overflow-scrolling:touch;
+}
+@keyframes up{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.md-h{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:16px;position:sticky;top:-18px;
+  background:var(--sf);padding:8px 0;z-index:1;
+}
+.md-h h3{font-size:18px;font-weight:900}
+.md-x{
+  width:38px;height:38px;border-radius:50%;
+  background:var(--sf2);font-size:18px;
+  display:flex;align-items:center;justify-content:center;
+}
+.md-x:active{transform:scale(.9)}
+
+.f{margin-bottom:12px}
+.fl{
+  display:block;font-size:12.5px;font-weight:700;
+  color:var(--tx2);margin-bottom:6px;
+}
+.fl b{color:var(--er)}
+.inp,.txa,.sel{
+  width:100%;padding:12px 14px;
+  background:var(--sf2);border:1.5px solid var(--bd);
+  border-radius:10px;color:var(--tx);
+  font-size:15px;font-weight:500;outline:none;
+  font-family:inherit;
+}
+.inp:focus,.txa:focus,.sel:focus{border-color:var(--pr)}
+.txa{resize:vertical;min-height:90px;line-height:1.5}
+.sel{-webkit-appearance:none;cursor:pointer;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%2394A3B8'><path d='M7 10L2 5h10z'/></svg>");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px}
+
+.stars-pick{
+  display:flex;gap:6px;font-size:32px;
+  justify-content:center;margin:8px 0 16px;
+}
+.star-p{
+  color:var(--bd);
+  transition:.15s;cursor:pointer;
+  filter:grayscale(1);
+}
+.star-p.on{color:var(--or);filter:none}
+
+.share-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+.share-btn{
+  padding:14px 8px;border-radius:12px;
+  background:var(--sf2);border:1px solid var(--bd);
+  display:flex;flex-direction:column;
+  align-items:center;gap:6px;
+  font-size:11px;font-weight:700;
+  color:var(--tx);
+}
+.share-btn:active{transform:scale(.95)}
+.share-ic{font-size:26px;line-height:1}
+
+.tst{
+  position:fixed;bottom:calc(130px + var(--safe-b));
+  left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--tx);color:var(--bg);
+  padding:11px 20px;border-radius:100px;
+  font-size:13px;font-weight:700;z-index:400;
+  opacity:0;transition:.3s;pointer-events:none;
+  max-width:90%;text-align:center;
+  box-shadow:var(--sh2);
+}
+.tst.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.tst.o{background:var(--pr);color:#fff}
+.tst.e{background:var(--er);color:#fff}
+
+.sk{background:linear-gradient(90deg,var(--sf2) 25%,var(--sf3) 50%,var(--sf2) 75%);background-size:200% 100%;animation:sh 1.5s infinite;border-radius:8px}
+@keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+@media(max-width:360px){
+  .gal-slide{font-size:110px}
+  .p-price{font-size:22px}
+  .btn{font-size:13px;padding:12px}
+  .sticky-btn{padding:12px 16px;font-size:13px}
+}
+</style>
+</head>
+<body data-t="light">
+<div class="app">
+
+  <div class="hdr">
+    <button class="hdr-btn" onclick="goBack()" aria-label="Orqaga">←</button>
+    <div class="hdr-title" id="hdrTitle">Mahsulot</div>
+    <button class="hdr-btn" onclick="openShare()" aria-label="Ulashish">📤</button>
+    <button class="hdr-btn" onclick="openCart()" aria-label="Savat">
+      🛒<span class="badge" id="cartBadge" style="display:none">0</span>
+    </button>
+  </div>
+
+  <div id="main">
+    <div style="padding:20px 12px">
+      <div class="sk" style="aspect-ratio:1;border-radius:16px;margin-bottom:14px"></div>
+      <div class="sk" style="height:20px;width:60%;margin-bottom:10px"></div>
+      <div class="sk" style="height:14px;width:90%;margin-bottom:6px"></div>
+      <div class="sk" style="height:14px;width:80%;margin-bottom:16px"></div>
+      <div class="sk" style="height:50px;border-radius:12px"></div>
+    </div>
+  </div>
+
+  <div id="similarWrap"></div>
+  <div style="height:40px"></div>
+
+</div>
+
+<div class="sticky" id="sticky" style="display:none">
+  <div class="sticky-inner">
+    <div class="sticky-price">
+      <div class="sticky-p" id="stickyPrice">—</div>
+      <div class="sticky-s" id="stickyStock">—</div>
+    </div>
+    <button class="sticky-fav" id="stickyFav" onclick="toggleFav()">🤍</button>
+    <button class="sticky-btn" id="stickyBtn" onclick="addToCart()">
+      🛒 Savatga
+    </button>
+  </div>
+</div>
+
+<div class="md" id="md" onclick="if(event.target.id==='md')closeMd()">
+  <div class="md-box" id="mdBox"></div>
+</div>
+
+<div class="tst" id="tst"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script>
+/* ═══ FIREBASE — asosiy loyiha ═══ */
+var FBC={
+  apiKey:"AIzaSyAX_jMlvSTo64seJr1nuAZQdN95_fHI1RI",
+  authDomain:"rayis-bozori.firebaseapp.com",
+  databaseURL:"https://rayis-bozori-default-rtdb.firebaseio.com",
+  projectId:"rayis-bozori",
+  storageBucket:"rayis-bozori.firebasestorage.app",
+  messagingSenderId:"2519056122",
+  appId:"1:2519056122:web:ceca980c17a349df0b9343"
+};
+var DB=null;
+try{if(!firebase.apps.length)firebase.initializeApp(FBC);DB=firebase.database();}catch(e){console.warn('FB:',e);}
+
+function getUID(){
+  var u=localStorage.getItem('rayis_uid');
+  if(!u){u='u_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);localStorage.setItem('rayis_uid',u);}
+  return u;
+}
+var UID=getUID();
+
+var PRODUCTS=[
+{id:'p001',cat:'quril',e:'🧱',n:'Sement M400 (50 kg)',price:45000,old:52000,unit:'qop',rate:4.8,reviews:342,seller:'Qumqo\'rg\'on Qurilish',stock:5200,cashback:2,images:['🧱','🏗','📦','🚛'],
+ desc:'M400 markali portlandsement. Yuqori sifatli, tez qotadi. Poydevor, devor, suvoq uchun ideal.',
+ chars:[{g:'Asosiy',k:'Marka',v:'M400'},{k:'Og\'irlik',v:'50 kg'},{k:'Ishlab chiqaruvchi',v:'Qizilqum Sement'},{k:'Qadoq turi',v:'Qog\'oz qop'},{k:'Saqlash muddati',v:'6 oy'}],
+ variants:{weight:['50 kg','25 kg','1 tonna']},
+ qa:[{q:'Qancha suv qo\'shiladi?',a:'Har 50 kg uchun 25-30 litr suv.',who:'RAYIS mutaxassisi',date:'2024-09-15'}]},
+{id:'p002',cat:'quril',e:'🏖',n:'Qum (yuvilgan, m³)',price:250000,old:280000,unit:'m³',rate:4.7,reviews:128,seller:'Surxon Qum',stock:800,cashback:1,images:['🏖','🚛','⛏','📦'],
+ desc:'Yuvilgan daryo qumi. Beton, suvoq, qum-tsement aralashmasi uchun.',
+ chars:[{g:'Asosiy',k:'Turi',v:'Yuvilgan daryo qumi'},{k:'Fraksiya',v:'0-5 mm'},{k:'Hajm',v:'1 m³'}]},
+{id:'p003',cat:'quril',e:'🪨',n:"Shag'al 5-20 mm (m³)",price:220000,old:250000,unit:'m³',rate:4.6,reviews:96,seller:'Surxon Karyer',stock:600,cashback:1,images:['🪨','🚛','⛏'],
+ desc:'Tabiiy shag\'al, fraksiya 5-20 mm. Beton, poydevor uchun.',
+ chars:[{g:'Asosiy',k:'Fraksiya',v:'5-20 mm'},{k:'Hajm',v:'1 m³'},{k:'Turi',v:'Tabiiy'}]},
+{id:'p004',cat:'quril',e:'🧱',n:'Gazoblok 25 sm (600×250×250)',price:18000,old:22000,unit:'dona',rate:4.9,reviews:512,seller:'Termiz Gazoblok',stock:12000,cashback:3,images:['🧱','🏗','📦','🏠'],
+ desc:'Avtoklav gazoblok D500. Issiqlik izolyatsiyasi yuqori. 1 m³ = 26 dona.',
+ chars:[{g:'Asosiy',k:'O\'lcham',v:'600×250×250 mm'},{k:'Qalinlik',v:'250 mm'},{k:'Brend',v:'D500'},{k:'1 m³ dona',v:'26 ta'}]},
+{id:'p005',cat:'quril',e:'🧱',n:'Pishgan g\'isht std 25 sm',price:700,old:850,unit:'dona',rate:4.7,reviews:280,seller:'Qumqo\'rg\'on G\'isht',stock:50000,cashback:1,images:['🧱','🏗','📦'],
+ desc:'Qizil pishgan g\'isht, M100 markali. Standart o\'lcham 250×120×65 mm.',
+ chars:[{g:'Asosiy',k:'O\'lcham',v:'250×120×65 mm'},{k:'Marka',v:'M100'},{k:'Rang',v:'Qizil'}]},
+{id:'p006',cat:'quril',e:'⬛',n:'Shlakoblok 25 sm',price:6000,old:7500,unit:'dona',rate:4.5,reviews:64,seller:'Bekzod Yo\'l Qurilish',stock:8000,cashback:2,images:['⬛','🏗','📦'],
+ desc:'Shlakobeton blok, 25 sm qalinlik. Arzon va mustahkam.',
+ chars:[{g:'Asosiy',k:'O\'lcham',v:'390×190×188 mm'},{k:'Qalinlik',v:'250 mm'},{k:'Og\'irlik',v:'18 kg'}]},
+{id:'p007',cat:'quril',e:'⚙️',n:'Armatura 12 mm A500C',price:8800000,old:9200000,unit:'tonna',rate:4.8,reviews:52,seller:'Termiz Metall',stock:45,cashback:1,images:['⚙️','🏗','📦'],
+ desc:'Armatura A500C, diametri 12 mm. Poydevor, karkas uchun. 1 tonna = ~1130 m.',
+ chars:[{g:'Asosiy',k:'Diametr',v:'12 mm'},{k:'Klass',v:'A500C'},{k:'1 tonna metr',v:'~1130 m'}]},
+{id:'p008',cat:'quril',e:'⚙️',n:'Armatura 10 mm A500C',price:8500000,old:8900000,unit:'tonna',rate:4.7,reviews:38,seller:'Termiz Metall',stock:60,cashback:1,images:['⚙️','🏗'],
+ desc:'Armatura A500C, diametri 10 mm. Karkas, plita, ustun uchun.',
+ chars:[{g:'Asosiy',k:'Diametr',v:'10 mm'},{k:'Klass',v:'A500C'}]},
+{id:'p009',cat:'quril',e:'⬛',n:'Beton M200 (m³)',price:340000,old:380000,unit:'m³',rate:4.6,reviews:74,seller:'Surxon Beton',stock:200,cashback:1,images:['⬛','🚛','🏗'],
+ desc:'Tayyor beton M200. Poydevor, lenta, pol uchun.',
+ chars:[{g:'Asosiy',k:'Marka',v:'M200'},{k:'Hajm',v:'1 m³'}]},
+{id:'p010',cat:'quril',e:'⬛',n:'Beton M300 (m³)',price:390000,old:430000,unit:'m³',rate:4.8,reviews:58,seller:'Surxon Beton',stock:180,cashback:1,images:['⬛','🚛','🏗'],
+ desc:'Tayyor beton M300. Karkas, ustun, plita uchun.',
+ chars:[{g:'Asosiy',k:'Marka',v:'M300'},{k:'Hajm',v:'1 m³'}]},
+{id:'p011',cat:'quril',e:'🧱',n:'Klei (bloklar uchun, 25 kg)',price:35000,old:42000,unit:'qop',rate:4.7,reviews:142,seller:'Termiz Qurilish',stock:800,cashback:2,images:['🧱','📦'],
+ desc:'Gazoblok, penoblok uchun maxsus klei. 25 kg qop.',
+ chars:[{g:'Asosiy',k:'Og\'irlik',v:'25 kg'},{k:'Sarfi',v:'~25 kg/m³'}]},
+{id:'p012',cat:'quril',e:'🔧',n:'Armatura to\'r 100×100',price:4000,old:5000,unit:'m²',rate:4.5,reviews:36,seller:'Termiz Metall',stock:500,cashback:1,images:['🔧','⚙️'],
+ desc:'Payvandlangan to\'r 100×100 mm. Suvoq, pol uchun.',
+ chars:[{g:'Asosiy',k:'Katak',v:'100×100 mm'},{k:'Sim diametri',v:'3 mm'}]},
+{id:'p013',cat:'asbob',e:'🔨',n:'Perforator Bosch GBH 2-26',price:1850000,old:2200000,unit:'dona',rate:4.9,reviews:214,seller:'RAYIS Tools',stock:24,cashback:5,images:['🔨','⚙️','📦','🛠'],
+ desc:'Bosch GBH 2-26 DRE perforator. 800W, 2.7J zarba kuchi. Germaniya sifati.',
+ chars:[{g:'Asosiy',k:'Quvvat',v:'800 W'},{k:'Zarba kuchi',v:'2.7 J'},{k:'Chuck',v:'SDS-Plus'},{k:'Kafolat',v:'2 yil'}]},
+{id:'p014',cat:'asbob',e:'🔧',n:'Drel akkumulyatorli 18V',price:950000,old:1200000,unit:'dona',rate:4.7,reviews:168,seller:'RAYIS Tools',stock:36,cashback:4,images:['🔧','⚙️','📦'],
+ desc:'Akkumulyatorli drel 18V, 2 ta batareya.',
+ chars:[{g:'Asosiy',k:'Voltaj',v:'18 V'},{k:'Batareya',v:'2×1.5 Ah'},{k:'Moment',v:'35 Nm'}]},
+{id:'p015',cat:'asbob',e:'🔨',n:'Bolg\'a 500 g',price:45000,old:55000,unit:'dona',rate:4.6,reviews:88,seller:'Qumqo\'rg\'on Do\'kon',stock:120,cashback:1,images:['🔨'],
+ desc:'Temir bolg\'a, 500 gramm. Yog\'och dastali.',
+ chars:[{g:'Asosiy',k:'Og\'irlik',v:'500 g'},{k:'Dasta',v:'Yog\'och'}]},
+{id:'p016',cat:'asbob',e:'🔧',n:'Ruletka 5 m',price:25000,old:32000,unit:'dona',rate:4.5,reviews:126,seller:'Qumqo\'rg\'on Do\'kon',stock:200,cashback:1,images:['🔧','📏'],
+ desc:'Ruletka 5 metr, avtomatik qaytish.',
+ chars:[{g:'Asosiy',k:'Uzunlik',v:'5 m'},{k:'Kenglik',v:'19 mm'}]},
+{id:'p017',cat:'asbob',e:'🪚',n:'Elektr arra 1800W',price:780000,old:950000,unit:'dona',rate:4.7,reviews:94,seller:'RAYIS Tools',stock:18,cashback:4,images:['🪚','⚙️','📦'],
+ desc:'Elektr arra 1800W, 190 mm disk.',
+ chars:[{g:'Asosiy',k:'Quvvat',v:'1800 W'},{k:'Disk',v:'190 mm'}]},
+{id:'p018',cat:'asbob',e:'🔨',n:'Bolg\'a-arralov (beton)',price:2400000,old:2800000,unit:'dona',rate:4.8,reviews:56,seller:'RAYIS Tools',stock:12,cashback:5,images:['🔨','⚙️','📦'],
+ desc:'Beton bolg\'asi 1500W. Buzish, kesish uchun.',
+ chars:[{g:'Asosiy',k:'Quvvat',v:'1500 W'},{k:'Zarba kuchi',v:'13 J'},{k:'Chuck',v:'SDS-Max'}]},
+{id:'p019',cat:'elektr',e:'⚡',n:'Kabel VVG 3×2.5 (m)',price:12000,old:14000,unit:'m',rate:4.8,reviews:184,seller:'Surxon Elektr',stock:5000,cashback:2,images:['⚡','📦'],
+ desc:'Mis kabel VVG 3×2.5 mm². Rozetka, chiroq uchun.',
+ chars:[{g:'Asosiy',k:'Kesim',v:'3×2.5 mm²'},{k:'Material',v:'Mis'},{k:'Kuchlanish',v:'660 V'}]},
+{id:'p020',cat:'elektr',e:'⚡',n:'Kabel VVG 3×1.5 (m)',price:8000,old:9500,unit:'m',rate:4.7,reviews:162,seller:'Surxon Elektr',stock:6000,cashback:2,images:['⚡'],
+ desc:'Mis kabel VVG 3×1.5 mm². Chiroq, o\'chirg\'ich uchun.',
+ chars:[{g:'Asosiy',k:'Kesim',v:'3×1.5 mm²'},{k:'Material',v:'Mis'}]},
+{id:'p021',cat:'elektr',e:'🔌',n:'Rozetka (yashirin)',price:28000,old:35000,unit:'dona',rate:4.6,reviews:98,seller:'Surxon Elektr',stock:500,cashback:2,images:['🔌','⚡'],
+ desc:'Yashirin rozetka, 16A. Standart o\'lcham.',
+ chars:[{g:'Asosiy',k:'Tok',v:'16 A'},{k:'Kuchlanish',v:'250 V'}]},
+{id:'p022',cat:'elektr',e:'💡',n:'LED chiroq 12W',price:25000,old:32000,unit:'dona',rate:4.7,reviews:220,seller:'Surxon Elektr',stock:800,cashback:3,images:['💡','⚡'],
+ desc:'LED lampochka 12W, E27. 6500K (oq). 1200 lumen.',
+ chars:[{g:'Asosiy',k:'Quvvat',v:'12 W'},{k:'Patron',v:'E27'},{k:'Rang',v:'6500K'}]},
+{id:'p023',cat:'elektr',e:'🔌',n:'Avtomat 16A',price:45000,old:55000,unit:'dona',rate:4.8,reviews:72,seller:'Surxon Elektr',stock:300,cashback:2,images:['🔌','⚡'],
+ desc:'Bir fazali avtomat 16A. Qisqa tutashuvdan himoya.',
+ chars:[{g:'Asosiy',k:'Tok',v:'16 A'},{k:'Qutblar',v:'1'}]},
+{id:'p024',cat:'elektr',e:'🔌',n:'Elektr shit 12 modul',price:450000,old:550000,unit:'dona',rate:4.7,reviews:44,seller:'Surxon Elektr',stock:45,cashback:2,images:['🔌','⚡','📦'],
+ desc:'Elektr shit 12 modul, plastik.',
+ chars:[{g:'Asosiy',k:'Modul',v:'12'},{k:'Material',v:'Plastik'}]},
+{id:'p025',cat:'sant',e:'🚿',n:'PPR truba 25 mm (m)',price:25000,old:30000,unit:'m',rate:4.7,reviews:112,seller:'Surxon Santexnika',stock:1000,cashback:2,images:['🚿'],
+ desc:'PPR suv trubasi 25 mm. Issiq va sovuq suv uchun.',
+ chars:[{g:'Asosiy',k:'Diametr',v:'25 mm'},{k:'Material',v:'PPR'}]},
+{id:'p026',cat:'sant',e:'🚽',n:'Unitaz (komplekt)',price:1200000,old:1500000,unit:'dona',rate:4.6,reviews:86,seller:'Surxon Santexnika',stock:28,cashback:3,images:['🚽','🚿'],
+ desc:'Unitaz komplekt, oq. Yumshoq o\'tirish.',
+ chars:[{g:'Asosiy',k:'Rang',v:'Oq'},{k:'Bak',v:'6 L'}]},
+{id:'p027',cat:'sant',e:'🚿',n:'Smesitel (vanna)',price:280000,old:380000,unit:'dona',rate:4.7,reviews:118,seller:'Surxon Santexnika',stock:60,cashback:3,images:['🚿'],
+ desc:'Vanna smesiteli, xrom.',
+ chars:[{g:'Asosiy',k:'Material',v:'Xrom'},{k:'Turi',v:'Ikki dastali'}]},
+{id:'p028',cat:'sant',e:'🛁',n:'Vanna (170×70)',price:2200000,old:2800000,unit:'dona',rate:4.5,reviews:42,seller:'Surxon Santexnika',stock:14,cashback:3,images:['🛁'],
+ desc:'Akril vanna 170×70 sm.',
+ chars:[{g:'Asosiy',k:'O\'lcham',v:'170×70 sm'},{k:'Material',v:'Akril'}]},
+{id:'p029',cat:'sant',e:'🚿',n:'Dush kabina',price:1800000,old:2300000,unit:'dona',rate:4.7,reviews:56,seller:'Surxon Santexnika',stock:10,cashback:3,images:['🚿'],
+ desc:'Dush kabina 90×90. Shisha eshik.',
+ chars:[{g:'Asosiy',k:'O\'lcham',v:'90×90 sm'},{k:'Eshik',v:'Shisha'}]},
+{id:'p030',cat:'isit',e:'🔥',n:'Qozon gaz (24 kW)',price:4500000,old:5200000,unit:'dona',rate:4.8,reviews:64,seller:'Surxon Isitish',stock:18,cashback:3,images:['🔥','♨️'],
+ desc:'Gaz qozon 24 kW. Ikki konturli, issiq suv ham beradi.',
+ chars:[{g:'Asosiy',k:'Quvvat',v:'24 kW'},{k:'Kontur',v:'2'},{k:'Maydon',v:'200 m²'}]},
+{id:'p031',cat:'isit',e:'🔥',n:'Qozon o\'tin/ko\'mir',price:3200000,old:3800000,unit:'dona',rate:4.7,reviews:88,seller:'Surxon Isitish',stock:22,cashback:3,images:['🔥'],
+ desc:'Qattiq yoqilg\'i qozoni.',
+ chars:[{g:'Asosiy',k:'Yoqilg\'i',v:'O\'tin/ko\'mir'},{k:'Maydon',v:'150 m²'}]},
+{id:'p032',cat:'isit',e:'🔥',n:'Radiator 500×100',price:650000,old:780000,unit:'dona',rate:4.6,reviews:142,seller:'Surxon Isitish',stock:80,cashback:3,images:['🔥'],
+ desc:'Alyuminiy radiator, 10 sektsiya.',
+ chars:[{g:'Asosiy',k:'Sektsiya',v:'10'},{k:'O\'lcham',v:'500×100 mm'}]},
+{id:'p033',cat:'isit',e:'🔥',n:'Issiq pol kabeli (m²)',price:180000,old:220000,unit:'m²',rate:4.7,reviews:38,seller:'Surxon Isitish',stock:200,cashback:3,images:['🔥'],
+ desc:'Elektr issiq pol kabeli.',
+ chars:[{g:'Asosiy',k:'Quvvat',v:'150 W/m²'}]},
+{id:'p034',cat:'boyoq',e:'🎨',n:'Ichki bo\'yoq (15 l)',price:380000,old:450000,unit:'dona',rate:4.8,reviews:164,seller:'Surxon Bo\'yoq',stock:120,cashback:3,images:['🎨'],
+ desc:'Ichki devor bo\'yog\'i, suv asosli. 15 litr.',
+ chars:[{g:'Asosiy',k:'Hajm',v:'15 L'},{k:'Sarfi',v:'10 m²/L'},{k:'Asos',v:'Suv'}]},
+{id:'p035',cat:'boyoq',e:'🎨',n:'Fasad bo\'yoq (15 l)',price:520000,old:620000,unit:'dona',rate:4.7,reviews:96,seller:'Surxon Bo\'yoq',stock:80,cashback:3,images:['🎨'],
+ desc:'Fasad bo\'yoq, ob-havoga chidamli.',
+ chars:[{g:'Asosiy',k:'Hajm',v:'15 L'},{k:'Chidamlilik',v:'10 yil'}]},
+{id:'p036',cat:'boyoq',e:'🎨',n:'Shpaklyovka (25 kg)',price:85000,old:100000,unit:'qop',rate:4.6,reviews:112,seller:'Surxon Bo\'yoq',stock:400,cashback:2,images:['🎨'],
+ desc:'Shpaklyovka, gips asosli.',
+ chars:[{g:'Asosiy',k:'Og\'irlik',v:'25 kg'},{k:'Asos',v:'Gips'}]},
+{id:'p037',cat:'boyoq',e:'🎨',n:'Grunt (10 l)',price:120000,old:150000,unit:'dona',rate:4.7,reviews:78,seller:'Surxon Bo\'yoq',stock:200,cashback:2,images:['🎨'],
+ desc:'Grunt, chuqur singdiruvchi.',
+ chars:[{g:'Asosiy',k:'Hajm',v:'10 L'}]},
+{id:'p038',cat:'boyoq',e:'🎨',n:'Gulqog\'oz (rulon)',price:150000,old:200000,unit:'rulon',rate:4.5,reviews:186,seller:'Surxon Bo\'yoq',stock:300,cashback:2,images:['🎨'],
+ desc:'Vinil gulqog\'oz. 1.06×10 m. Yuviladi.',
+ chars:[{g:'Asosiy',k:'O\'lcham',v:'1.06×10 m'},{k:'Material',v:'Vinil'}]},
+{id:'p039',cat:'tom',e:'🏠',n:'Shifer 8 to\'lqin',price:80000,old:95000,unit:'list',rate:4.7,reviews:224,seller:'Surxon Tom',stock:1200,cashback:2,images:['🏠','🏗'],
+ desc:'Shifer 8 to\'lqinli, kulrang.',
+ chars:[{g:'Asosiy',k:'To\'lqin',v:'8'},{k:'O\'lcham',v:'1750×1130 mm'}]},
+{id:'p040',cat:'tom',e:'🏠',n:'Metallocherepitsa (m²)',price:90000,old:110000,unit:'m²',rate:4.8,reviews:168,seller:'Surxon Tom',stock:2000,cashback:3,images:['🏠'],
+ desc:'Metallocherepitsa, poliester qoplama.',
+ chars:[{g:'Asosiy',k:'Qalinlik',v:'0.45 mm'},{k:'Qoplama',v:'Poliester'},{k:'Kafolat',v:'15 yil'}]},
+{id:'p041',cat:'tom',e:'🏠',n:'Ondulin (m²)',price:100000,old:120000,unit:'m²',rate:4.6,reviews:96,seller:'Surxon Tom',stock:800,cashback:3,images:['🏠'],
+ desc:'Ondulin, yengil va arzon.',
+ chars:[{g:'Asosiy',k:'Qalinlik',v:'3 mm'}]},
+{id:'p042',cat:'tom',e:'🏠',n:'Profnastil (m²)',price:68000,old:78000,unit:'m²',rate:4.7,reviews:142,seller:'Surxon Tom',stock:1500,cashback:3,images:['🏠'],
+ desc:'Profnastil C8, 0.4 mm.',
+ chars:[{g:'Asosiy',k:'Profil',v:'C8'},{k:'Qalinlik',v:'0.4 mm'}]},
+{id:'p043',cat:'tom',e:'🪵',n:'Mourlat 5×15 (pm)',price:50000,old:60000,unit:'pm',rate:4.6,reviews:56,seller:'Surxon Yog\'och',stock:600,cashback:2,images:['🪵'],
+ desc:'Mourlat 5×15 sm. Tom karkasi uchun.',
+ chars:[{g:'Asosiy',k:'O\'lcham',v:'5×15 sm'}]},
+{id:'p044',cat:'eshik',e:'🚪',n:'Ichki eshik (std)',price:950000,old:1200000,unit:'dona',rate:4.7,reviews:112,seller:'Surxon Eshik',stock:60,cashback:3,images:['🚪'],
+ desc:'Ichki eshik, MDF. 80×200 sm.',
+ chars:[{g:'Asosiy',k:'O\'lcham',v:'80×200 sm'},{k:'Material',v:'MDF'}]},
+{id:'p045',cat:'eshik',e:'🚪',n:'Temir eshik (kirish)',price:4500000,old:5500000,unit:'dona',rate:4.8,reviews:64,seller:'Surxon Eshik',stock:18,cashback:3,images:['🚪'],
+ desc:'Kirish temir eshik, 2 qulf.',
+ chars:[{g:'Asosiy',k:'O\'lcham',v:'90×205 sm'},{k:'Qulf',v:'2'}]},
+{id:'p046',cat:'eshik',e:'🪟',n:'Plastik deraza 1.5×1.5',price:1650000,old:1900000,unit:'dona',rate:4.7,reviews:142,seller:'Surxon Deraza',stock:45,cashback:3,images:['🪟'],
+ desc:'PVX deraza, 2 kamerali.',
+ chars:[{g:'Asosiy',k:'O\'lcham',v:'1500×1500 mm'},{k:'Kamera',v:'2'}]},
+{id:'p047',cat:'eshik',e:'🪟',n:'Plastik deraza 3-kamera',price:2200000,old:2600000,unit:'dona',rate:4.8,reviews:96,seller:'Surxon Deraza',stock:30,cashback:3,images:['🪟'],
+ desc:'PVX deraza, 3 kamerali.',
+ chars:[{g:'Asosiy',k:'Kamera',v:'3'}]},
+{id:'p048',cat:'metal',e:'⚙️',n:'Profil truba 40×40 (6 m)',price:185000,old:220000,unit:'dona',rate:4.7,reviews:78,seller:'Termiz Metall',stock:200,cashback:2,images:['⚙️'],
+ desc:'Profil truba 40×40×2 mm.',
+ chars:[{g:'Asosiy',k:'O\'lcham',v:'40×40 mm'},{k:'Devor',v:'2 mm'},{k:'Uzunlik',v:'6 m'}]},
+{id:'p049',cat:'metal',e:'⚙️',n:'Burchak 50×50 (6 m)',price:165000,old:195000,unit:'dona',rate:4.6,reviews:64,seller:'Termiz Metall',stock:180,cashback:2,images:['⚙️'],
+ desc:'Po\'lat burchak 50×50×5 mm.',
+ chars:[{g:'Asosiy',k:'O\'lcham',v:'50×50 mm'},{k:'Devor',v:'5 mm'}]},
+{id:'p050',cat:'metal',e:'⚙️',n:'Payvand elektrod 3 mm (5 kg)',price:65000,old:78000,unit:'paket',rate:4.7,reviews:118,seller:'Termiz Metall',stock:400,cashback:2,images:['⚙️'],
+ desc:'Payvand elektrod 3 mm, 5 kg paket.',
+ chars:[{g:'Asosiy',k:'Diametr',v:'3 mm'},{k:'Og\'irlik',v:'5 kg'}]},
+{id:'p051',cat:'yogoch',e:'🪵',n:'Reka 5×5 (6 m)',price:40000,old:48000,unit:'dona',rate:4.6,reviews:142,seller:'Surxon Yog\'och',stock:800,cashback:1,images:['🪵'],
+ desc:'Yog\'och reka 5×5 sm. Opalubka uchun.',
+ chars:[{g:'Asosiy',k:'O\'lcham',v:'5×5 sm'},{k:'Uzunlik',v:'6 m'}]},
+{id:'p052',cat:'yogoch',e:'🪵',n:'Yog\'och 3×10 (6 m)',price:100000,old:120000,unit:'dona',rate:4.7,reviews:86,seller:'Surxon Yog\'och',stock:400,cashback:2,images:['🪵'],
+ desc:'Yog\'och 3×10 sm, 6 metr.',
+ chars:[{g:'Asosiy',k:'O\'lcham',v:'3×10 sm'}]},
+{id:'p053',cat:'yogoch',e:'🪵',n:'Faner 10 mm (1525×1525)',price:180000,old:220000,unit:'list',rate:4.5,reviews:52,seller:'Surxon Yog\'och',stock:150,cashback:2,images:['🪵'],
+ desc:'Faner 10 mm, 1525×1525 mm.',
+ chars:[{g:'Asosiy',k:'Qalinlik',v:'10 mm'}]},
+{id:'p054',cat:'yogoch',e:'🪵',n:'Strapila 4 m (dona)',price:100000,old:120000,unit:'dona',rate:4.6,reviews:64,seller:'Surxon Yog\'och',stock:500,cashback:2,images:['🪵'],
+ desc:'Yog\'och strapila 4 metr.',
+ chars:[{g:'Asosiy',k:'Uzunlik',v:'4 m'}]},
+{id:'p055',cat:'hovli',e:'🌳',n:'Daraxt ko\'chati (mevali)',price:50000,old:65000,unit:'dona',rate:4.7,reviews:168,seller:'Surxon Bog\'',stock:300,cashback:2,images:['🌳'],
+ desc:'Mevali daraxt ko\'chati.',
+ chars:[{g:'Asosiy',k:'Yosh',v:'2 yil'}]},
+{id:'p056',cat:'hovli',e:'🌳',n:'Yo\'lka plitkasi (m²)',price:95000,old:120000,unit:'m²',rate:4.6,reviews:142,seller:'Surxon Hovli',stock:1000,cashback:3,images:['🌳'],
+ desc:'Yo\'lka plitkasi, 30×30 sm.',
+ chars:[{g:'Asosiy',k:'O\'lcham',v:'30×30 sm'}]},
+{id:'p057',cat:'hovli',e:'🌳',n:'Bordyur (pm)',price:55000,old:68000,unit:'pm',rate:4.5,reviews:64,seller:'Surxon Hovli',stock:600,cashback:2,images:['🌳'],
+ desc:'Bordyur tosh, kulrang.',
+ chars:[{g:'Asosiy',k:'Uzunlik',v:'1 pm'}]},
+{id:'p058',cat:'xizmat',e:'🚛',n:'Yuk tashish (Qumqo\'rg\'on)',price:250000,old:300000,unit:'reys',rate:4.8,reviews:86,seller:'Surxon Logistika',stock:999,cashback:0,images:['🚛'],
+ desc:'Yuk tashish xizmati, Qumqo\'rg\'on tumani ichida.',
+ chars:[{g:'Asosiy',k:'Yuk',v:'3 tonna'},{k:'Hudud',v:'Qumqo\'rg\'on'}]},
+{id:'p059',cat:'xizmat',e:'🚜',n:'Ekskavator (soat)',price:350000,old:400000,unit:'soat',rate:4.7,reviews:52,seller:'Surxon Texnika',stock:999,cashback:0,images:['🚜'],
+ desc:'Ekskavator ijarasi, soatiga.',
+ chars:[{g:'Asosiy',k:'Xizmat',v:'Qazish/tekislash'}]},
+{id:'p060',cat:'xizmat',e:'🚜',n:'Traktor (soat)',price:280000,old:320000,unit:'soat',rate:4.6,reviews:64,seller:'Surxon Texnika',stock:999,cashback:0,images:['🚜'],
+ desc:'Traktor ijarasi, soatiga.',
+ chars:[{g:'Asosiy',k:'Xizmat',v:'Yuk/haydash'}]}
+];
+
+var ST={
+  product:null,
+  variants:{},
+  qty:1,
+  tab:'desc',
+  ratingPick:0,
+  cart:{},
+  fav:{},
+  reviews:[],
+  reviewsLoaded:false
+};
+
+function loadLocal(){
+  try{
+    var c=localStorage.getItem('rayis_cart_'+UID);
+    if(c)ST.cart=JSON.parse(c);
+    var f=localStorage.getItem('rayis_fav_'+UID);
+    if(f)ST.fav=JSON.parse(f);
+  }catch(e){}
+}
+function saveCart(){localStorage.setItem('rayis_cart_'+UID,JSON.stringify(ST.cart));updateBadge();}
+function saveFav(){localStorage.setItem('rayis_fav_'+UID,JSON.stringify(ST.fav));}
+
+function fmt(n){return Math.round(Number(n)||0).toLocaleString('ru-RU').replace(/,/g,' ')+" so'm";}
+function fmtN(n){return Math.round(Number(n)||0).toLocaleString('ru-RU').replace(/,/g,' ');}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function toast(m,tp){var e=document.getElementById('tst');e.textContent=m;e.className='tst on'+(tp==='e'?' e':tp==='o'?' o':'');clearTimeout(e._t);e._t=setTimeout(function(){e.className='tst'+(tp==='e'?' e':' o');},2200);}
+function closeMd(){document.getElementById('md').classList.remove('on');}
+function openMd(){document.getElementById('md').classList.add('on');}
+function getParam(k){return new URLSearchParams(window.location.search).get(k);}
+
+function loadProduct(){
+  var id=getParam('id')||'p001';
+  var p=PRODUCTS.find(function(x){return x.id===id;});
+  if(!p){
+    document.getElementById('main').innerHTML='<div style="padding:60px 20px;text-align:center"><div style="font-size:64px;margin-bottom:10px">😕</div><div style="font-size:18px;font-weight:800">Mahsulot topilmadi</div><button class="btn btn-p" style="margin-top:20px;padding:14px 24px" onclick="goHome()">🏠 Bosh sahifa</button></div>';
+    return;
+  }
+  ST.product=p;
+  ST.qty=1;
+  if(p.variants){
+    Object.keys(p.variants).forEach(function(k){
+      ST.variants[k]=p.variants[k][0];
+    });
+  }
+  document.title=p.n+' — RAYIS';
+  document.getElementById('hdrTitle').textContent=p.n;
+  render();
+  loadReviews();
+  renderSimilar();
+  updateSticky();
+}
+
+function render(){
+  var p=ST.product;
+  if(!p)return;
+  var h='';
+  var imgs=p.images||[p.e];
+  var disc=p.old>p.price?Math.round((1-p.price/p.old)*100):0;
+  var inFav=ST.fav[p.id];
+  
+  h+='<div class="gal">';
+  h+='<div class="gal-track" id="galTrack" onscroll="onGalScroll()">';
+  imgs.forEach(function(im,i){
+    h+='<div class="gal-slide" onclick="openZoom('+i+')">';
+    if(i===0&&disc>0)h+='<div class="gal-disc">-'+disc+'%</div>';
+    h+=im;
+    h+='<div class="zoomhint">🔍 Kattalashtirish</div>';
+    h+='</div>';
+  });
+  h+='</div>';
+  h+='<button class="gal-fav '+(inFav?'on':'')+'" onclick="toggleFav()">'+(inFav?'❤️':'🤍')+'</button>';
+  h+='<div class="gal-dots" id="galDots">';
+  imgs.forEach(function(_,i){
+    h+='<div class="gal-dot '+(i===0?'on':'')+'" data-i="'+i+'"></div>';
+  });
+  h+='</div>';
+  if(imgs.length>1){
+    h+='<div class="gal-thumbs" id="galThumbs">';
+    imgs.forEach(function(im,i){
+      h+='<div class="gal-thumb '+(i===0?'on':'')+'" onclick="goGal('+i+')">'+im+'</div>';
+    });
+    h+='</div>';
+  }
+  h+='</div>';
+  
+  h+='<div class="card">';
+  h+='<div class="p-price-block">';
+  h+='<div class="p-price '+(disc>0?'disc':'')+'">'+fmt(p.price)+'</div>';
+  if(disc>0){
+    h+='<div class="p-old">'+fmt(p.old)+'</div>';
+    h+='<div class="p-disc-badge">-'+disc+'%</div>';
+  }
+  h+='</div>';
+  if(p.cashback>0){
+    h+='<div class="p-bonus">💎 '+p.cashback+'% keshbek ('+fmtN(p.price*p.cashback/100)+' so\'m)</div>';
+  }
+  h+='<div class="p-name">'+esc(p.n)+'</div>';
+  h+='<div class="p-meta">';
+  h+='<span><span class="star">★</span> <b>'+p.rate+'</b></span>';
+  h+='<span>'+p.reviews+' ta sharh</span>';
+  h+='<span>'+esc(p.seller)+'</span>';
+  h+='</div>';
+  h+='<div class="p-sku">Artikul: '+p.id.toUpperCase()+' · 1 '+esc(p.unit)+'</div>';
+  
+  if(p.variants){
+    Object.keys(p.variants).forEach(function(k){
+      var labels={weight:'Og\'irligi',color:'Rang',size:'O\'lcham',type:'Turi'};
+      h+='<div class="variant" style="margin-top:14px">';
+      h+='<div class="variant-t">'+esc(labels[k]||k)+': <b>'+esc(ST.variants[k])+'</b></div>';
+      h+='<div class="variant-opts">';
+      p.variants[k].forEach(function(v){
+        h+='<div class="vo '+(ST.variants[k]===v?'on':'')+'" onclick="pickVariant(\''+k+'\',\''+v.replace(/'/g,"\\'")+'\')">'+esc(v)+'</div>';
+      });
+      h+='</div></div>';
+    });
+  }
+  
+  h+='<div class="qty-row">';
+  h+='<div class="qty-box">';
+  h+='<button class="qty-btn" onclick="chQty(-1)" '+(ST.qty<=1?'disabled':'')+'>−</button>';
+  h+='<div class="qty-val" id="qtyVal">'+ST.qty+'</div>';
+  h+='<button class="qty-btn" onclick="chQty(1)" '+(ST.qty>=Math.min(p.stock,99)?'disabled':'')+'>+</button>';
+  h+='</div>';
+  h+='<div class="qty-stock">Omborda: <b>'+fmtN(p.stock)+' '+esc(p.unit)+'</b></div>';
+  h+='</div>';
+  
+  var inCart=ST.cart[p.id];
+  h+='<div class="buy-btns">';
+  h+='<button class="btn btn-g" onclick="addToCart()">'+(inCart?'✓ Savatda':'🛒 Savatga')+'</button>';
+  h+='<button class="btn btn-p" onclick="buyNow()">⚡ Sotib olish</button>';
+  h+='</div>';
+  h+='<button class="btn btn-a btn-full" style="margin-top:8px" onclick="openInstallment()">💳 Nasiya / Muddatli to\'lov</button>';
+  h+='</div>';
+  
+  h+='<div class="card">';
+  h+='<div class="dlv-row">';
+  h+='<div class="dlv-ic">🚚</div>';
+  h+='<div class="dlv-body">';
+  h+='<div class="dlv-t">Yetkazib berish</div>';
+  h+='<div class="dlv-s">Qumqo\'rg\'on tumani bo\'ylab <b>1 kunda</b>.<br>Yetkazib berish: '+fmt(50000)+' (2 mln so\'mdan yuqori <b>bepul</b>)</div>';
+  h+='</div></div>';
+  h+='<div class="dlv-row">';
+  h+='<div class="dlv-ic">🛡</div>';
+  h+='<div class="dlv-body">';
+  h+='<div class="dlv-t">To\'lov himoyasi (Escrow)</div>';
+  h+='<div class="dlv-s">Tovar sizga yetib bormaguncha pul <b>RAYIS</b> da saqlanadi</div>';
+  h+='</div></div>';
+  h+='</div>';
+  
+  var sInit=p.seller.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();
+  h+='<div class="card">';
+  h+='<div class="seller">';
+  h+='<div class="seller-av">'+sInit+'</div>';
+  h+='<div class="seller-inf">';
+  h+='<div class="seller-n">'+esc(p.seller)+'</div>';
+  h+='<div class="seller-s"><span class="star">★</span> 4.8 · 234 ta sotuv · Qumqo\'rg\'on</div>';
+  h+='</div>';
+  h+='<button class="seller-btn" onclick="toast(\'Sotuvchi bilan chat tez orada\',\'o\')">💬 Chat</button>';
+  h+='</div>';
+  h+='</div>';
+  
+  document.getElementById('main').innerHTML=h;
+  updateSticky();
+}
+
+function updateSticky(){
+  var p=ST.product;
+  if(!p)return;
+  document.getElementById('sticky').style.display='block';
+  document.getElementById('stickyPrice').textContent=fmt(p.price*ST.qty);
+  document.getElementById('stickyStock').textContent=ST.qty+' '+p.unit+' · '+p.seller;
+  var fav=document.getElementById('stickyFav');
+  fav.textContent=ST.fav[p.id]?'❤️':'🤍';
+  fav.className='sticky-fav'+(ST.fav[p.id]?' on':'');
+  var btn=document.getElementById('stickyBtn');
+  if(ST.cart[p.id]){
+    btn.textContent='✓ Savatda';
+    btn.className='sticky-btn added';
+  } else {
+    btn.textContent='🛒 Savatga';
+    btn.className='sticky-btn';
+  }
+}
+
+function pickVariant(k,v){ST.variants[k]=v;render();}
+function chQty(d){
+  var p=ST.product;
+  var max=Math.min(p.stock,99);
+  ST.qty=Math.max(1,Math.min(max,ST.qty+d));
+  document.getElementById('qtyVal').textContent=ST.qty;
+  var btns=document.querySelectorAll('.qty-btn');
+  btns[0].disabled=ST.qty<=1;
+  btns[1].disabled=ST.qty>=max;
+  updateSticky();
+}
+function addToCart(){
+  var p=ST.product;
+  if(!p)return;
+  if(ST.cart[p.id])ST.cart[p.id]+=ST.qty;
+  else ST.cart[p.id]=ST.qty;
+  saveCart();
+  render();
+  toast('🛒 Savatga qo\'shildi ('+ST.qty+' '+p.unit+')','o');
+}
+function buyNow(){
+  var p=ST.product;
+  if(!p)return;
+  if(!ST.cart[p.id])ST.cart[p.id]=ST.qty;
+  saveCart();
+  window.location.href='savat.html';
+}
+function toggleFav(){
+  var p=ST.product;
+  if(!p)return;
+  if(ST.fav[p.id])delete ST.fav[p.id];
+  else ST.fav[p.id]=true;
+  saveFav();
+  render();
+  toast(ST.fav[p.id]?'❤️ Sevimlilarga qo\'shildi':'🤍 Olib tashlandi','o');
+}
+
+function onGalScroll(){
+  var track=document.getElementById('galTrack');
+  var idx=Math.round(track.scrollLeft/track.clientWidth);
+  document.querySelectorAll('.gal-dot').forEach(function(d,i){
+    d.classList.toggle('on',i===idx);
+  });
+  document.querySelectorAll('.gal-thumb').forEach(function(t,i){
+    t.classList.toggle('on',i===idx);
+  });
+}
+function goGal(i){
+  var track=document.getElementById('galTrack');
+  track.scrollTo({left:i*track.clientWidth,behavior:'smooth'});
+}
+function openZoom(i){
+  var p=ST.product;
+  var imgs=p.images||[p.e];
+  var h='<div class="md-h"><h3>🖼 Rasm '+(i+1)+'/'+imgs.length+'</h3><button class="md-x" onclick="closeMd()">✕</button></div>';
+  h+='<div style="aspect-ratio:1;background:var(--sf2);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:200px">'+imgs[i]+'</div>';
+  h+='<div style="display:flex;gap:8px;overflow-x:auto;margin-top:12px;padding-bottom:4px">';
+  imgs.forEach(function(im,j){
+    h+='<div class="gal-thumb '+(i===j?'on':'')+'" style="flex:0 0 60px;height:60px" onclick="closeMd();setTimeout(function(){openZoom('+j+')},200)">'+im+'</div>';
+  });
+  h+='</div>';
+  document.getElementById('mdBox').innerHTML=h;
+  openMd();
+}
+
+function renderTabs(){
+  var p=ST.product;
+  var h='<div class="tabs">';
+  h+='<button class="tab '+(ST.tab==='desc'?'on':'')+'" onclick="setTab(\'desc\')">📝 Tavsif</button>';
+  h+='<button class="tab '+(ST.tab==='chars'?'on':'')+'" onclick="setTab(\'chars\')">📋 Xususiyat</button>';
+  h+='<button class="tab '+(ST.tab==='revs'?'on':'')+'" onclick="setTab(\'revs\')">⭐ Sharhlar<span class="count">'+(ST.reviews.length||p.reviews)+'</span></button>';
+  h+='<button class="tab '+(ST.tab==='qa'?'on':'')+'" onclick="setTab(\'qa\')">❓ Savol</button>';
+  h+='</div>';
+  return h;
+}
+function setTab(t){
+  ST.tab=t;
+  document.querySelectorAll('.tab').forEach(function(el){
+    var m={desc:'desc',chars:'chars',revs:'revs',qa:'qa'};
+    el.classList.toggle('on',el.getAttribute('onclick').indexOf(m[t])>=0);
+  });
+  document.getElementById('tabContent').innerHTML=renderTabContent();
+}
+function renderTabContent(){
+  var p=ST.product;
+  if(ST.tab==='desc')return renderDesc();
+  if(ST.tab==='chars')return renderChars();
+  if(ST.tab==='revs')return renderRevs();
+  if(ST.tab==='qa')return renderQA();
+  return '';
+}
+function renderDesc(){
+  var p=ST.product;
+  var h='<div class="desc">';
+  h+='<p>'+esc(p.desc||'Tavsif mavjud emas')+'</p>';
+  h+='<h4>Afzalliklari</h4>';
+  h+='<ul>';
+  h+='<li>✅ Sifatli mahsulot, O\'zbekiston standartiga mos</li>';
+  h+='<li>✅ RAYIS kafolati — nuqson bo\'lsa qaytarish</li>';
+  h+='<li>✅ Tez yetkazib berish (Qumqo\'rg\'onda 1 kun)</li>';
+  h+='<li>✅ To\'lov himoyasi (Escrow)</li>';
+  h+='<li>✅ '+p.cashback+'% keshbek bonus</li>';
+  h+='</ul>';
+  h+='<div>';
+  h+='<span class="tag">#'+p.cat+'</span>';
+  h+='<span class="tag">#RAYIS</span>';
+  h+='<span class="tag">#Surxondaryo</span>';
+  h+='</div>';
+  h+='</div>';
+  return h;
+}
+function renderChars(){
+  var p=ST.product;
+  if(!p.chars||!p.chars.length)return '<div class="desc">Xususiyatlar mavjud emas</div>';
+  var h='<div class="chars">';
+  var curGroup='';
+  p.chars.forEach(function(c){
+    if(c.g&&c.g!==curGroup){
+      h+='<div class="char-group">'+esc(c.g)+'</div>';
+      curGroup=c.g;
+    }
+    h+='<div class="char"><div class="char-k">'+esc(c.k)+'</div><div class="char-v">'+esc(c.v)+'</div></div>';
+  });
+  h+='<div class="char"><div class="char-k">Artikul</div><div class="char-v">'+p.id.toUpperCase()+'</div></div>';
+  h+='<div class="char"><div class="char-k">Birlik</div><div class="char-v">1 '+esc(p.unit)+'</div></div>';
+  h+='<div class="char"><div class="char-k">Ishlab chiqaruvchi</div><div class="char-v">'+esc(p.seller)+'</div></div>';
+  h+='</div>';
+  return h;
+}
+function renderRevs(){
+  var p=ST.product;
+  var revs=ST.reviews;
+  if(!ST.reviewsLoaded){
+    return '<div style="text-align:center;padding:40px 20px;color:var(--tx2)">⏳ Sharhlar yuklanmoqda...</div>';
+  }
+  var h='';
+  var counts={5:0,4:0,3:0,2:0,1:0};
+  revs.forEach(function(r){counts[Math.round(r.rating)]=(counts[Math.round(r.rating)]||0)+1;});
+  var total=revs.length||0;
+  h+='<div class="rev-summary">';
+  h+='<div class="rev-big">';
+  h+='<div class="rev-big-n">'+(total?(revs.reduce(function(s,r){return s+r.rating;},0)/total).toFixed(1):p.rate)+'</div>';
+  h+='<div class="rev-big-s">'+total+' ta sharh</div>';
+  h+='</div>';
+  h+='<div class="rev-bars">';
+  [5,4,3,2,1].forEach(function(r){
+    var cnt=counts[r]||0;
+    var pct=total?Math.round(cnt/total*100):0;
+    h+='<div class="rev-bar">';
+    h+='<div class="rev-bar-l">'+r+'★</div>';
+    h+='<div class="rev-bar-t"><div class="rev-bar-f" style="width:'+pct+'%"></div></div>';
+    h+='<div class="rev-bar-c">'+cnt+'</div>';
+    h+='</div>';
+  });
+  h+='</div></div>';
+  
+  h+='<button class="btn btn-p btn-full" style="margin-bottom:14px" onclick="openAddReview()">✍️ Sharh yozish</button>';
+  
+  if(!revs.length){
+    h+='<div style="text-align:center;padding:30px 20px;color:var(--tx2);background:var(--sf);border-radius:14px">';
+    h+='<div style="font-size:48px;margin-bottom:8px">💬</div>';
+    h+='<div style="font-size:14px;font-weight:700">Hozircha sharh yo\'q</div>';
+    h+='<div style="font-size:12px;margin-top:4px">Birinchi bo\'ling!</div>';
+    h+='</div>';
+  } else {
+    revs.forEach(function(r){
+      h+=renderRevItem(r);
+    });
+  }
+  return h;
+}
+function renderRevItem(r){
+  var h='<div class="rev">';
+  h+='<div class="rev-h">';
+  h+='<div class="rev-av">'+esc((r.name||'M')[0].toUpperCase())+'</div>';
+  h+='<div class="rev-inf">';
+  h+='<div class="rev-n">'+esc(r.name||'Mehmon')+'</div>';
+  h+='<div class="rev-d">'+new Date(r.date||Date.now()).toLocaleDateString('uz-UZ')+'</div>';
+  h+='</div>';
+  h+='<div class="rev-stars">'+'★'.repeat(Math.round(r.rating))+'☆'.repeat(5-Math.round(r.rating))+'</div>';
+  h+='</div>';
+  h+='<div class="rev-t">'+esc(r.text||'')+'</div>';
+  h+='<div class="rev-foot">';
+  h+='<button onclick="likeRev(\''+(r.id||'')+'\')">👍 Foydali ('+(r.likes||0)+')</button>';
+  h+='</div>';
+  h+='</div>';
+  return h;
+}
+function renderQA(){
+  var p=ST.product;
+  var h='';
+  h+='<button class="btn btn-p btn-full" style="margin-bottom:14px" onclick="openAskQuestion()">❓ Savol berish</button>';
+  if(!p.qa||!p.qa.length){
+    h+='<div style="text-align:center;padding:30px 20px;color:var(--tx2)">Hozircha savol yo\'q</div>';
+  } else {
+    p.qa.forEach(function(q){
+      h+='<div class="qa">';
+      h+='<div class="qa-q">';
+      h+='<div class="qa-ic">S</div>';
+      h+='<div class="qa-body">'+esc(q.q)+'<div class="qa-who">'+esc(q.who||'Xaridor')+' · '+esc(q.date||'')+'</div></div>';
+      h+='</div>';
+      h+='<div class="qa-q">';
+      h+='<div class="qa-ic a">J</div>';
+      h+='<div class="qa-body">'+esc(q.a)+'</div>';
+      h+='</div>';
+      h+='</div>';
+    });
+  }
+  return h;
+}
+
+function loadReviews(){
+  var p=ST.product;
+  if(!p)return;
+  ST.reviewsLoaded=false;
+  if(!DB){ST.reviews=[];ST.reviewsLoaded=true;return;}
+  DB.ref('reviews/'+p.id).on('value',function(snap){
+    var data=snap.val()||{};
+    var arr=[];
+    Object.keys(data).forEach(function(k){arr.push(Object.assign({id:k},data[k]));});
+    arr.sort(function(a,b){return (b.date||0)-(a.date||0);});
+    ST.reviews=arr;
+    ST.reviewsLoaded=true;
+    if(ST.tab==='revs'){
+      var tc=document.getElementById('tabContent');
+      if(tc)tc.innerHTML=renderRevs();
+    }
+  });
+}
+
+function openAddReview(){
+  ST.ratingPick=0;
+  var h='<div class="md-h"><h3>✍️ Sharh yozish</h3><button class="md-x" onclick="closeMd()">✕</button></div>';
+  h+='<div class="f"><label class="fl">Reyting <b>*</b></label><div class="stars-pick" id="starsPick">';
+  for(var i=1;i<=5;i++)h+='<span class="star-p" data-i="'+i+'" onclick="pickStar('+i+')">★</span>';
+  h+='</div></div>';
+  h+='<div class="f"><label class="fl">Ismingiz <b>*</b></label><input class="inp" id="rvName" placeholder="Ism-familiya"></div>';
+  h+='<div class="f"><label class="fl">Sharh <b>*</b></label><textarea class="txa" id="rvText" placeholder="Mahsulot haqida fikringiz..."></textarea></div>';
+  h+='<button class="btn btn-p btn-full" style="margin-top:8px" onclick="submitReview()">📤 Yuborish</button>';
+  document.getElementById('mdBox').innerHTML=h;
+  openMd();
+}
+function pickStar(i){
+  ST.ratingPick=i;
+  document.querySelectorAll('.star-p').forEach(function(s,idx){s.classList.toggle('on',idx<i);});
+}
+function submitReview(){
+  var n=document.getElementById('rvName').value.trim();
+  var t=document.getElementById('rvText').value.trim();
+  if(ST.ratingPick<1)return toast('Reyting tanlang','e');
+  if(n.length<2)return toast('Ism kiriting','e');
+  if(t.length<10)return toast('Sharh kamida 10 belgi','e');
+  var rev={productId:ST.product.id,uid:UID,name:n,rating:ST.ratingPick,text:t,date:Date.now(),likes:0};
+  if(!DB){toast('Firebase ulanmagan','e');return;}
+  DB.ref('reviews/'+ST.product.id).push(rev)
+    .then(function(){closeMd();toast('✅ Sharhingiz qabul qilindi!','o');ST.tab='revs';document.getElementById('tabContent').innerHTML=renderRevs();})
+    .catch(function(e){toast('Xato: '+e.message,'e');});
+}
+function likeRev(id){
+  if(!DB||!id)return;
+  DB.ref('reviews/'+ST.product.id+'/'+id+'/likes').transaction(function(v){return (v||0)+1;});
+  toast('👍 Rahmat!','o');
+}
+
+function openAskQuestion(){
+  var h='<div class="md-h"><h3>❓ Savol berish</h3><button class="md-x" onclick="closeMd()">✕</button></div>';
+  h+='<div class="f"><label class="fl">Ismingiz <b>*</b></label><input class="inp" id="qaName" placeholder="Ism"></div>';
+  h+='<div class="f"><label class="fl">Savolingiz <b>*</b></label><textarea class="txa" id="qaText" placeholder="Savolingiz..."></textarea></div>';
+  h+='<button class="btn btn-p btn-full" style="margin-top:8px" onclick="submitQuestion()">📤 Yuborish</button>';
+  document.getElementById('mdBox').innerHTML=h;
+  openMd();
+}
+function submitQuestion(){
+  var n=document.getElementById('qaName').value.trim();
+  var t=document.getElementById('qaText').value.trim();
+  if(n.length<2)return toast('Ism kiriting','e');
+  if(t.length<5)return toast('Savol kiriting','e');
+  if(!DB){toast('Firebase ulanmagan','e');return;}
+  DB.ref('questions/'+ST.product.id).push({productId:ST.product.id,uid:UID,name:n,question:t,answer:'',date:Date.now()})
+    .then(function(){closeMd();toast('✅ Savolingiz yuborildi!','o');})
+    .catch(function(e){toast('Xato: '+e.message,'e');});
+}
+
+function openShare(){
+  var p=ST.product;
+  if(!p)return;
+  var url=window.location.href;
+  var txt=p.n+' — '+fmt(p.price)+' | RAYIS';
+  var h='<div class="md-h"><h3>📤 Ulashish</h3><button class="md-x" onclick="closeMd()">✕</button></div>';
+  h+='<div class="share-grid">';
+  h+='<button class="share-btn" onclick="shareTo(\'telegram\')"><span class="share-ic">✈️</span>Telegram</button>';
+  h+='<button class="share-btn" onclick="shareTo(\'whatsapp\')"><span class="share-ic">💬</span>WhatsApp</button>';
+  h+='<button class="share-btn" onclick="shareTo(\'viber\')"><span class="share-ic">📞</span>Viber</button>';
+  h+='<button class="share-btn" onclick="shareTo(\'sms\')"><span class="share-ic">💌</span>SMS</button>';
+  h+='<button class="share-btn" onclick="shareTo(\'email\')"><span class="share-ic">📧</span>Email</button>';
+  h+='<button class="share-btn" onclick="shareTo(\'facebook\')"><span class="share-ic">📘</span>Facebook</button>';
+  h+='<button class="share-btn" onclick="shareTo(\'copy\')"><span class="share-ic">📋</span>Nusxa</button>';
+  h+='<button class="share-btn" onclick="shareTo(\'native\')"><span class="share-ic">📱</span>Boshqa</button>';
+  h+='</div>';
+  document.getElementById('mdBox').innerHTML=h;
+  openMd();
+}
+function shareTo(t){
+  var p=ST.product;
+  var url=window.location.href;
+  var txt=p.n+' — '+fmt(p.price)+' | RAYIS';
+  if(t==='telegram')window.open('https://t.me/share/url?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(txt),'_blank');
+  else if(t==='whatsapp')window.open('https://wa.me/?text='+encodeURIComponent(txt+' '+url),'_blank');
+  else if(t==='viber')window.open('viber://forward?text='+encodeURIComponent(txt+' '+url),'_blank');
+  else if(t==='sms')window.location.href='sms:?body='+encodeURIComponent(txt+' '+url);
+  else if(t==='email')window.location.href='mailto:?subject='+encodeURIComponent(p.n)+'&body='+encodeURIComponent(txt+' '+url);
+  else if(t==='facebook')window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url),'_blank');
+  else if(t==='copy'){
+    if(navigator.clipboard)navigator.clipboard.writeText(txt+' '+url).then(function(){toast('✅ Nusxalandi','o');});
+  }
+  else if(t==='native'){
+    if(navigator.share)navigator.share({title:p.n,text:txt,url:url}).catch(function(){});
+    else toast('Qurilma qo\'llab-quvvatlamaydi','e');
+  }
+  if(t!=='copy'&&t!=='native')setTimeout(closeMd,300);
+}
+
+function openInstallment(){
+  var p=ST.product;
+  var total=p.price*ST.qty;
+  var monthly=Math.round(total/12);
+  var h='<div class="md-h"><h3>💳 Nasiya / Muddatli to\'lov</h3><button class="md-x" onclick="closeMd()">✕</button></div>';
+  h+='<div style="background:linear-gradient(135deg,var(--pr),var(--prD));border-radius:16px;padding:20px;color:#fff;text-align:center;margin-bottom:16px">';
+  h+='<div style="font-size:11px;opacity:.9">Oylik to\'lov</div>';
+  h+='<div style="font-size:32px;font-weight:900;margin:6px 0">'+fmt(monthly)+'</div>';
+  h+='<div style="font-size:12px;opacity:.9">12 oy davomida</div>';
+  h+='</div>';
+  h+='<div class="f"><label class="fl">Muddat</label><select class="sel" id="instMonths" onchange="calcInst()"><option value="3">3 oy</option><option value="6">6 oy</option><option value="9">9 oy</option><option value="12" selected>12 oy</option><option value="18">18 oy</option><option value="24">24 oy</option></select></div>';
+  h+='<div class="f"><label class="fl">Boshlang\'ich to\'lov</label><input class="inp" type="number" id="instDown" value="0" oninput="calcInst()" placeholder="0"></div>';
+  h+='<div style="background:var(--sf2);border-radius:12px;padding:14px;margin-bottom:16px">';
+  h+='<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span>Mahsulot narxi</span><b>'+fmt(total)+'</b></div>';
+  h+='<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span>Boshlang\'ich</span><b id="instDownVal">0 so\'m</b></div>';
+  h+='<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span>Muddat</span><b id="instMonthsVal">12 oy</b></div>';
+  h+='<div style="display:flex;justify-content:space-between;font-size:15px;font-weight:900;color:var(--pr);margin-top:8px;padding-top:8px;border-top:2px solid var(--bd)"><span>Oylik</span><b id="instMonthlyVal">'+fmt(monthly)+'</b></div>';
+  h+='</div>';
+  h+='<div style="font-size:11.5px;color:var(--tx2);line-height:1.6;margin-bottom:14px">💡 Nasiya <b>Uzum Nasiya</b>, <b>Payme Nasiya</b> yoki <b>bank kartasi</b> orqali.</div>';
+  h+='<button class="btn btn-p btn-full" onclick="applyInstallment()">📝 Ariza berish</button>';
+  document.getElementById('mdBox').innerHTML=h;
+  openMd();
+}
+function calcInst(){
+  var p=ST.product;
+  var total=p.price*ST.qty;
+  var m=parseInt(document.getElementById('instMonths').value)||12;
+  var down=parseFloat(document.getElementById('instDown').value)||0;
+  var remain=Math.max(0,total-down);
+  var monthly=Math.round(remain/m);
+  document.getElementById('instDownVal').textContent=fmt(down);
+  document.getElementById('instMonthsVal').textContent=m+' oy';
+  document.getElementById('instMonthlyVal').textContent=fmt(monthly);
+}
+function applyInstallment(){
+  closeMd();
+  toast('✅ Ariza qabul qilindi! Operator qo\'ng\'iroq qiladi','o');
+}
+
+function renderSimilar(){
+  var p=ST.product;
+  if(!p)return;
+  var similar=PRODUCTS.filter(function(x){return x.cat===p.cat&&x.id!==p.id;}).slice(0,8);
+  var others=PRODUCTS.filter(function(x){return x.cat!==p.cat&&x.id!==p.id;}).sort(function(){return Math.random()-0.5;}).slice(0,8);
+  var h='';
+  if(similar.length){
+    h+='<div class="sim-h"><h3>🔁 O\'xshash mahsulotlar</h3><a href="katalog.html?cat='+p.cat+'">Barchasi →</a></div>';
+    h+='<div class="hscroll">';
+    similar.forEach(function(s){h+=renderPCard(s);});
+    h+='</div>';
+  }
+  if(others.length){
+    h+='<div class="sim-h"><h3>💡 Sizga yoqishi mumkin</h3></div>';
+    h+='<div class="hscroll">';
+    others.forEach(function(s){h+=renderPCard(s);});
+    h+='</div>';
+  }
+  document.getElementById('similarWrap').innerHTML=h;
+}
+function renderPCard(s){
+  var disc=s.old>s.price?Math.round((1-s.price/s.old)*100):0;
+  var h='<div class="pcard" onclick="openProduct(\''+s.id+'\')">';
+  h+='<div class="pcard-img" style="position:relative">';
+  if(disc>0)h+='<div style="position:absolute;top:6px;left:6px;background:var(--er);color:#fff;font-size:10px;font-weight:900;padding:2px 6px;border-radius:5px">-'+disc+'%</div>';
+  h+=s.e;
+  h+='</div>';
+  h+='<div class="pcard-body">';
+  h+='<div class="pcard-p">'+fmt(s.price)+'</div>';
+  if(disc>0)h+='<div class="pcard-p old">'+fmt(s.old)+'</div>';
+  h+='<div class="pcard-n">'+esc(s.n)+'</div>';
+  h+='<div class="pcard-r"><span class="star">★</span> '+s.rate+' · '+s.reviews+'</div>';
+  h+='</div>';
+  h+='</div>';
+  return h;
+}
+function openProduct(id){window.location.href='mahsulot.html?id='+id;}
+
+function openCart(){window.location.href='savat.html';}
+
+function updateBadge(){
+  var total=0;
+  Object.keys(ST.cart).forEach(function(k){total+=ST.cart[k];});
+  var b=document.getElementById('cartBadge');
+  if(!b)return;
+  if(total>0){b.style.display='flex';b.textContent=total;}
+  else b.style.display='none';
+}
+
+function goBack(){
+  if(document.getElementById('md').classList.contains('on')){closeMd();return;}
+  if(window.history.length>2)window.history.back();
+  else window.location.href='katalog.html';
+}
+function goHome(){window.location.href='index.html';}
+
+window.addEventListener('popstate',function(){
+  if(document.getElementById('md').classList.contains('on')){
+    closeMd();
+    history.pushState({},'','');
+  }
+});
+
+(function init(){
+  loadLocal();
+  loadProduct();
+  updateBadge();
+  setTimeout(function(){
+    var main=document.getElementById('main');
+    if(main&&ST.product){
+      main.insertAdjacentHTML('beforeend',renderTabs()+'<div class="tab-content" id="tabContent">'+renderTabContent()+'</div>');
+    }
+  },50);
+  history.pushState({page:'product'},'','');
+  console.log('✅ RAYIS Mahsulot — ishga tushdi');
+})();
+</script>
+</body>
+</html>
